@@ -51,7 +51,7 @@ import numpy as np
 import pandas as pd
 
 
-def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
+def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Counts the number of workdays between pairs of dates in given series.
 
     This function calculates the number of workdays for each pair of start and end dates
@@ -64,7 +64,7 @@ def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
         to_dates (pd.Series): A pandas Series containing the end dates of the periods.
 
     Returns:
-        np.ndarray: An array containing the number of workdays for each date pair.
+        pd.Series: A Pandas Series containing the number of workdays for each date pair.
 
     Raises:
         ValueError: If the length of the calculated workdays list does not match the number of date pairs.
@@ -86,9 +86,9 @@ def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
     max_year = np.max(to_years)
 
     if min_year == max_year:
-        norwegian_holidays = holidays.NO(years=min_year)
+        norwegian_holidays = holidays.Norway(years=min_year)
     else:
-        norwegian_holidays = holidays.NO(years=list(range(min_year, max_year + 1)))
+        norwegian_holidays = holidays.Norway(years=range(min_year, max_year + 1))
 
     # Convert the holiday dates to a numpy array of datetime64 objects
     holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
@@ -124,10 +124,10 @@ def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
             "Unexpected error: length of workdays_list does not match the number of date pairs."
         )
 
-    return np.array(workdays_list)
+    return pd.Series(workdays_list, dtype=int)
 
 
-def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple:
+def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[int, int]:
     """Given a year and a quarter, this function calculates the first and last dates of the specified quarter using pandas.
 
     Args:
@@ -155,7 +155,7 @@ def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple:
     start_date_str = start_date.strftime("%Y-%m-%d")
     end_date_str = end_date.strftime("%Y-%m-%d")
 
-    return start_date_str, end_date_str
+    return tuple(start_date_str, end_date_str)
 
 
 def indicate_merge(
@@ -395,7 +395,7 @@ def proc_sums(
     return sum_df
 
 
-def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
+def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Determines if the reference day falls between given date ranges.
 
     This function checks if the 16th day of each month (reference day) is
@@ -454,7 +454,7 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
     result = np.logical_and(from_dates <= ref_days, ref_days <= to_dates)
 
     # Return the result as an array of boolean values
-    return result
+    return pd.Series(result, dtype=bool)
 
 
 def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
@@ -513,4 +513,4 @@ def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     result = np.logical_and(from_weeks <= ref_weeks, ref_weeks <= to_weeks)
 
     # Return the result as a series of boolean values
-    return result
+    return pd.Series(result, dtype=bool)
