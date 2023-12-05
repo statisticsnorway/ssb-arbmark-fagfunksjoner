@@ -5,6 +5,7 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
 """
 
+
 def example_function(number1: int, number2: int) -> str:
     """Compare two integers.
 
@@ -33,53 +34,83 @@ def example_function(number1: int, number2: int) -> str:
 
     return f"{number1} is greater than or equal to {number2}"
 
-# Holidays to calculate the number of holidays
-import holidays
-# Pandas for table management
-import pandas as pd
-# Numpy for data wrangling
-import numpy as np
+
 # Itertools for functions creating iterators for efficient looping
 import itertools
 
+# Optional for explicit type hint
+from typing import Optional
+
+# Holidays to calculate the number of holidays
+import holidays
+
+# Numpy for data wrangling
+import numpy as np
+
+# Pandas for table management
+import pandas as pd
+
+
 def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
-    """
-    Parameters:
-        from_dates : List of first dates of period.
-        to_dates : List of last dates of period.
+    """Counts the number of workdays between pairs of dates in given series.
+
+    This function calculates the number of workdays for each pair of start and end dates
+    provided in the `from_dates` and `to_dates` series. It handles date ranges spanning multiple
+    years and excludes weekends and holidays specific to Norway. The function dynamically
+    fetches Norwegian holidays for the relevant years based on the input dates.
+
+    Args:
+        from_dates (pd.Series): A pandas Series containing the start dates of the periods.
+        to_dates (pd.Series): A pandas Series containing the end dates of the periods.
+
     Returns:
-        Returns a list of number of workdays in period from first to last date.
+        np.ndarray: An array containing the number of workdays for each date pair.
+
+    Raises:
+        ValueError: If the length of the calculated workdays list does not match the number of date pairs.
+
+    Note:
+        - The function can handle date ranges spanning multiple years.
+        - Holidays are determined based on the Norwegian calendar for each year in the date range.
     """
     # Convert the from_dates and to_dates columns to numpy arrays
     from_dates = from_dates.values
     to_dates = to_dates.values
-    # Extract the year from the from_dates array
-    year = from_dates.astype('datetime64[Y]').astype(int) + 1970
-    # Check if the year is the same in the to_dates array
-    if not np.all(year == to_dates.astype('datetime64[Y]').astype(int) + 1970):
-        # If the year is not the same, raise an error
-        raise ValueError("Function can only be applied to dates in the same year!")
-    # Check if there is more than one unique year in the array
-    if np.unique(year).size > 1:
-        # If there is more than one unique year, raise an error
-        raise ValueError("Function can only be applied to a single year!")
+
+    # Extract the year from the from_dates and to_dates arrays
+    from_years = from_dates.astype("datetime64[Y]").astype(int) + 1970
+    to_years = to_dates.astype("datetime64[Y]").astype(int) + 1970
+
+    # Find the max and min years
+    min_year = np.min(from_years)
+    max_year = np.max(to_years)
+
+    if min_year == max_year:
+        norwegian_holidays = holidays.NO(years=min_year)
+    else:
+        norwegian_holidays = holidays.NO(years=list(range(min_year, max_year + 1)))
+
+    # Convert the holiday dates to a numpy array of datetime64 objects
+    holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
 
     # Convert from_dates and to_dates to datetime64 arrays
-    from_dates = from_dates.astype('datetime64[D]')
-    to_dates = to_dates.astype('datetime64[D]')
+    from_dates = from_dates.astype("datetime64[D]")
+    to_dates = to_dates.astype("datetime64[D]")
 
     # Find the max and min dates
     min_date = np.min(from_dates)
     max_date = np.max(to_dates)
 
     # Generate a range of dates between the min and max dates
-    dates = np.arange(min_date, max_date + np.timedelta64(1, 'D'), dtype='datetime64[D]')
-
-    # Convert the holiday dates to a numpy array of datetime64 objects
-    holiday_dates = np.array(sorted(holidays.NO(years=year).keys()), dtype='datetime64[D]')
+    dates = np.arange(
+        min_date, max_date + np.timedelta64(1, "D"), dtype="datetime64[D]"
+    )
 
     # Filter the dates array to exclude holiday dates and weekends
-    workdays = dates[~np.isin(dates, holiday_dates) & ~np.isin((dates.astype('datetime64[D]').view('int64') - 4) % 7, [5, 6])]
+    workdays = dates[
+        ~np.isin(dates, holiday_dates)
+        & ~np.isin((dates.astype("datetime64[D]").view("int64") - 4) % 7, [5, 6])
+    ]
 
     # Calculate the number of workdays for each from and to date pair
     workdays_list = []
@@ -89,14 +120,16 @@ def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
 
     # Check if the length of the workdays_list is the same as the number of date pairs
     if len(workdays_list) != len(from_dates):
-        raise ValueError("Unexpected error: length of workdays_list does not match the number of date pairs.")
+        raise ValueError(
+            "Unexpected error: length of workdays_list does not match the number of date pairs."
+        )
 
     return np.array(workdays_list)
 
+
 def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple:
-    """
-    Given a year and a quarter, this function calculates the
-    first and last dates of the specified quarter using pandas.
+    """Given a year and a quarter, this function calculates the first and last dates of the specified quarter using pandas.
+
     Args:
         year_str (str): The year as a string.
         quarter_str (str): The quarter as a string.
@@ -119,50 +152,16 @@ def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple:
     end_date = start_date + pd.offsets.QuarterEnd()
 
     # Format dates as strings in 'YYYY-MM-DD' format
-    start_date_str = start_date.strftime('%Y-%m-%d')
-    end_date_str = end_date.strftime('%Y-%m-%d')
+    start_date_str = start_date.strftime("%Y-%m-%d")
+    end_date_str = end_date.strftime("%Y-%m-%d")
 
     return start_date_str, end_date_str
 
-def format_invalids(df: pd.DataFrame,
-                    col_name: str,
-                    invalid: list,
-                    label: str) -> None:
-    """
-    Modify a column in a pandas DataFrame in-place by replacing values
-    specified in the 'invalid' list with a given 'label'.
 
-    Parameters:
-    - df (pd.DataFrame): The pandas DataFrame containing the column to be modified.
-    - col_name (str): The name of the column in the DataFrame to be modified.
-    - invalid (list): List of values in the column to be replaced.
-    - label (str): The value to replace the invalid entries with.
-
-    Returns:
-    None. The function modifies the DataFrame in-place.
-    """
-
-    # Identify which entries in the column are in the 'invalid' list
-    isinvalid = df[col_name].isin(invalid)
-
-    # Get a list of unique invalid codes present in the column
-    invalid_codes = list(df[col_name][isinvalid].unique())
-
-    # Print the unique invalid codes found
-    print(f"The following invalid codes can be found in {col_name}: {invalid_codes}.")
-
-    # Print the number of entries that will be changed to the label
-    print(f"Changes {len(df[col_name][isinvalid])} entries in {col_name} to '{label}'.")
-
-    # Use .loc on the DataFrame to modify the column in-place
-    df.loc[isinvalid, col_name] = label
-
-    # Print the total number of entries that have been labeled
-    print(f"There is a total of {(df[col_name] == label).sum()} entries labelled as '{label}'.")
-    
-def indicate_merge(left: pd.DataFrame(), right: pd.DataFrame(), how: str, on: list) -> pd.DataFrame:
-    """
-    Perform a merge of two DataFrames and prints a frequency table indicating the merge type for each row.
+def indicate_merge(
+    left: pd.DataFrame(), right: pd.DataFrame(), how: str, on: list
+) -> pd.DataFrame:
+    """Perform a merge of two DataFrames and prints a frequency table indicating the merge type for each row.
 
     The merge types are determined as follows (left-to-right):
     - 'one-to-zero': Rows that exist only in the left DataFrame.
@@ -187,7 +186,7 @@ def indicate_merge(left: pd.DataFrame(), right: pd.DataFrame(), how: str, on: li
     merged_df = pd.merge(left, right, how=how, on=on, indicator=True)
 
     # Convert _merge column to numpy
-    np_merge = merged_df['_merge'].to_numpy()
+    np_merge = merged_df["_merge"].to_numpy()
 
     # Identify duplicate rows in each DataFrame
     duplicated_left = left.duplicated(subset=on, keep=False)
@@ -195,28 +194,55 @@ def indicate_merge(left: pd.DataFrame(), right: pd.DataFrame(), how: str, on: li
 
     # Different treatment depending on if "on" is a single column or not
     if isinstance(on, str):
-        duplicated_from_left = merged_df[on].isin(left.loc[duplicated_left, on].drop_duplicates()).to_numpy()
-        duplicated_from_right = merged_df[on].isin(right.loc[duplicated_right, on].drop_duplicates()).to_numpy()
+        duplicated_from_left = (
+            merged_df[on]
+            .isin(left.loc[duplicated_left, on].drop_duplicates())
+            .to_numpy()
+        )
+        duplicated_from_right = (
+            merged_df[on]
+            .isin(right.loc[duplicated_right, on].drop_duplicates())
+            .to_numpy()
+        )
     else:
-        duplicated_from_left = merged_df[on].apply(tuple, axis=1).isin(left[on][duplicated_left].drop_duplicates().apply(tuple, axis=1)).to_numpy()
-        duplicated_from_right = merged_df[on].apply(tuple, axis=1).isin(right[on][duplicated_right].drop_duplicates().apply(tuple, axis=1)).to_numpy()
+        duplicated_from_left = (
+            merged_df[on]
+            .apply(tuple, axis=1)
+            .isin(left[on][duplicated_left].drop_duplicates().apply(tuple, axis=1))
+            .to_numpy()
+        )
+        duplicated_from_right = (
+            merged_df[on]
+            .apply(tuple, axis=1)
+            .isin(right[on][duplicated_right].drop_duplicates().apply(tuple, axis=1))
+            .to_numpy()
+        )
 
     # Define the conditions and choices for np.select
     conditions = [
-        (np_merge == 'left_only') & ~duplicated_from_left,
-        (np_merge == 'right_only') & ~duplicated_from_right,
-        (np_merge == 'left_only') & duplicated_from_left,
-        (np_merge == 'right_only') & duplicated_from_right,
-        (np_merge == 'both') & ~duplicated_from_left & ~duplicated_from_right,
-        (np_merge == 'both') & duplicated_from_left & ~duplicated_from_right,
-        (np_merge == 'both') & ~duplicated_from_left & duplicated_from_right,
-        (np_merge == 'both') & duplicated_from_right & duplicated_from_left
+        (np_merge == "left_only") & ~duplicated_from_left,
+        (np_merge == "right_only") & ~duplicated_from_right,
+        (np_merge == "left_only") & duplicated_from_left,
+        (np_merge == "right_only") & duplicated_from_right,
+        (np_merge == "both") & ~duplicated_from_left & ~duplicated_from_right,
+        (np_merge == "both") & duplicated_from_left & ~duplicated_from_right,
+        (np_merge == "both") & ~duplicated_from_left & duplicated_from_right,
+        (np_merge == "both") & duplicated_from_right & duplicated_from_left,
     ]
 
-    choices = ['one-to-zero', 'zero-to-one', 'many-to-zero', 'zero-to-many', 'one-to-one', 'many-to-one', 'one-to-many', 'many-to-many']
+    choices = [
+        "one-to-zero",
+        "zero-to-one",
+        "many-to-zero",
+        "zero-to-many",
+        "one-to-one",
+        "many-to-one",
+        "one-to-many",
+        "many-to-many",
+    ]
 
     # Use np.select to create new column
-    merge_type = np.select(conditions, choices, default='unknown')
+    merge_type = np.select(conditions, choices, default="unknown")
 
     # Print the frequency of each merge type
     unique, counts = np.unique(merge_type, return_counts=True)
@@ -225,15 +251,15 @@ def indicate_merge(left: pd.DataFrame(), right: pd.DataFrame(), how: str, on: li
         print(f"Number of entries of type '{i}': {j}")
 
     # Drop the _merge column and return the result
-    merged_df.drop(columns='_merge', inplace=True)
+    merged_df.drop(columns="_merge", inplace=True)
 
     return merged_df
 
-def kv_intervall(start_p, slutt_p):
-    """
-    This function generates a list of quarterly periods between two given periods.
 
-    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year 
+def kv_intervall(start_p, slutt_p):
+    """This function generates a list of quarterly periods between two given periods.
+
+    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year
     and Q is a quarter (1 to 4). The function handles cases where the start and end
     periods are in the same year or in different years.
 
@@ -260,78 +286,83 @@ def kv_intervall(start_p, slutt_p):
     intervall = []
 
     # Generate the periods
-    for i in range(start_aar4, slutt_aar4+1):
-        if (start_aar4 == slutt_aar4):
+    for i in range(start_aar4, slutt_aar4 + 1):
+        if start_aar4 == slutt_aar4:
             # If the start and end periods are in the same year
-            for j in range(start_kv, slutt_kv+1):
+            for j in range(start_kv, slutt_kv + 1):
                 intervall.append(f"{i}k{j}")
-        elif (i == start_aar4):
+        elif i == start_aar4:
             # If the current year is the start year
-            for j in range(start_kv, 4+1):
+            for j in range(start_kv, 4 + 1):
                 intervall.append(f"{i}k{j}")
-        elif (start_aar4 < i and slutt_aar4 > i):
+        elif start_aar4 < i and slutt_aar4 > i:
             # If the current year is between the start and end years
-            for j in range(1, 4+1):
+            for j in range(1, 4 + 1):
                 intervall.append(f"{i}k{j}")
-        elif (i == slutt_aar4):
+        elif i == slutt_aar4:
             # If the current year is the end year
-            for j in range(1, slutt_kv+1):
+            for j in range(1, slutt_kv + 1):
                 intervall.append(f"{i}k{j}")
 
     return intervall
+
 
 def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
     values: list[str],
-    agg_func: dict = None
+    agg_func: Optional[dict] = None,
 ) -> pd.DataFrame:
-    """
-    Compute aggregations for all combinations of columns and return a new 
-    DataFrame with these aggregations.
+    """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
 
     Parameters:
-    df : pd.DataFrame
-        The input DataFrame.
-    groups : list[str]
-        List of columns to be considered for groupings.
-    values : list[str]
-        List of columns on which the aggregation functions will be applied.
-    agg_func : dict, optional
-        Dictionary mapping columns to aggregation functions corresponding to 
-        the 'values' list.
-        Default is 'sum' for all columns in 'values'.
+        df : pd.DataFrame
+            The input DataFrame.
+        groups : list[str]
+            List of columns to be considered for groupings.
+        values : list[str]
+            List of columns on which the aggregation functions will be applied.
+        agg_func : Optional[dict], default None
+            Dictionary mapping columns to aggregation functions corresponding to
+            the 'values' list. If None, defaults to 'sum' for all columns in 'values'.
 
     Returns:
-    pd.DataFrame
-        A DataFrame containing aggregations for all combinations of 'columns'.
+        pd.DataFrame: A DataFrame containing aggregations for all combinations of 'columns'.
+
+    Raises:
+        ValueError: If any of the specified columns in 'groups' or 'values' are not present in the DataFrame.
+        ValueError: If any columns in 'values' are not numeric and no aggregation function is provided.
 
     Notes:
-    - The returned DataFrame also contains an additional column named 'level' 
-      indicating the level of grouping.
-    - Columns not used in a particular level of grouping will have a value 
-      'Total'.
+        - The returned DataFrame also contains an additional column named 'level'
+          indicating the level of grouping.
+        - Columns not used in a particular level of grouping will have a value 'Total'.
     """
-
     # All columns used from the input dataframe
     required_columns = groups + values
 
     # Check that the parameters references columns in the dataframe
     missing_columns = [col for col in required_columns if col not in df.columns]
     if missing_columns:
-        raise ValueError(f"Columns {', '.join(missing_columns)} are not present in the dataframe!")
+        raise ValueError(
+            f"Columns {', '.join(missing_columns)} are not present in the dataframe!"
+        )
 
     # Check if all columns in 'values' are numeric
-    non_numeric_cols = [col for col in values if not pd.api.types.is_numeric_dtype(df[col])]
+    non_numeric_cols = [
+        col for col in values if not pd.api.types.is_numeric_dtype(df[col])
+    ]
 
     # Copy the dataframe and limit input to columns in the parameter
     df = df[required_columns].copy()
 
     # Default aggregation: 'sum' for all 'values' columns.
     if agg_func is None and not non_numeric_cols:
-        agg_func = {col: 'sum' for col in values}
+        agg_func = {col: "sum" for col in values}
     elif agg_func is None and non_numeric_cols:
-        raise ValueError(f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!")
+        raise ValueError(
+            f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
+        )
     else:
         # Correct a format causing error in agg-function
         for col, funcs in agg_func.items():
@@ -355,33 +386,51 @@ def proc_sums(
             sum_columns = list(groups_set - subset_set)
             if sum_columns:
                 # For columns not in the current subset, fill with 'Total'.
-                sub_sum[sum_columns] = 'Total'
+                sub_sum[sum_columns] = "Total"
             # Indicate level of grouping
-            sub_sum['level'] = i
+            sub_sum["level"] = i
             # Append this subset's aggregation results to the final DataFrame.
             sum_df = pd.concat([sum_df, sub_sum], ignore_index=True)
 
     return sum_df
 
+
 def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
-    """
-    Parameters:
-        from_dates : List of first dates of period.
-        to_dates : List of last dates of period.
+    """Determines if the reference day falls between given date ranges.
+
+    This function checks if the 16th day of each month (reference day) is
+    within the range specified by the corresponding 'from_dates' and 'to_dates'.
+    It requires that both 'from_dates' and 'to_dates' are in the same year and month.
+
+    Args:
+        from_dates (pd.Series): A Series of dates representing the start of a period.
+            These dates should be in the 'YYYY-MM-DD' format.
+        to_dates (pd.Series): A Series of dates representing the end of a period.
+            These dates should also be in the 'YYYY-MM-DD' format.
+
     Returns:
-        Returns a list of booleans for if the
-        reference day is between the from_dates and to_dates.
-        The reference day is defined as the 16th of each month.
+        np.ndarray: An array of booleans. Each element corresponds to whether the
+        16th day of the month for each period is within the respective date range.
+
+    Raises:
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if
+        they are not in the same month, or if multiple years are present across the dates.
+
+    Example:
+        >>> from_dates = pd.Series(['2023-01-01', '2023-02-10'])
+        >>> to_dates = pd.Series(['2023-01-20', '2023-02-18'])
+        >>> ref_day(from_dates, to_dates)
+        array([True, True])
     """
     # Convert the from_dates and to_dates columns to numpy arrays
     from_dates = from_dates.values
     to_dates = to_dates.values
 
     # Extract the year from the from_dates array
-    year = from_dates.astype('datetime64[Y]').astype(int) + 1970
+    year = from_dates.astype("datetime64[Y]").astype(int) + 1970
 
     # Check if the year is the same in the to_dates array
-    if not np.all(year == to_dates.astype('datetime64[Y]').astype(int) + 1970):
+    if not np.all(year == to_dates.astype("datetime64[Y]").astype(int) + 1970):
         # If the year is not the same, raise an error
         raise ValueError("Function can only be applied to dates in the same year!")
 
@@ -391,15 +440,15 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
         raise ValueError("Function can only be applied to a single year!")
 
     # Extract the month from the from_dates array
-    month = from_dates.astype('datetime64[M]').astype(int) % 12 + 1
+    month = from_dates.astype("datetime64[M]").astype(int) % 12 + 1
 
     # Check if the month is the same in the to_dates array
-    if not np.all(month == to_dates.astype('datetime64[M]').astype(int) % 12 + 1):
+    if not np.all(month == to_dates.astype("datetime64[M]").astype(int) % 12 + 1):
         # If the month is not the same, raise an error
         raise ValueError("Function can only be applied to dates in the same months!")
 
     # Create a reference day for each month
-    ref_days = np.array([f"{year[0]}-{m:02d}-16" for m in month], dtype='datetime64[D]')
+    ref_days = np.array([f"{year[0]}-{m:02d}-16" for m in month], dtype="datetime64[D]")
 
     # Check if the reference day is within the range of the from_date and to_date
     result = np.logical_and(from_dates <= ref_days, ref_days <= to_dates)
@@ -407,16 +456,35 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> np.ndarray:
     # Return the result as an array of boolean values
     return result
 
+
 def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
-    """
-    Parameters:
-        from_dates : List of first dates of period.
-        to_dates : List of last dates of period.
+    """Determines if any date in each date range falls in the reference week.
+
+    This function checks if any date between the 'from_dates' and 'to_dates'
+    is within the reference week. The reference week is defined as the week
+    which includes the 16th day of each month. It requires that both
+    'from_dates' and 'to_dates' are in the same year and the same month.
+
+    Args:
+        from_dates (pd.Series): A Series of dates representing the start of a period.
+            These dates should be in the 'YYYY-MM-DD' format.
+        to_dates (pd.Series): A Series of dates representing the end of a period.
+            These dates should also be in the 'YYYY-MM-DD' format.
+
     Returns:
-        Returns a list of booleans for if any of the dates between
-        from_dates and to_dates is in the reference week. The
-        reference week is defined as the week of the 16th of
-        each month.
+        pd.Series: A Series of booleans, where each boolean corresponds to whether
+        any date in the period from 'from_dates' to 'to_dates' falls within the
+        reference week of the month.
+
+    Raises:
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if
+        they are not in the same month.
+
+    Example:
+        >>> from_dates = pd.Series(['2023-01-01', '2023-02-10'])
+        >>> to_dates = pd.Series(['2023-01-20', '2023-02-18'])
+        >>> ref_week(from_dates, to_dates)
+        pd.Series([True, True])
     """
     # Check if the year is the same in the to_dates array
     if not np.all(from_dates.dt.year == to_dates.dt.year):
@@ -429,7 +497,9 @@ def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
         raise ValueError("Function can only be applied to dates in the same months!")
 
     # Create a reference day for each month
-    ref_days = pd.to_datetime([f"{y}-{m:02d}-16" for y, m in zip(from_dates.dt.year, from_dates.dt.month)])
+    ref_days = pd.to_datetime(
+        [f"{y}-{m:02d}-16" for y, m in zip(from_dates.dt.year, from_dates.dt.month)]
+    )
 
     # Convert ref_days to a Series object to use the dt accessor
     ref_days = pd.Series(ref_days)
@@ -444,4 +514,3 @@ def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
 
     # Return the result as a series of boolean values
     return result
-
