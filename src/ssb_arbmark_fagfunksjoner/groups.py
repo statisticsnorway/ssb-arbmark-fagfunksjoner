@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-def alder_grp(alder: pd.Series, labels=True) -> pd.Series:
+def alder_grp(alder: pd.Series, labels: bool = True) -> pd.Series:
     """Categorize a pandas Series of person ages into predefined groups.
 
     Parameters:
@@ -66,7 +66,7 @@ def alder_grp(alder: pd.Series, labels=True) -> pd.Series:
     return np.select(conditions, results, default=".")
 
 
-def nace_sn07_47grp(nace_sn07: pd.Series, labels=True) -> pd.Series:
+def nace_sn07_47grp(nace_sn07: pd.Series, labels: bool = True) -> pd.Series:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -209,7 +209,7 @@ def nace_sn07_47grp(nace_sn07: pd.Series, labels=True) -> pd.Series:
         return np.select(conditions, list(groups.keys()), default="99")
 
 
-def nace_sn07_17grp(nace_sn07: pd.Series, labels=True) -> pd.Series:
+def nace_sn07_17grp(nace_sn07: pd.Series, labels: bool = True) -> pd.Series:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -302,7 +302,9 @@ def nace_sn07_17grp(nace_sn07: pd.Series, labels=True) -> pd.Series:
         return np.select(conditions, list(groups.keys()), default="999")
 
 
-def sektor2_grp(sektor: pd.Series, undersektor: pd.Series, labels=True) -> pd.Series:
+def sektor2_grp(
+    sektor: pd.Series, undersektor: pd.Series, labels: bool = True
+) -> pd.Series:
     """Categorize a pandas Series of sectors and subsectors into predefined groups.
 
     Parameters:
@@ -340,7 +342,7 @@ def sektor2_grp(sektor: pd.Series, undersektor: pd.Series, labels=True) -> pd.Se
         return np.select(conditions, list(groups.keys()), default="999")
 
 
-def virk_str_8grp(ansatte: pd.Series, labels=True) -> pd.Series:
+def virk_str_8grp(ansatte: pd.Series, labels: bool = True) -> pd.Series:
     """Categorize a pandas Series of employee counts into predefined groups.
 
     Parameters:
