@@ -7,16 +7,16 @@ import numpy as np
 import pandas as pd
 
 
-def alder_grp(alder: pd.Series, labels: bool = True) -> pd.Series:
+def alder_grp(alder: pd.Series, display: str = "label") -> pd.Series:
     """Categorize a pandas Series of person ages into predefined groups.
 
     Parameters:
         alder (pd.Series): A pandas Series containing the person ages.
-        labels (bool, optional): If True, returns group labels; if False, returns keys;
-                                 if 'combined', returns a combination of keys and labels.
+        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
+                                 for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original person ages are replaced by group labels or keys.
+        pd.Series: A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
     """
     # Define the conditions for each group
     conditions = [
@@ -54,24 +54,25 @@ def alder_grp(alder: pd.Series, labels: bool = True) -> pd.Series:
         "14": "69 år",
     }
 
-    # Determine the format of the results based on the labels parameter
-    if labels == "combined":
-        results = [f"{key} {value}" for key, value in groups.items()]
-    elif labels:
+    # Determine the format of the results based on the display parameter
+    if display == "label":
         results = list(groups.values())
-    else:
+    elif display == "number":
         results = list(groups.keys())
+    else:
+        results = [f"{key} {value}" for key, value in groups.items()]
 
     # Apply the selected format to the series
     return np.select(conditions, results, default=".")
 
 
-def nace_sn07_47grp(nace_sn07: pd.Series, labels: bool = True) -> pd.Series:
+def nace_sn07_47grp(nace_sn07: pd.Series, display: str = "label") -> pd.Series:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
         nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        labels (bool, optional): Whether to return group labels or keys. Default is True.
+        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
+                                 for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
@@ -200,21 +201,22 @@ def nace_sn07_47grp(nace_sn07: pd.Series, labels: bool = True) -> pd.Series:
     }
 
     # Determine and apply the selected format based on the labels parameter
-    if labels == "combined":
+    if display == "label":
+        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+    elif display == "number":
+        return np.select(conditions, list(groups.keys()), default="99")
+    else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         return np.select(conditions, combined_labels, default="99 Uoppgitt")
-    elif labels:
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
-    else:
-        return np.select(conditions, list(groups.keys()), default="99")
 
 
-def nace_sn07_17grp(nace_sn07: pd.Series, labels: bool = True) -> pd.Series:
+def nace_sn07_17grp(nace_sn07: pd.Series, display: str = "label") -> pd.Series:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
         nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        labels (bool, optional): Whether to return group labels or keys. Default is True.
+        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
+                                 for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
@@ -293,24 +295,25 @@ def nace_sn07_17grp(nace_sn07: pd.Series, labels: bool = True) -> pd.Series:
     }
 
     # Determine and apply the selected format based on the labels parameter
-    if labels == "combined":
+    if display == "label":
+        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+    elif display == "number":
+        return np.select(conditions, list(groups.keys()), default="999")
+    else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         return np.select(conditions, combined_labels, default="999 Uoppgitt")
-    elif labels:
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
-    else:
-        return np.select(conditions, list(groups.keys()), default="999")
 
 
 def sektor2_grp(
-    sektor: pd.Series, undersektor: pd.Series, labels: bool = True
+    sektor: pd.Series, undersektor: pd.Series, display: str = "label"
 ) -> pd.Series:
     """Categorize a pandas Series of sectors and subsectors into predefined groups.
 
     Parameters:
         sektor (pd.Series): A pandas Series containing the sector codes.
         undersektor (pd.Series): A pandas Series containing the subsector codes.
-        labels (bool, optional): Whether to return group labels or keys. Default is True.
+        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
+                                 for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original sector and subsectors are replaced by group labels or keys.
@@ -333,21 +336,22 @@ def sektor2_grp(
     }
 
     # Determine and apply the selected format based on the labels parameter
-    if labels == "combined":
+    if display == "label":
+        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+    elif display == "number":
+        return np.select(conditions, list(groups.keys()), default="999")
+    else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         return np.select(conditions, combined_labels, default="999 Uoppgitt")
-    elif labels:
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
-    else:
-        return np.select(conditions, list(groups.keys()), default="999")
 
 
-def virk_str_8grp(ansatte: pd.Series, labels: bool = True) -> pd.Series:
+def virk_str_8grp(ansatte: pd.Series, display: str = "label") -> pd.Series:
     """Categorize a pandas Series of employee counts into predefined groups.
 
     Parameters:
         ansatte (pd.Series): A pandas Series containing the employee counts.
-        labels (bool, optional): Whether to return group labels or keys. Default is True.
+        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
+                                 for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original employee counts are replaced by group labels or keys.
@@ -377,10 +381,10 @@ def virk_str_8grp(ansatte: pd.Series, labels: bool = True) -> pd.Series:
     }
 
     # Determine and apply the selected format based on the labels parameter
-    if labels == "combined":
+    if display == "label":
+        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+    elif display == "number":
+        return np.select(conditions, list(groups.keys()), default="99")
+    else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         return np.select(conditions, combined_labels, default="99 Uoppgitt")
-    elif labels:
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
-    else:
-        return np.select(conditions, list(groups.keys()), default="99")
