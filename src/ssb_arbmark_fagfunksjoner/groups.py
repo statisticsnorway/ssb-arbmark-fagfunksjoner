@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-def alder_grp(alder: pd.Series, display: str = "label") -> pd.Series:
+def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
     """Categorize a pandas Series of person ages into predefined groups.
 
     Parameters:
@@ -66,7 +66,9 @@ def alder_grp(alder: pd.Series, display: str = "label") -> pd.Series:
     return np.select(conditions, results, default=".")
 
 
-def nace_sn07_47grp(nace_sn07: pd.Series, display: str = "label") -> pd.Series:
+def nace_sn07_47grp(
+    nace_sn07: pd.Series[str], display: str = "label"
+) -> pd.Series[str]:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -210,7 +212,9 @@ def nace_sn07_47grp(nace_sn07: pd.Series, display: str = "label") -> pd.Series:
         return np.select(conditions, combined_labels, default="99 Uoppgitt")
 
 
-def nace_sn07_17grp(nace_sn07: pd.Series, display: str = "label") -> pd.Series:
+def nace_sn07_17grp(
+    nace_sn07: pd.Series[str], display: str = "label"
+) -> pd.Series[str]:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -305,8 +309,8 @@ def nace_sn07_17grp(nace_sn07: pd.Series, display: str = "label") -> pd.Series:
 
 
 def sektor2_grp(
-    sektor: pd.Series, undersektor: pd.Series, display: str = "label"
-) -> pd.Series:
+    sektor: pd.Series[str], undersektor: pd.Series[str], display: str = "label"
+) -> pd.Series[str]:
     """Categorize a pandas Series of sectors and subsectors into predefined groups.
 
     Parameters:
@@ -345,7 +349,7 @@ def sektor2_grp(
         return np.select(conditions, combined_labels, default="999 Uoppgitt")
 
 
-def virk_str_8grp(ansatte: pd.Series, display: str = "label") -> pd.Series:
+def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[str]:
     """Categorize a pandas Series of employee counts into predefined groups.
 
     Parameters:
