@@ -12,14 +12,14 @@ import itertools
 # Optional for explicit type hint
 from typing import Optional
 
-# Holidays to calculate the number of holidays
-import holidays
-
 # Numpy for data wrangling
 import numpy as np
 
 # Pandas for table management
 import pandas as pd
+
+# Holidays to calculate the number of holidays
+from holidays import Norway
 
 
 def count_workdays(
@@ -59,9 +59,9 @@ def count_workdays(
     max_year = np.max(to_years)
 
     if min_year == max_year:
-        norwegian_holidays = holidays.Norway(years=min_year)
+        norwegian_holidays = Norway(years=min_year)
     else:
-        norwegian_holidays = holidays.Norway(years=range(min_year, max_year + 1))
+        norwegian_holidays = Norway(years=range(min_year, max_year + 1))
 
     # Convert the holiday dates to a numpy array of datetime64 objects
     holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
