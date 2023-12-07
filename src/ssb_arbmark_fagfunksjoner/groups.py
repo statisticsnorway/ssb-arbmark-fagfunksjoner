@@ -56,9 +56,9 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
 
     # Determine the format of the results based on the display parameter
     if display == "label":
-        results = list(groups.values())
+        results = [str(value) for value in groups.values()]
     elif display == "number":
-        results = list(groups.keys())
+        results = [str(key) for key in groups.keys()]
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
 
@@ -204,13 +204,16 @@ def nace_sn07_47grp(
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = [str(value) for value in groups.values()]
+        default_code = "Uoppgitt"
     elif display == "number":
-        results = np.select(conditions, list(groups.keys()), default="99")
+        results = [str(key) for key in groups.keys()]
+        default_code = "99"
     else:
-        combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        results = np.select(conditions, combined_labels, default="99 Uoppgitt")
-    return pd.Series(results, dtype="string")
+        results = [f"{key} {value}" for key, value in groups.items()]
+        default_code = "99 Uoppgitt"
+    grouped = np.select(conditions, results, default=default_code)
+    return pd.Series(grouped, dtype="string")
 
 
 def nace_sn07_17grp(
@@ -301,13 +304,16 @@ def nace_sn07_17grp(
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = [str(value) for value in groups.values()]
+        default_code = "Uoppgitt"
     elif display == "number":
-        results = np.select(conditions, list(groups.keys()), default="999")
+        results = [str(key) for key in groups.keys()]
+        default_code = "999"
     else:
-        combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        results = np.select(conditions, combined_labels, default="999 Uoppgitt")
-    return pd.Series(results, dtype="string")
+        results = [f"{key} {value}" for key, value in groups.items()]
+        default_code = "999 Uoppgitt"
+    grouped = np.select(conditions, results, default=default_code)
+    return pd.Series(grouped, dtype="string")
 
 
 def sektor2_grp(
@@ -343,13 +349,16 @@ def sektor2_grp(
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = [str(value) for value in groups.values()]
+        default_code = "Uoppgitt"
     elif display == "number":
-        results = np.select(conditions, list(groups.keys()), default="999")
+        results = [str(key) for key in groups.keys()]
+        default_code = "999"
     else:
-        combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        results = np.select(conditions, combined_labels, default="999 Uoppgitt")
-    return pd.Series(results, dtype="string")
+        results = [f"{key} {value}" for key, value in groups.items()]
+        default_code = "999 Uoppgitt"
+    grouped = np.select(conditions, results, default=default_code)
+    return pd.Series(grouped, dtype="string")
 
 
 def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[str]:
@@ -389,10 +398,13 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = [str(value) for value in groups.values()]
+        default_code = "Uoppgitt"
     elif display == "number":
-        results = np.select(conditions, list(groups.keys()), default="99")
+        results = [str(key) for key in groups.keys()]
+        default_code = "99"
     else:
-        combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        results = np.select(conditions, combined_labels, default="99 Uoppgitt")
-    return pd.Series(results, dtype="string")
+        results = [f"{key} {value}" for key, value in groups.items()]
+        default_code = "99 Uoppgitt"
+    grouped = np.select(conditions, results, default=default_code)
+    return pd.Series(grouped, dtype="string")
