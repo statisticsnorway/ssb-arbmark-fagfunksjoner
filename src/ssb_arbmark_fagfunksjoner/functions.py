@@ -47,12 +47,12 @@ def count_workdays(
         - Holidays are determined based on the Norwegian calendar for each year in the date range.
     """
     # Convert the from_dates and to_dates columns to numpy arrays
-    from_dates = from_dates.values
-    to_dates = to_dates.values
+    from_dates_np = from_dates.to_numpy()
+    to_dates_np = to_dates.to_numpy()
 
     # Extract the year from the from_dates and to_dates arrays
-    from_years = from_dates.astype("datetime64[Y]").astype(int) + 1970
-    to_years = to_dates.astype("datetime64[Y]").astype(int) + 1970
+    from_years = from_dates_np.astype("datetime64[Y]").astype(int) + 1970
+    to_years = to_dates_np.astype("datetime64[Y]").astype(int) + 1970
 
     # Find the max and min years
     min_year = np.min(from_years)
@@ -67,12 +67,12 @@ def count_workdays(
     holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
 
     # Convert from_dates and to_dates to datetime64 arrays
-    from_dates = from_dates.astype("datetime64[D]")
-    to_dates = to_dates.astype("datetime64[D]")
+    from_dates_d = from_dates_np.astype("datetime64[D]")
+    to_dates_d = to_dates_np.astype("datetime64[D]")
 
     # Find the max and min dates
-    min_date = np.min(from_dates)
-    max_date = np.max(to_dates)
+    min_date = np.min(from_dates_d)
+    max_date = np.max(to_dates_d)
 
     # Generate a range of dates between the min and max dates
     dates = np.arange(
@@ -87,7 +87,7 @@ def count_workdays(
 
     # Calculate the number of workdays for each from and to date pair
     workdays_list = []
-    for from_date, to_date in zip(from_dates, to_dates):
+    for from_date, to_date in zip(from_dates_d, to_dates_d):
         workdays_in_range = workdays[(workdays >= from_date) & (workdays <= to_date)]
         workdays_list.append(len(workdays_in_range))
 
