@@ -232,7 +232,7 @@ def indicate_merge(
     return merged_df
 
 
-def kv_intervall(start_p, slutt_p):
+def kv_intervall(start_p, slutt_p) -> list:
     """This function generates a list of quarterly periods between two given periods.
 
     The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year

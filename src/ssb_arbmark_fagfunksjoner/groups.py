@@ -63,7 +63,7 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
         results = [f"{key} {value}" for key, value in groups.items()]
 
     # Apply the selected format to the series
-    return np.select(conditions, results, default=".")
+    return pd.Series(np.select(conditions, results, default="."), dtype=str)
 
 
 def nace_sn07_47grp(
@@ -204,12 +204,13 @@ def nace_sn07_47grp(
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
     elif display == "number":
-        return np.select(conditions, list(groups.keys()), default="99")
+        results = np.select(conditions, list(groups.keys()), default="99")
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        return np.select(conditions, combined_labels, default="99 Uoppgitt")
+        results = np.select(conditions, combined_labels, default="99 Uoppgitt")
+    return pd.Series(results, dtype=str)
 
 
 def nace_sn07_17grp(
@@ -300,12 +301,13 @@ def nace_sn07_17grp(
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
     elif display == "number":
-        return np.select(conditions, list(groups.keys()), default="999")
+        results = np.select(conditions, list(groups.keys()), default="999")
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        return np.select(conditions, combined_labels, default="999 Uoppgitt")
+        results = np.select(conditions, combined_labels, default="999 Uoppgitt")
+    return pd.Series(results, dtype=str)
 
 
 def sektor2_grp(
@@ -341,12 +343,13 @@ def sektor2_grp(
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
     elif display == "number":
-        return np.select(conditions, list(groups.keys()), default="999")
+        results = np.select(conditions, list(groups.keys()), default="999")
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        return np.select(conditions, combined_labels, default="999 Uoppgitt")
+        results = np.select(conditions, combined_labels, default="999 Uoppgitt")
+    return pd.Series(results, dtype=str)
 
 
 def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[str]:
@@ -386,9 +389,10 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
 
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
-        return np.select(conditions, list(groups.values()), default="Uoppgitt")
+        results = np.select(conditions, list(groups.values()), default="Uoppgitt")
     elif display == "number":
-        return np.select(conditions, list(groups.keys()), default="99")
+        results = np.select(conditions, list(groups.keys()), default="99")
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
-        return np.select(conditions, combined_labels, default="99 Uoppgitt")
+        results = np.select(conditions, combined_labels, default="99 Uoppgitt")
+    return pd.Series(results, dtype=str)
