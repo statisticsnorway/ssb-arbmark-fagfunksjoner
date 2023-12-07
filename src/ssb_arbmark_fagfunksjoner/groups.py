@@ -63,9 +63,7 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
         results = [f"{key} {value}" for key, value in groups.items()]
 
     # Apply the selected format to the series
-    return pd.Series(
-        np.select(conditions, np.array(results), default="."), dtype="string"
-    )
+    return pd.Series(np.select(conditions, results, default="."), dtype="string")
 
 
 def nace_sn07_47grp(
@@ -216,7 +214,7 @@ def nace_sn07_47grp(
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "99 Uoppgitt"
-    grouped = np.select(conditions, np.array(results), default=default_code)
+    grouped = np.select(conditions, results, default=default_code)
     return pd.Series(grouped, dtype="string")
 
 
@@ -316,7 +314,7 @@ def nace_sn07_17grp(
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Uoppgitt"
-    grouped = np.select(conditions, np.array(results), default=default_code)
+    grouped = np.select(conditions, results, default=default_code)
     return pd.Series(grouped, dtype="string")
 
 
@@ -361,7 +359,7 @@ def sektor2_grp(
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Uoppgitt"
-    grouped = np.select(conditions, np.array(results), default=default_code)
+    grouped = np.select(conditions, results, default=default_code)
     return pd.Series(grouped, dtype="string")
 
 
@@ -410,5 +408,5 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "99 Uoppgitt"
-    grouped = np.select(conditions, np.array(results), default=default_code)
+    grouped = np.select(conditions, results, default=default_code)
     return pd.Series(grouped, dtype="string")
