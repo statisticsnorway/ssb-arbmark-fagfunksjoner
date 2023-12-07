@@ -100,7 +100,7 @@ def count_workdays(
     return pd.Series(workdays_list, dtype="Int64")
 
 
-def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[int, int]:
+def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[str, str]:
     """Given a year and a quarter, this function calculates the first and last dates of the specified quarter using pandas.
 
     Args:
@@ -128,7 +128,7 @@ def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[int, int]:
     start_date_str = start_date.strftime("%Y-%m-%d")
     end_date_str = end_date.strftime("%Y-%m-%d")
 
-    return tuple(start_date_str, end_date_str)
+    return start_date_str, end_date_str
 
 
 def indicate_merge(
