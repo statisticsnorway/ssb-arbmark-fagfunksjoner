@@ -9,8 +9,10 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 # Itertools for functions creating iterators for efficient looping
 import itertools
 
-# Optional for explicit type hint
+# Literal, Optional, Union and List for type hints
+from typing import Literal
 from typing import Optional
+from typing import Union
 
 # Numpy for data wrangling
 import numpy as np
@@ -132,7 +134,10 @@ def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[str, str]:
 
 
 def indicate_merge(
-    left: pd.DataFrame, right: pd.DataFrame, how: str, on: list[str]
+    left: pd.DataFrame,
+    right: pd.DataFrame,
+    how: Literal["left", "right", "outer", "inner", "cross"],
+    on: Union[str, list[str]],
 ) -> pd.DataFrame:
     """Perform a merge of two DataFrames and prints a frequency table indicating the merge type for each row.
 
