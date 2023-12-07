@@ -132,7 +132,7 @@ def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[str, str]:
 
 
 def indicate_merge(
-    left: pd.DataFrame(), right: pd.DataFrame(), how: str, on: list
+    left: pd.DataFrame, right: pd.DataFrame, how: str, on: list[str]
 ) -> pd.DataFrame:
     """Perform a merge of two DataFrames and prints a frequency table indicating the merge type for each row.
 
@@ -193,14 +193,26 @@ def indicate_merge(
 
     # Define the conditions and choices for np.select
     conditions = [
-        (np_merge == "left_only") & ~duplicated_from_left,
-        (np_merge == "right_only") & ~duplicated_from_right,
-        (np_merge == "left_only") & duplicated_from_left,
-        (np_merge == "right_only") & duplicated_from_right,
-        (np_merge == "both") & ~duplicated_from_left & ~duplicated_from_right,
-        (np_merge == "both") & duplicated_from_left & ~duplicated_from_right,
-        (np_merge == "both") & ~duplicated_from_left & duplicated_from_right,
-        (np_merge == "both") & duplicated_from_right & duplicated_from_left,
+        np.logical_and(np_merge == "left_only", ~duplicated_from_left),
+        np.logical_and(np_merge == "right_only", ~duplicated_from_right),
+        np.logical_and(np_merge == "left_only", duplicated_from_left),
+        np.logical_and(np_merge == "right_only", duplicated_from_right),
+        np.logical_and(
+            np_merge == "both",
+            np.logical_and(~duplicated_from_left, ~duplicated_from_right),
+        ),
+        np.logical_and(
+            np_merge == "both",
+            np.logical_and(duplicated_from_left, ~duplicated_from_right),
+        ),
+        np.logical_and(
+            np_merge == "both",
+            np.logical_and(~duplicated_from_left, duplicated_from_right),
+        ),
+        np.logical_and(
+            np_merge == "both",
+            np.logical_and(duplicated_from_right, duplicated_from_left),
+        ),
     ]
 
     choices = [
