@@ -8,6 +8,7 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
 # Itertools for functions creating iterators for efficient looping
 import itertools
+from datetime import datetime
 
 # Optional for explicit type hint
 from typing import Optional
@@ -22,7 +23,9 @@ import numpy as np
 import pandas as pd
 
 
-def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series[int]:
+def count_workdays(
+    from_dates: pd.Series["datetime"], to_dates: pd.Series[datetime]
+) -> pd.Series[int]:
     """Counts the number of workdays between pairs of dates in given series.
 
     This function calculates the number of workdays for each pair of start and end dates
@@ -366,7 +369,9 @@ def proc_sums(
     return sum_df
 
 
-def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series[bool]:
+def ref_day(
+    from_dates: pd.Series[pd.Timestamp], to_dates: pd.Series[pd.Timestamp]
+) -> pd.Series[bool]:
     """Determines if the reference day falls between given date ranges.
 
     This function checks if the 16th day of each month (reference day) is
@@ -428,7 +433,9 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series[bool]:
     return pd.Series(result, dtype="boolean")
 
 
-def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series[bool]:
+def ref_week(
+    from_dates: pd.Series[pd.datetime], to_dates: pd.Series[pd.datetime]
+) -> pd.Series[bool]:
     """Determines if any date in each date range falls in the reference week.
 
     This function checks if any date between the 'from_dates' and 'to_dates'
