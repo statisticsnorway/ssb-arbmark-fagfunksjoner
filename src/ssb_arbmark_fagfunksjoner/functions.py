@@ -18,8 +18,8 @@ import numpy as np
 # Pandas for table management
 import pandas as pd
 
-# Holidays to calculate the number of holidays
-from holidays import Norway
+# Holidays in Norway
+from holidays import NO
 
 
 def count_workdays(
@@ -59,9 +59,9 @@ def count_workdays(
     max_year = np.max(to_years)
 
     if min_year == max_year:
-        norwegian_holidays = Norway(years=min_year)
+        norwegian_holidays = NO(years=min_year)
     else:
-        norwegian_holidays = Norway(years=range(min_year, max_year + 1))
+        norwegian_holidays = NO(years=range(min_year, max_year + 1))
 
     # Convert the holiday dates to a numpy array of datetime64 objects
     holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
