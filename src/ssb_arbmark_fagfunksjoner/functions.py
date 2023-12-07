@@ -10,6 +10,7 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 import itertools
 
 # Type hints
+from typing import Any
 from typing import Callable
 from typing import Literal
 from typing import Optional
@@ -304,7 +305,7 @@ def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
     values: list[str],
-    agg_func: Optional[dict[str, Callable]] = None,
+    agg_func: Optional[dict[str, Callable[..., Any]]] = None,
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
 
@@ -350,18 +351,18 @@ def proc_sums(
     df = df[required_columns].copy()
 
     # Default aggregation: 'sum' for all 'values' columns.
-    if agg_func is None:
+    if agg_func is not None:
+        for col, funcs in list(agg_func.items()):
+            if isinstance(funcs, list) and len(funcs) == 1:
+                # Directly assign the single function instead of the list
+                agg_func[col] = funcs[0]
+    elif agg_func is None:
         if not non_numeric_cols:
             agg_func = {col: np.sum for col in values}
         else:
             raise ValueError(
                 f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
             )
-    else:
-        # Correct a format causing error in agg-function
-        for col, funcs in agg_func.items():
-            if isinstance(funcs, list) and len(funcs) == 1:
-                agg_func[col] = funcs[0]
 
     # Initialize empty datframe
     sum_df = pd.DataFrame()
