@@ -11,7 +11,6 @@ import itertools
 
 # Type hints
 from typing import Any
-from typing import Callable
 from typing import Literal
 from typing import Optional
 from typing import Union
@@ -305,7 +304,7 @@ def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
     values: list[str],
-    agg_func: Optional[dict[str, Callable[..., Any]]] = None,
+    agg_func: Optional[dict[str, Union[Any, list[Any]]]] = None,
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
 
@@ -352,9 +351,10 @@ def proc_sums(
 
     if agg_func is not None:
         for col, funcs in agg_func.items():
-            if len(list(funcs)) == 1:
-                # Directly assign the single function instead of the list
-                agg_func[col] = str(next(iter(funcs)))
+            # Check if funcs is a list
+            if isinstance(funcs, list) and len(funcs) == 1:
+                # If funcs is a list with exactly one item, extract that item
+                agg_func[col] = funcs[0]
     elif agg_func is None:
         if not non_numeric_cols:
             # Default aggregation: 'sum' for all 'values' columns.
