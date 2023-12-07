@@ -63,7 +63,7 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
         results = [f"{key} {value}" for key, value in groups.items()]
 
     # Apply the selected format to the series
-    return pd.Series(np.select(conditions, results, default="."), dtype=str)
+    return pd.Series(np.select(conditions, results, default="."), dtype="string")
 
 
 def nace_sn07_47grp(
@@ -210,7 +210,7 @@ def nace_sn07_47grp(
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         results = np.select(conditions, combined_labels, default="99 Uoppgitt")
-    return pd.Series(results, dtype=str)
+    return pd.Series(results, dtype="string")
 
 
 def nace_sn07_17grp(
@@ -237,7 +237,7 @@ def nace_sn07_17grp(
         print(
             f"Warning: There are {n_unique_grp} unique industry divisions on 2-number level. The function first groups the input into the 47 groups standard."
         )
-        nace_str2 = nace_sn07_47grp(nace_sn07, labels=False)
+        nace_str2 = nace_sn07_47grp(nace_sn07, display="number")
 
     # Define the conditions for each group
     conditions = [
@@ -307,7 +307,7 @@ def nace_sn07_17grp(
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         results = np.select(conditions, combined_labels, default="999 Uoppgitt")
-    return pd.Series(results, dtype=str)
+    return pd.Series(results, dtype="string")
 
 
 def sektor2_grp(
@@ -349,7 +349,7 @@ def sektor2_grp(
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         results = np.select(conditions, combined_labels, default="999 Uoppgitt")
-    return pd.Series(results, dtype=str)
+    return pd.Series(results, dtype="string")
 
 
 def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[str]:
@@ -395,4 +395,4 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
     else:
         combined_labels = [f"{key} {value}" for key, value in groups.items()]
         results = np.select(conditions, combined_labels, default="99 Uoppgitt")
-    return pd.Series(results, dtype=str)
+    return pd.Series(results, dtype="string")

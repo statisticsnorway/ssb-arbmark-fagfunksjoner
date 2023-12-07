@@ -9,9 +9,6 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 # Itertools for functions creating iterators for efficient looping
 import itertools
 
-# Datetime to handle datetime objects inside Series
-from datetime import datetime
-
 # Optional for explicit type hint
 from typing import Optional
 
@@ -25,9 +22,7 @@ import numpy as np
 import pandas as pd
 
 
-def count_workdays(
-    from_dates: pd.Series[datetime], to_dates: pd.Series[datetime]
-) -> pd.Series[int]:
+def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series[int]:
     """Counts the number of workdays between pairs of dates in given series.
 
     This function calculates the number of workdays for each pair of start and end dates
@@ -100,7 +95,7 @@ def count_workdays(
             "Unexpected error: length of workdays_list does not match the number of date pairs."
         )
 
-    return pd.Series(workdays_list, dtype=int)
+    return pd.Series(workdays_list, dtype="Int64")
 
 
 def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[int, int]:
@@ -371,9 +366,7 @@ def proc_sums(
     return sum_df
 
 
-def ref_day(
-    from_dates: pd.Series[datetime], to_dates: pd.Series[datetime]
-) -> pd.Series[bool]:
+def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series[bool]:
     """Determines if the reference day falls between given date ranges.
 
     This function checks if the 16th day of each month (reference day) is
@@ -432,12 +425,10 @@ def ref_day(
     result = np.logical_and(from_dates <= ref_days, ref_days <= to_dates)
 
     # Return the result as an array of boolean values
-    return pd.Series(result, dtype=bool)
+    return pd.Series(result, dtype="boolean")
 
 
-def ref_week(
-    from_dates: pd.Series[datetime], to_dates: pd.Series[datetime]
-) -> pd.Series[bool]:
+def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series[bool]:
     """Determines if any date in each date range falls in the reference week.
 
     This function checks if any date between the 'from_dates' and 'to_dates'
@@ -493,4 +484,4 @@ def ref_week(
     result = np.logical_and(from_weeks <= ref_weeks, ref_weeks <= to_weeks)
 
     # Return the result as a series of boolean values
-    return pd.Series(result, dtype=bool)
+    return pd.Series(result, dtype="boolean")
