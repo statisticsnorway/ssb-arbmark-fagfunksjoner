@@ -31,9 +31,9 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
         np.logical_and(alder >= 55, alder <= 59),  # 55-59 år
         np.logical_and(alder >= 60, alder <= 64),  # 60-64 år
         np.logical_or(alder == 65, alder == 66),  # 65-66 år
-        np.ndarray(alder == 67),  # 67 år
-        np.ndarray(alder == 68),  # 68 år
-        np.ndarray(alder == 69),  # 69 år
+        (alder == 67).to_numpy(),  # 67 år
+        (alder == 68).to_numpy(),  # 68 år
+        (alder == 69).to_numpy(),  # 69 år
     ]
 
     # Define the group labels with string keys
@@ -64,7 +64,7 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
 
     # Apply the selected format to the series
     return pd.Series(
-        np.select(conditions, np.ndarray(results), default="."), dtype="string"
+        np.select(conditions, np.array(results), default="."), dtype="string"
     )
 
 
@@ -102,57 +102,57 @@ def nace_sn07_47grp(
         np.isin(nace2, ["10", "11", "12"]),  # Næringsmiddel-,drikkev.,tobakkind.
         np.isin(nace2, ["13", "14", "15"]),  # Tekstil-,bekledn.-,lærvareind.
         np.isin(nace2, ["16", "17"]),  # Trelast- og trevareind.
-        np.ndarray(nace2 == "18"),  # Trykking, grafisk industri
+        (nace2 == "18").to_numpy(),  # Trykking, grafisk industri
         np.isin(
             nace2, ["19", "20", "21"]
         ),  # Petrolieum, kull, kjemisk og farmasøytisk industri
         np.isin(nace2, ["22", "23"]),  # Gummivare-, plast-,mineralproduktind.
-        np.ndarray(nace2 == "24"),  # Metallindustri
-        np.ndarray(nace2 == "25"),  # Metallvareindustri
+        (nace2 == "24").to_numpy(),  # Metallindustri
+        (nace2 == "25").to_numpy(),  # Metallvareindustri
         np.isin(nace2, ["26", "27"]),  # Data- og elektronisk industri
-        nace2 == "28",  # Maskinindustri
+        (nace2 == "28").to_numpy(),  # Maskinindustri
         np.logical_or(
             np.isin(nace2, ["29", "33"]), np.logical_and(nace3 >= "302", nace3 <= "309")
         ),  # Transportmidelindustri, utenom 30.1; Produksjon av kjøretøy og tilhengere, unntatt motorvogner og motorsykler
-        np.ndarray(
+        (
             nace3 == "301"
-        ),  # Produksjon av skip og båter, inkl. oljeplattformer
+        ).to_numpy(),  # Produksjon av skip og båter, inkl. oljeplattformer
         np.isin(nace2, ["31", "32"]),  # Møbel og annen industri
-        np.ndarray([nace2 == "35"]),  # Elekstrisitet, gass, damp, varmtvann
+        (nace2 == "35").to_numpy(),  # Elekstrisitet, gass, damp, varmtvann
         np.logical_and(nace2 >= "36", nace2 <= "39"),  # Vann, avløp og renovasjon
         np.isin(nace2, ["41", "42", "43"]),  # Bygge- og anleggsvirksomhet
-        np.ndarray(nace2 == "45"),  # Motorvognrep og -handel
-        np.ndarray(nace2 == "46"),  # Agentur- og engroshandel
-        np.ndarray(nace2 == "47"),  # Detaljhandel, unntatt motorvogner
-        np.ndarray(nace2 == "49"),  # Landtransport og rørtransport
-        np.ndarray(nace2 == "50"),  # Sjøfart
-        np.ndarray(nace2 == "51"),  # Lufttransport
-        np.ndarray(nace2 == "52"),  # Lagring og tjenester tilknyttet transport
-        np.ndarray(nace2 == "53"),  # Posttjenester
-        np.ndarray(nace2 == "55"),  # Overnattingsvirksomhet
-        np.ndarray(nace2 == "56"),  # Serveringsvirksomhet
+        (nace2 == "45").to_numpy(),  # Motorvognrep og -handel
+        (nace2 == "46").to_numpy(),  # Agentur- og engroshandel
+        (nace2 == "47").to_numpy(),  # Detaljhandel, unntatt motorvogner
+        (nace2 == "49").to_numpy(),  # Landtransport og rørtransport
+        (nace2 == "50").to_numpy(),  # Sjøfart
+        (nace2 == "51").to_numpy(),  # Lufttransport
+        (nace2 == "52").to_numpy(),  # Lagring og tjenester tilknyttet transport
+        (nace2 == "53").to_numpy(),  # Posttjenester
+        (nace2 == "55").to_numpy(),  # Overnattingsvirksomhet
+        (nace2 == "56").to_numpy(),  # Serveringsvirksomhet
         np.isin(nace2, ["58", "59", "60"]),  # Forlag, film-, TV-pr, kringkasting
         np.isin(nace2, ["61", "62", "63"]),  # IKT-virksomhet
-        np.ndarray(nace2 == "64"),  # Finansieringsvirksomhet (bank, m.m.)
-        np.ndarray(nace2 == "65"),  # Forsikringsvirksomhet og pensjonskasser
-        np.ndarray(nace2 == "66"),  # Finansiell tjenesteyting
-        np.ndarray(nace2 == "68"),  # Omsetning og drift av fast eiendom
+        (nace2 == "64").to_numpy(),  # Finansieringsvirksomhet (bank, m.m.)
+        (nace2 == "65").to_numpy(),  # Forsikringsvirksomhet og pensjonskasser
+        (nace2 == "66").to_numpy(),  # Finansiell tjenesteyting
+        (nace2 == "68").to_numpy(),  # Omsetning og drift av fast eiendom
         np.isin(nace2, ["69", "70", "71"]),  # Juridisk-, hovedkontor-, konsulentj.
-        np.ndarray(nace2 == "72"),  # Forskning og utviklingsarbeid
+        (nace2 == "72").to_numpy(),  # Forskning og utviklingsarbeid
         np.isin(
             nace2, ["73", "74", "75"]
         ),  # Faglig, vitenskapelig og teknisk tjenesteyting ellers
         np.logical_and(
             nace2 >= "77", nace2 <= "82"
         ),  # Forretningsmessig tjenesteyting ellers
-        np.ndarray(nace2 == "84"),  # Off.adm., forsvar, sosialforsikring
-        np.ndarray(nace2 == "85"),  # Undervining
-        np.ndarray(nace2 == "86"),  # Helsetjenester
+        (nace2 == "84").to_numpy(),  # Off.adm., forsvar, sosialforsikring
+        (nace2 == "85").to_numpy(),  # Undervining
+        (nace2 == "86").to_numpy(),  # Helsetjenester
         np.isin(nace2, ["87", "88"]),  # Pleie og omsorg; Fritids- og sportsaktiviteter
         np.logical_and(nace2 >= "90", nace2 <= "93"),  # Kultur, underholdning og fritid
         np.isin(nace2, ["94", "95", "96"]),  # Annen tjenesteyting
-        np.ndarray(nace2 == "97"),  # Lønnet husarbeid i private husholdninger
-        np.ndarray(nace2 == "99"),  # Internasjonale organisasjoner
+        (nace2 == "97").to_numpy(),  # Lønnet husarbeid i private husholdninger
+        (nace2 == "99").to_numpy(),  # Internasjonale organisasjoner
     ]
 
     # Define the group labels with string keys
@@ -216,7 +216,7 @@ def nace_sn07_47grp(
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "99 Uoppgitt"
-    grouped = np.select(conditions, results.to_numpy(), default=default_code)
+    grouped = np.select(conditions, np.array(results), default=default_code)
     return pd.Series(grouped, dtype="string")
 
 
@@ -248,7 +248,7 @@ def nace_sn07_17grp(
 
     # Define the conditions for each group
     conditions = [
-        np.ndarray(nace_str2 == "01"),  # 01-03 Jordbruk, skogbruk og fiske
+        (nace_str2 == "01").to_numpy(),  # 01-03 Jordbruk, skogbruk og fiske
         np.logical_and(
             nace_str2 >= "01", nace_str2 <= "03"
         ),  # 05-09 Bergverksdrift og utvinning
@@ -256,7 +256,7 @@ def nace_sn07_17grp(
         np.logical_and(
             nace_str2 >= "17", nace_str2 <= "18"
         ),  # 35-39 Elektrisitet, vann og renovasjon
-        np.ndarray(nace_str2 == "19"),  # 41-43 Bygge- og anleggsvirksomhet
+        (nace_str2 == "19").to_numpy(),  # 41-43 Bygge- og anleggsvirksomhet
         np.logical_and(
             nace_str2 >= "20", nace_str2 <= "22"
         ),  # 45-47 Varehandel, reparasjon av motorvogner
@@ -275,9 +275,9 @@ def nace_sn07_17grp(
         np.logical_and(
             nace_str2 >= "35", nace_str2 <= "38"
         ),  # 68-75 Teknisk tjenesteyting, eiendomsdrift
-        np.ndarray(nace_str2 == "39"),  # 77-82 Forretningsmessig tjenesteyting
-        np.ndarray(nace_str2 == "40"),  # 84 Off.adm., forsvar, sosialforsikring
-        np.ndarray(nace_str2 == "41"),  # 85 Undervisning
+        (nace_str2 == "39").to_numpy(),  # 77-82 Forretningsmessig tjenesteyting
+        (nace_str2 == "40").to_numpy(),  # 84 Off.adm., forsvar, sosialforsikring
+        (nace_str2 == "41").to_numpy(),  # 85 Undervisning
         np.logical_and(
             nace_str2 >= "42", nace_str2 <= "43"
         ),  # 86-88 Helse- og sosialtjenester
@@ -316,7 +316,7 @@ def nace_sn07_17grp(
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Uoppgitt"
-    grouped = np.select(conditions, results.to_numpy(), default=default_code)
+    grouped = np.select(conditions, np.array(results), default=default_code)
     return pd.Series(grouped, dtype="string")
 
 
@@ -336,11 +336,11 @@ def sektor2_grp(
     """
     # Define the conditions for each group
     conditions = [
-        np.ndarray(sektor == "6100"),
+        (sektor == "6100").to_numpy(),
         np.logical_and(sektor == "6500", undersektor != "007"),
         np.logical_and(sektor == "6500", undersektor == "007"),
-        np.ndarray(sektor == "1510"),
-        np.ndarray(sektor == "1520"),
+        (sektor == "1510").to_numpy(),
+        (sektor == "1520").to_numpy(),
     ]
 
     groups = {
@@ -361,7 +361,7 @@ def sektor2_grp(
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Uoppgitt"
-    grouped = np.select(conditions, results.to_numpy(), default=default_code)
+    grouped = np.select(conditions, np.array(results), default=default_code)
     return pd.Series(grouped, dtype="string")
 
 
@@ -378,14 +378,14 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
     """
     # Define the conditions for each group
     conditions = [
-        np.ndarray(ansatte == 0),  # No employees
+        (ansatte == 0).to_numpy(),  # No employees
         np.logical_and(ansatte >= 1, ansatte <= 4),  # 1-4 employees
         np.logical_and(ansatte >= 5, ansatte <= 9),  # 5-9 employees
         np.logical_and(ansatte >= 10, ansatte <= 19),  # 10-19 employees
         np.logical_and(ansatte >= 20, ansatte <= 49),  # 20-49 employees
         np.logical_and(ansatte >= 50, ansatte <= 99),  # 50-99 employees
         np.logical_and(ansatte >= 100, ansatte <= 249),  # 100-249 employees
-        np.ndarray(ansatte >= 250),  # 250 employees or more
+        (ansatte >= 250).to_numpy(),  # 250 employees or more
     ]
 
     # Define the group labels with string keys
@@ -410,5 +410,5 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "99 Uoppgitt"
-    grouped = np.select(conditions, results.to_numpy(), default=default_code)
+    grouped = np.select(conditions, np.array(results), default=default_code)
     return pd.Series(grouped, dtype="string")
