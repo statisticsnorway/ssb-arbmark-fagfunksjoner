@@ -1,5 +1,7 @@
 """A collection of useful groups."""
 
+# List for appropriate type annotation
+
 # Numpy for data wrangling
 import numpy as np
 
@@ -19,7 +21,7 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
         pd.Series: A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
     """
     # Define the conditions for each group
-    conditions: list[np.ndarray] = [
+    conditions: list[np.ndarray[np.bool_]] = [
         np.logical_and(alder >= 16, alder <= 19),  # 16-19 år
         np.logical_and(alder >= 20, alder <= 24),  # 20-24 år
         np.logical_and(alder >= 25, alder <= 29),  # 25-29 år
@@ -87,7 +89,7 @@ def nace_sn07_47grp(
     nace3 = pd.Series(nace_sn07.str[:3], name="nace3")
 
     # Define the conditions for each group
-    conditions: list[np.ndarray] = [
+    conditions: list[np.ndarray[np.bool_]] = [
         np.isin(
             nace2, ["01", "02", "03"]
         ),  # Jordbruk, skogbruk, fiske; Bergverksdrift og utvinning, utenom olje og gass
@@ -243,7 +245,7 @@ def nace_sn07_17grp(
         nace_str2 = nace_sn07_47grp(nace_sn07, display="number")
 
     # Define the conditions for each group
-    conditions: list[np.ndarray] = [
+    conditions: list[np.ndarray[np.bool_]] = [
         nace_str2 == "01",  # 01-03 Jordbruk, skogbruk og fiske
         np.logical_and(
             nace_str2 >= "01", nace_str2 <= "03"
@@ -331,7 +333,7 @@ def sektor2_grp(
         pd.Series: A pandas Series where the original sector and subsectors are replaced by group labels or keys.
     """
     # Define the conditions for each group
-    conditions: list[np.ndarray] = [
+    conditions: list[np.ndarray[np.bool_]] = [
         sektor == "6100",
         np.logical_and(sektor == "6500", undersektor != "007"),
         np.logical_and(sektor == "6500", undersektor == "007"),
@@ -373,7 +375,7 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
         pd.Series: A pandas Series where the original employee counts are replaced by group labels or keys.
     """
     # Define the conditions for each group
-    conditions: list[np.ndarray] = [
+    conditions: list[np.ndarray[np.bool_]] = [
         ansatte == 0,  # No employees
         np.logical_and(ansatte >= 1, ansatte <= 4),  # 1-4 employees
         np.logical_and(ansatte >= 5, ansatte <= 9),  # 5-9 employees
