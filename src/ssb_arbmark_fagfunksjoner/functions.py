@@ -6,7 +6,6 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 """
 
 
-# Holidays in Norway
 # Itertools for functions creating iterators for efficient looping
 import itertools
 
@@ -16,6 +15,7 @@ from typing import Literal
 from typing import Optional
 from typing import Union
 
+# Holidays in Norway
 import holidays
 
 # Numpy for data wrangling
@@ -249,7 +249,7 @@ def indicate_merge(
     return merged_df
 
 
-def kv_intervall(start_p, slutt_p) -> list[str]:
+def kv_intervall(start_p: str, slutt_p: str) -> list[str]:
     """This function generates a list of quarterly periods between two given periods.
 
     The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year
