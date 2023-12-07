@@ -350,13 +350,14 @@ def proc_sums(
     df = df[required_columns].copy()
 
     # Default aggregation: 'sum' for all 'values' columns.
-    if agg_func is None and not non_numeric_cols:
-        agg_func = {col: "sum" for col in values}
-    elif agg_func is None and non_numeric_cols:
-        raise ValueError(
-            f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
-        )
-    elif agg_func is not None:
+    if agg_func is None:
+        if not non_numeric_cols:
+            agg_func = {col: np.sum for col in values}
+        else:
+            raise ValueError(
+                f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
+            )
+    else:
         # Correct a format causing error in agg-function
         for col, funcs in agg_func.items():
             if isinstance(funcs, list) and len(funcs) == 1:
