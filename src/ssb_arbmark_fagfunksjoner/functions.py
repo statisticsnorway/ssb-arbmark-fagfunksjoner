@@ -6,22 +6,23 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 """
 
 
+# Holidays in Norway
 # Itertools for functions creating iterators for efficient looping
 import itertools
 
-# Literal, Optional, Union and List for type hints
+# Type hints
+from typing import Callable
 from typing import Literal
 from typing import Optional
 from typing import Union
+
+import holidays
 
 # Numpy for data wrangling
 import numpy as np
 
 # Pandas for table management
 import pandas as pd
-
-# Holidays in Norway
-from holidays import NO
 
 
 def count_workdays(
@@ -61,9 +62,11 @@ def count_workdays(
     max_year = np.max(to_years)
 
     if min_year == max_year:
-        norwegian_holidays = NO(years=min_year)
+        norwegian_holidays = holidays.country_holidays("NO", years=min_year)
     else:
-        norwegian_holidays = NO(years=range(min_year, max_year + 1))
+        norwegian_holidays = holidays.country_holidays(
+            "NO", years=range(min_year, max_year + 1)
+        )
 
     # Convert the holiday dates to a numpy array of datetime64 objects
     holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
@@ -246,7 +249,7 @@ def indicate_merge(
     return merged_df
 
 
-def kv_intervall(start_p, slutt_p) -> list:
+def kv_intervall(start_p, slutt_p) -> list[str]:
     """This function generates a list of quarterly periods between two given periods.
 
     The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year
@@ -301,7 +304,7 @@ def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
     values: list[str],
-    agg_func: Optional[dict] = None,
+    agg_func: Optional[dict[str, Callable]] = None,
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
 
@@ -312,7 +315,7 @@ def proc_sums(
             List of columns to be considered for groupings.
         values : list[str]
             List of columns on which the aggregation functions will be applied.
-        agg_func : Optional[dict], default None
+        agg_func : Optional[Dict[str, Callable]], default None
             Dictionary mapping columns to aggregation functions corresponding to
             the 'values' list. If None, defaults to 'sum' for all columns in 'values'.
 
@@ -353,7 +356,7 @@ def proc_sums(
         raise ValueError(
             f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
         )
-    else:
+    elif agg_func is not None:
         # Correct a format causing error in agg-function
         for col, funcs in agg_func.items():
             if isinstance(funcs, list) and len(funcs) == 1:
