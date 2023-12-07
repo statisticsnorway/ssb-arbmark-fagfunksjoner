@@ -420,14 +420,14 @@ def ref_day(
         array([True, True])
     """
     # Convert the from_dates and to_dates columns to numpy arrays
-    from_dates = from_dates.values
-    to_dates = to_dates.values
+    from_dates_np = from_dates.to_numpy()
+    to_dates_np = to_dates.to_numpy()
 
     # Extract the year from the from_dates array
-    year = from_dates.astype("datetime64[Y]").astype(int) + 1970
+    year = from_dates_np.astype("datetime64[Y]").astype(int) + 1970
 
     # Check if the year is the same in the to_dates array
-    if not np.all(year == to_dates.astype("datetime64[Y]").astype(int) + 1970):
+    if not np.all(year == to_dates_np.astype("datetime64[Y]").astype(int) + 1970):
         # If the year is not the same, raise an error
         raise ValueError("Function can only be applied to dates in the same year!")
 
@@ -437,10 +437,10 @@ def ref_day(
         raise ValueError("Function can only be applied to a single year!")
 
     # Extract the month from the from_dates array
-    month = from_dates.astype("datetime64[M]").astype(int) % 12 + 1
+    month = from_dates_np.astype("datetime64[M]").astype(int) % 12 + 1
 
     # Check if the month is the same in the to_dates array
-    if not np.all(month == to_dates.astype("datetime64[M]").astype(int) % 12 + 1):
+    if not np.all(month == to_dates_np.astype("datetime64[M]").astype(int) % 12 + 1):
         # If the month is not the same, raise an error
         raise ValueError("Function can only be applied to dates in the same months!")
 
@@ -448,7 +448,7 @@ def ref_day(
     ref_days = np.array([f"{year[0]}-{m:02d}-16" for m in month], dtype="datetime64[D]")
 
     # Check if the reference day is within the range of the from_date and to_date
-    result = np.logical_and(from_dates <= ref_days, ref_days <= to_dates)
+    result = np.logical_and(from_dates_np <= ref_days, ref_days <= to_dates_np)
 
     # Return the result as an array of boolean values
     return pd.Series(result, dtype="boolean")
@@ -496,12 +496,11 @@ def ref_week(
         raise ValueError("Function can only be applied to dates in the same months!")
 
     # Create a reference day for each month
-    ref_days = pd.to_datetime(
-        [f"{y}-{m:02d}-16" for y, m in zip(from_dates.dt.year, from_dates.dt.month)]
+    ref_days = pd.Series(
+        pd.to_datetime(
+            [f"{y}-{m:02d}-16" for y, m in zip(from_dates.dt.year, from_dates.dt.month)]
+        )
     )
-
-    # Convert ref_days to a Series object to use the dt accessor
-    ref_days = pd.Series(ref_days)
 
     # Calculate the week numbers using pandas with Monday as the starting day
     from_weeks = from_dates.dt.isocalendar().week
