@@ -353,7 +353,7 @@ def proc_sums(
     # Default aggregation: 'sum' for all 'values' columns.
     if agg_func is not None:
         for col, funcs in list(agg_func.items()):
-            if isinstance(funcs, list) and len(funcs) == 1:
+            if isinstance(funcs, list) and not len(funcs) > 1:
                 # Directly assign the single function instead of the list
                 agg_func[col] = funcs[0]
     elif agg_func is None:
