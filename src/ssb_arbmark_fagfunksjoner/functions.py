@@ -350,15 +350,16 @@ def proc_sums(
     # Copy the dataframe and limit input to columns in the parameter
     df = df[required_columns].copy()
 
-    # Default aggregation: 'sum' for all 'values' columns.
     if agg_func is not None:
         for col, funcs in list(agg_func.items()):
-            if isinstance(funcs, list):
-                if len(funcs) == 1:
+            if not isinstance(funcs, str):
+                n_funcs = len(funcs)
+                if n_funcs == 1:
                     # Directly assign the single function instead of the list
                     agg_func[col] = str(funcs[0])
     elif agg_func is None:
         if not non_numeric_cols:
+            # Default aggregation: 'sum' for all 'values' columns.
             agg_func = {col: np.sum for col in values}
         else:
             raise ValueError(
