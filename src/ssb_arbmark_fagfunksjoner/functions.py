@@ -8,7 +8,6 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
 # Itertools for functions creating iterators for efficient looping
 import itertools
-from datetime import datetime
 
 # Optional for explicit type hint
 from typing import Optional
@@ -24,7 +23,7 @@ import pandas as pd
 
 
 def count_workdays(
-    from_dates: pd.Series["datetime"], to_dates: pd.Series[datetime]
+    from_dates: pd.Series[pd.Timestamp], to_dates: pd.Series[pd.Timestamp]
 ) -> pd.Series[int]:
     """Counts the number of workdays between pairs of dates in given series.
 
@@ -434,7 +433,7 @@ def ref_day(
 
 
 def ref_week(
-    from_dates: pd.Series[pd.datetime], to_dates: pd.Series[pd.datetime]
+    from_dates: pd.Series[pd.Timestamp], to_dates: pd.Series[pd.Timestamp]
 ) -> pd.Series[bool]:
     """Determines if any date in each date range falls in the reference week.
 
