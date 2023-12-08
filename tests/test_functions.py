@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 from ssb_arbmark_fagfunksjoner.functions import count_workdays
 from ssb_arbmark_fagfunksjoner.functions import first_last_date_quarter
@@ -54,6 +55,7 @@ def test_kv_intervall() -> None:
         ), f"For {start_p} to {slutt_p}, expected {expected}, but got {result}"
 
 
+@pytest.fixture
 def sample_df() -> pd.DataFrame:
     return pd.DataFrame(
         {
