@@ -13,7 +13,6 @@ import itertools
 from typing import Any
 from typing import Literal
 from typing import Optional
-from typing import Union
 
 # Holidays in Norway
 import holidays
@@ -140,7 +139,7 @@ def indicate_merge(
     left: pd.DataFrame,
     right: pd.DataFrame,
     how: Literal["left", "right", "outer", "inner", "cross"],
-    on: Union[str, list[str]],
+    on: str | list[str],
 ) -> pd.DataFrame:
     """Perform a merge of two DataFrames and prints a frequency table indicating the merge type for each row.
 
@@ -304,7 +303,7 @@ def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
     values: list[str],
-    agg_func: Optional[dict[str, Union[Any, list[Any]]]] = None,
+    agg_func: Optional[dict[str, Any | list[Any]]] = None,
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
 
