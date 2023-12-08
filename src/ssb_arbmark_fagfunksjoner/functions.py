@@ -399,12 +399,6 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
 
     Raises:
         ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they are not in the same month, or if multiple years are present across the dates.
-
-    Example:
-        >>> from_dates = pd.Series(pd.to_datetime(['2023-01-01', '2023-02-10']))
-        >>> to_dates = pd.Series(pd.to_datetime(['2023-01-20', '2023-02-18']))
-        >>> ref_day(from_dates, to_dates)
-        array([True, True])
     """
     # Convert the from_dates and to_dates columns to numpy arrays
     from_dates_np = from_dates.to_numpy().astype("datetime64[D]")
@@ -457,12 +451,6 @@ def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
 
     Raises:
         ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they are not in the same month.
-
-    Example:
-        >>> from_dates = pd.Series(pd.to_datetime(['2023-01-01', '2023-02-10']))
-        >>> to_dates = pd.Series(pd.to_datetime(['2023-01-20', '2023-02-18']))
-        >>> ref_week(from_dates, to_dates)
-        pd.Series([True, True])
     """
     # Check if the year is the same in the to_dates array
     if not np.all(from_dates.dt.year == to_dates.dt.year):
