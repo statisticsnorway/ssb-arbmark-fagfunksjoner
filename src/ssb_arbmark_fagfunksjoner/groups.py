@@ -12,8 +12,8 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
 
     Parameters:
         alder (pd.Series): A pandas Series containing the person ages.
-        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
-                                 for any other string, returns a combination of keys and labels.
+        display (str): If 'label', returns group labels; if 'number', returns keys;
+                       for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
@@ -73,8 +73,8 @@ def nace_sn07_47grp(
 
     Parameters:
         nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
-                                 for any other string, returns a combination of keys and labels.
+        display (str): If 'label', returns group labels; if 'number', returns keys;
+                       for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
@@ -225,8 +225,8 @@ def nace_sn07_17grp(
 
     Parameters:
         nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
-                                 for any other string, returns a combination of keys and labels.
+        display (str): If 'label', returns group labels; if 'number', returns keys;
+                       for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
@@ -326,8 +326,8 @@ def sektor2_grp(
     Parameters:
         sektor (pd.Series): A pandas Series containing the sector codes.
         undersektor (pd.Series): A pandas Series containing the subsector codes.
-        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
-                                 for any other string, returns a combination of keys and labels.
+        display (str): If 'label', returns group labels; if 'number', returns keys;
+                       for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original sector and subsectors are replaced by group labels or keys.
@@ -368,8 +368,8 @@ def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[
 
     Parameters:
         ansatte (pd.Series): A pandas Series containing the employee counts.
-        display (str, optional): If 'label', returns group labels; if 'number', returns keys;
-                                 for any other string, returns a combination of keys and labels.
+        display (str): If 'label', returns group labels; if 'number', returns keys;
+                       for any other string, returns a combination of keys and labels.
 
     Returns:
         pd.Series: A pandas Series where the original employee counts are replaced by group labels or keys.
