@@ -27,10 +27,7 @@ import pandas as pd
 def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Counts the number of workdays between pairs of dates in given series.
 
-    This function calculates the number of workdays for each pair of start and end dates
-    provided in the `from_dates` and `to_dates` series. It handles date ranges spanning multiple
-    years and excludes weekends and holidays specific to Norway. The function dynamically
-    fetches Norwegian holidays for the relevant years based on the input dates.
+    This function calculates the number of workdays for each pair of start and end dates provided in the `from_dates` and `to_dates` series. It handles date ranges spanning multiple years and excludes weekends and holidays specific to Norway. The function dynamically fetches Norwegian holidays for the relevant years based on the input dates.
 
     Args:
         from_dates (pd.Series): A pandas Series containing the start dates of the periods.
@@ -249,9 +246,7 @@ def indicate_merge(
 def kv_intervall(start_p: str, slutt_p: str) -> list[str]:
     """This function generates a list of quarterly periods between two given periods.
 
-    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year
-    and Q is a quarter (1 to 4). The function handles cases where the start and end
-    periods are in the same year or in different years.
+    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year and Q is a quarter (1 to 4). The function handles cases where the start and end periods are in the same year or in different years.
 
     Parameters:
     start_p (str): The start period in the format 'YYYYkQ'.
@@ -390,9 +385,7 @@ def proc_sums(
 def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Determines if the reference day falls between given date ranges.
 
-    This function checks if the 16th day of each month (reference day) is
-    within the range specified by the corresponding 'from_dates' and 'to_dates'.
-    It requires that both 'from_dates' and 'to_dates' are in the same year and month.
+    This function checks if the 16th day of each month (reference day) is within the range specified by the corresponding 'from_dates' and 'to_dates'. It requires that both 'from_dates' and 'to_dates' are in the same year and month.
 
     Args:
         from_dates (pd.Series): A Series of dates representing the start of a period.
@@ -451,10 +444,7 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
 def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Determines if any date in each date range falls in the reference week.
 
-    This function checks if any date between the 'from_dates' and 'to_dates'
-    is within the reference week. The reference week is defined as the week
-    which includes the 16th day of each month. It requires that both
-    'from_dates' and 'to_dates' are in the same year and the same month.
+    This function checks if any date between the 'from_dates' and 'to_dates' is within the reference week. The reference week is defined as the week which includes the 16th day of each month. It requires that both 'from_dates' and 'to_dates' are in the same year and the same month.
 
     Args:
         from_dates (pd.Series): A Series of dates representing the start of a period.
@@ -463,9 +453,7 @@ def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
             These dates should also be in the 'YYYY-MM-DD' format.
 
     Returns:
-        pd.Series: A Series of booleans, where each boolean corresponds to whether
-        any date in the period from 'from_dates' to 'to_dates' falls within the
-        reference week of the month.
+        pd.Series: A Series of booleans, where each boolean corresponds to whether any date in the period from 'from_dates' to 'to_dates' falls within the reference week of the month.
 
     Raises:
         ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they are not in the same month.
