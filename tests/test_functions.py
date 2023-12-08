@@ -113,8 +113,8 @@ def test_ref_day_within_range() -> None:
     from_dates = pd.Series(["2023-01-01", "2023-02-10"])
     to_dates = pd.Series(["2023-01-20", "2023-02-18"])
     expected = pd.Series([True, True])
-    assert ref_day(from_dates, to_dates).equals(
-        expected
+    assert (
+        ref_day(from_dates, to_dates) == expected
     ), "16th day within range test failed"
 
 
@@ -122,31 +122,17 @@ def test_ref_day_outside_range() -> None:
     from_dates = pd.Series(["2023-03-17", "2023-04-18"])
     to_dates = pd.Series(["2023-03-30", "2023-04-25"])
     expected = pd.Series([False, False])
-    assert ref_day(from_dates, to_dates).equals(
-        expected
+    assert (
+        ref_day(from_dates, to_dates) == expected
     ), "16th day outside range test failed"
 
 
 def test_ref_week_within_range() -> None:
-    from_dates = pd.Series(
-        pd.to_datetime(
-            [
-                "2023-01-22",
-                "2023-04-01",
-            ]
-        )
-    )
-    to_dates = pd.Series(
-        pd.to_datetime(
-            [
-                "2023-01-31",
-                "2023-04-15",
-            ]
-        )
-    )
+    from_dates = pd.Series(pd.to_datetime(["2023-01-22", "2023-04-01"]))
+    to_dates = pd.Series(pd.to_datetime(["2023-01-31", "2023-04-15"]))
     expected = pd.Series([True, True])
-    assert ref_week(from_dates, to_dates).equals(
-        expected
+    assert (
+        ref_week(from_dates, to_dates) == expected
     ), "Reference week within range test failed"
 
 
@@ -154,6 +140,6 @@ def test_ref_week_outside_range() -> None:
     from_dates = pd.Series(pd.to_datetime(["2023-01-01", "2023-04-17"]))
     to_dates = pd.Series(pd.to_datetime(["2023-01-15", "2023-04-30"]))
     expected = pd.Series([False, False])
-    assert ref_week(from_dates, to_dates).equals(
-        expected
+    assert (
+        ref_week(from_dates, to_dates) == expected
     ), "Reference week outside range test failed"
