@@ -115,7 +115,7 @@ def test_ref_day_within_range() -> None:
     expected = pd.Series([True, True])
     assert (
         ref_day(from_dates, to_dates) == expected
-    ), "16th day within range test failed"
+    ).all(), "16th day within range test failed"
 
 
 def test_ref_day_outside_range() -> None:
@@ -124,7 +124,7 @@ def test_ref_day_outside_range() -> None:
     expected = pd.Series([False, False])
     assert (
         ref_day(from_dates, to_dates) == expected
-    ), "16th day outside range test failed"
+    ).all(), "16th day outside range test failed"
 
 
 def test_ref_week_within_range() -> None:
@@ -133,7 +133,7 @@ def test_ref_week_within_range() -> None:
     expected = pd.Series([True, True])
     assert (
         ref_week(from_dates, to_dates) == expected
-    ), "Reference week within range test failed"
+    ).all(), "Reference week within range test failed"
 
 
 def test_ref_week_outside_range() -> None:
@@ -142,4 +142,4 @@ def test_ref_week_outside_range() -> None:
     expected = pd.Series([False, False])
     assert (
         ref_week(from_dates, to_dates) == expected
-    ), "Reference week outside range test failed"
+    ).all(), "Reference week outside range test failed"
