@@ -24,9 +24,7 @@ import numpy as np
 import pandas as pd
 
 
-def count_workdays(
-    from_dates: pd.Series[pd.Timestamp], to_dates: pd.Series[pd.Timestamp]
-) -> pd.Series[int]:
+def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Counts the number of workdays between pairs of dates in given series.
 
     This function calculates the number of workdays for each pair of start and end dates
@@ -357,7 +355,7 @@ def proc_sums(
     elif agg_func is None:
         if not non_numeric_cols:
             # Default aggregation: 'sum' for all 'values' columns.
-            agg_func = {col: np.sum for col in values}
+            agg_func = {col: "sum" for col in values}
         else:
             raise ValueError(
                 f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
@@ -389,9 +387,7 @@ def proc_sums(
     return sum_df
 
 
-def ref_day(
-    from_dates: pd.Series[pd.Timestamp], to_dates: pd.Series[pd.Timestamp]
-) -> pd.Series[bool]:
+def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Determines if the reference day falls between given date ranges.
 
     This function checks if the 16th day of each month (reference day) is
@@ -453,9 +449,7 @@ def ref_day(
     return pd.Series(result, dtype="boolean")
 
 
-def ref_week(
-    from_dates: pd.Series[pd.Timestamp], to_dates: pd.Series[pd.Timestamp]
-) -> pd.Series[bool]:
+def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     """Determines if any date in each date range falls in the reference week.
 
     This function checks if any date between the 'from_dates' and 'to_dates'
