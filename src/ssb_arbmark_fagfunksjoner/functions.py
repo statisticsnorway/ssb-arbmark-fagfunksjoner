@@ -405,8 +405,7 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
         16th day of the month for each period is within the respective date range.
 
     Raises:
-        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if
-        they are not in the same month, or if multiple years are present across the dates.
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they are not in the same month, or if multiple years are present across the dates.
 
     Example:
         >>> from_dates = pd.Series(['2023-01-01', '2023-02-10'])
@@ -469,8 +468,7 @@ def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
         reference week of the month.
 
     Raises:
-        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if
-        they are not in the same month.
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they are not in the same month.
 
     Example:
         >>> from_dates = pd.Series(['2023-01-01', '2023-02-10'])
