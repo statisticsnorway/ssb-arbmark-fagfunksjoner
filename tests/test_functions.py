@@ -66,7 +66,7 @@ def sample_df() -> pd.DataFrame:
     )
 
 
-def test_proc_sums_count_nunique(sample_df) -> None:
+def test_proc_sums_count_nunique(sample_df: pd.DataFrame) -> None:
     test1_result = proc_sums(
         sample_df, groups=["B"], values=["E"], agg_func={"E": ["count", "nunique"]}
     ).to_dict()
@@ -79,7 +79,7 @@ def test_proc_sums_count_nunique(sample_df) -> None:
     assert test1_result == test1_expected, "Test 1 failed"
 
 
-def test_proc_sums_default_sum(sample_df) -> None:
+def test_proc_sums_default_sum(sample_df: pd.DataFrame) -> None:
     test2_result = proc_sums(sample_df, groups=["A", "B"], values=["C"]).to_dict()
     test2_expected = {
         "A": {0: "bar", 1: "foo", 2: "foo", 3: "bar", 4: "foo", 5: "Total", 6: "Total"},
@@ -90,7 +90,7 @@ def test_proc_sums_default_sum(sample_df) -> None:
     assert test2_result == test2_expected, "Test 2 failed"
 
 
-def test_proc_sums_custom_aggregations(sample_df) -> None:
+def test_proc_sums_custom_aggregations(sample_df: pd.DataFrame) -> None:
     test3_result = proc_sums(
         sample_df,
         groups=["A", "B"],
