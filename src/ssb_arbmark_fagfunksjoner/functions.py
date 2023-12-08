@@ -407,8 +407,8 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
         array([True, True])
     """
     # Convert the from_dates and to_dates columns to numpy arrays
-    from_dates_np = from_dates.to_numpy()
-    to_dates_np = to_dates.to_numpy()
+    from_dates_np = from_dates.to_numpy().astype("datetime64[D]")
+    to_dates_np = to_dates.to_numpy().astype("datetime64[D]")
 
     # Extract the year from the from_dates array
     year = from_dates_np.astype("datetime64[Y]").astype(int) + 1970
