@@ -54,7 +54,7 @@ def test_kv_intervall() -> None:
         ), f"For {start_p} to {slutt_p}, expected {expected}, but got {result}"
 
 
-def sample_df():
+def sample_df() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "A": ["foo", "foo", "foo", "bar", "bar", "bar"],
@@ -66,7 +66,7 @@ def sample_df():
     )
 
 
-def test_proc_sums_count_nunique(sample_df):
+def test_proc_sums_count_nunique(sample_df) -> None:
     test1_result = proc_sums(
         sample_df, groups=["B"], values=["E"], agg_func={"E": ["count", "nunique"]}
     ).to_dict()
@@ -79,7 +79,7 @@ def test_proc_sums_count_nunique(sample_df):
     assert test1_result == test1_expected, "Test 1 failed"
 
 
-def test_proc_sums_default_sum(sample_df):
+def test_proc_sums_default_sum(sample_df) -> None:
     test2_result = proc_sums(sample_df, groups=["A", "B"], values=["C"]).to_dict()
     test2_expected = {
         "A": {0: "bar", 1: "foo", 2: "foo", 3: "bar", 4: "foo", 5: "Total", 6: "Total"},
@@ -90,7 +90,7 @@ def test_proc_sums_default_sum(sample_df):
     assert test2_result == test2_expected, "Test 2 failed"
 
 
-def test_proc_sums_custom_aggregations(sample_df):
+def test_proc_sums_custom_aggregations(sample_df) -> None:
     test3_result = proc_sums(
         sample_df,
         groups=["A", "B"],
@@ -107,7 +107,7 @@ def test_proc_sums_custom_aggregations(sample_df):
     assert test3_result == test3_expected, "Test 3 failed"
 
 
-def test_ref_day_within_range():
+def test_ref_day_within_range() -> None:
     from_dates = pd.Series(["2023-01-01", "2023-02-10"])
     to_dates = pd.Series(["2023-01-20", "2023-02-18"])
     expected = pd.Series([True, True])
@@ -116,7 +116,7 @@ def test_ref_day_within_range():
     ), "16th day within range test failed"
 
 
-def test_ref_day_outside_range():
+def test_ref_day_outside_range() -> None:
     from_dates = pd.Series(["2023-03-17", "2023-04-18"])
     to_dates = pd.Series(["2023-03-30", "2023-04-25"])
     expected = pd.Series([False, False])
@@ -125,7 +125,7 @@ def test_ref_day_outside_range():
     ), "16th day outside range test failed"
 
 
-def test_ref_week_within_range():
+def test_ref_week_within_range() -> None:
     from_dates = pd.Series(
         pd.to_datetime(
             [
@@ -148,7 +148,7 @@ def test_ref_week_within_range():
     ), "Reference week within range test failed"
 
 
-def test_ref_week_outside_range():
+def test_ref_week_outside_range() -> None:
     from_dates = pd.Series(pd.to_datetime(["2023-01-01", "2023-04-17"]))
     to_dates = pd.Series(pd.to_datetime(["2023-01-15", "2023-04-30"]))
     expected = pd.Series([False, False])
