@@ -253,38 +253,26 @@ def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
     # Define the conditions for each group
     conditions = [
         (nace_str2 == "01").to_numpy(),  # 01-03 Jordbruk, skogbruk og fiske
-        np.logical_and(
-            nace_str2 >= "01", nace_str2 <= "03"
-        ),  # 05-09 Bergverksdrift og utvinning
+        np.isin(nace_str2, ["02", "03"]),  # 05-09 Bergverksdrift og utvinning
         np.logical_and(nace_str2 >= "04", nace_str2 <= "16"),  # 10-33 Industri
-        np.logical_and(
-            nace_str2 >= "17", nace_str2 <= "18"
-        ),  # 35-39 Elektrisitet, vann og renovasjon
+        np.isin(nace_str2, ["17", "18"]),  # 35-39 Elektrisitet, vann og renovasjon
         (nace_str2 == "19").to_numpy(),  # 41-43 Bygge- og anleggsvirksomhet
-        np.logical_and(
-            nace_str2 >= "20", nace_str2 <= "22"
+        np.isin(
+            nace_str2, ["20", "21", "22"]
         ),  # 45-47 Varehandel, reparasjon av motorvogner
         np.logical_and(
             nace_str2 >= "23", nace_str2 <= "27"
         ),  # 49-53 Transport og lagring
-        np.logical_and(
-            nace_str2 >= "28", nace_str2 <= "29"
-        ),  # 55-56 Overnattings- og serveringsvirksomhet
-        np.logical_and(
-            nace_str2 >= "30", nace_str2 <= "31"
-        ),  # 58-63 Informasjon og kommunikasjon
-        np.logical_and(
-            nace_str2 >= "32", nace_str2 <= "34"
-        ),  # 64-66 Finansiering og forsikring
+        np.isin(nace_str2, ["28", "29"]),  # 55-56 Overnattings- og serveringsvirksomhet
+        np.isin(nace_str2, ["30", "31"]),  # 58-63 Informasjon og kommunikasjon
+        np.isin(nace_str2, ["32", "33", "34"]),  # 64-66 Finansiering og forsikring
         np.logical_and(
             nace_str2 >= "35", nace_str2 <= "38"
         ),  # 68-75 Teknisk tjenesteyting, eiendomsdrift
         (nace_str2 == "39").to_numpy(),  # 77-82 Forretningsmessig tjenesteyting
         (nace_str2 == "40").to_numpy(),  # 84 Off.adm., forsvar, sosialforsikring
         (nace_str2 == "41").to_numpy(),  # 85 Undervisning
-        np.logical_and(
-            nace_str2 >= "42", nace_str2 <= "43"
-        ),  # 86-88 Helse- og sosialtjenester
+        np.isin(nace_str2, ["42", "43"]),  # 86-88 Helse- og sosialtjenester
         np.logical_and(
             nace_str2 >= "44", nace_str2 <= "47"
         ),  # 90-99 Personlig tjenesteyting
