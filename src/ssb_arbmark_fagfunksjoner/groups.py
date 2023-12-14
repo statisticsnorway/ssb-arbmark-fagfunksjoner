@@ -1,13 +1,23 @@
 """A collection of useful groups."""
 
+# Type hints
+from typing import TYPE_CHECKING
+
 # Numpy for data wrangling
 import numpy as np
 
 # Pandas for table management
 import pandas as pd
 
+if TYPE_CHECKING:
+    PdSeriesInt = pd.Series[int]  # type: ignore[misc]
+    PdSeriesStr = pd.Series[str]  # type: ignore[misc]
+else:
+    PdSeriesInt = pd.Series
+    PdSeriesStr = pd.Series
 
-def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
+
+def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of person ages into predefined groups.
 
     Parameters:
@@ -66,9 +76,7 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
     return pd.Series(np.select(conditions, results, default="."), dtype="string")
 
 
-def nace_sn07_47grp(
-    nace_sn07: pd.Series[str], display: str = "label"
-) -> pd.Series[str]:
+def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -218,9 +226,7 @@ def nace_sn07_47grp(
     return pd.Series(grouped, dtype="string")
 
 
-def nace_sn07_17grp(
-    nace_sn07: pd.Series[str], display: str = "label"
-) -> pd.Series[str]:
+def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -319,8 +325,8 @@ def nace_sn07_17grp(
 
 
 def sektor2_grp(
-    sektor: pd.Series[str], undersektor: pd.Series[str], display: str = "label"
-) -> pd.Series[str]:
+    sektor: PdSeriesStr, undersektor: PdSeriesStr, display: str = "label"
+) -> PdSeriesStr:
     """Categorize a pandas Series of sectors and subsectors into predefined groups.
 
     Parameters:
@@ -363,7 +369,7 @@ def sektor2_grp(
     return pd.Series(grouped, dtype="string")
 
 
-def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[str]:
+def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of employee counts into predefined groups.
 
     Parameters:

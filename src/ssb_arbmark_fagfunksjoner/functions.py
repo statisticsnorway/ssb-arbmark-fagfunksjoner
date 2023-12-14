@@ -8,9 +8,9 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
 # Itertools for functions creating iterators for efficient looping
 import itertools
-from typing import TYPE_CHECKING
 
 # Type hints
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Literal
 from typing import Optional
