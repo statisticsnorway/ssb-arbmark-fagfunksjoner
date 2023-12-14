@@ -14,7 +14,7 @@ classifiers = ["Development Status :: 4 - Beta"]
 Changelog = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner/releases"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 click = ">=8.0.1"
 pipx = "^1.3.2"
 cruft = "^2.15.0"
@@ -73,7 +73,7 @@ show_error_context = true
 force-exclude = true  # Apply excludes to pre-commit
 show-fixes = true
 src = ["src", "tests"]
-target-version = "py39"  # Minimum Python version supported
+target-version = "py310"  # Minimum Python version supported
 
 # Ruff rules may be customized as desired: https://docs.astral.sh/ruff/rules/
 select = [

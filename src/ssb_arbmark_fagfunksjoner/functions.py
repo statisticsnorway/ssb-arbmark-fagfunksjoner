@@ -13,7 +13,6 @@ import itertools
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import Literal
-from typing import Optional
 
 # Holidays in Norway
 import holidays
@@ -106,7 +105,7 @@ def count_workdays(
 
     # Calculate the number of workdays for each from and to date pair
     workdays_list = []
-    for from_date, to_date in zip(from_dates_d, to_dates_d):
+    for from_date, to_date in zip(from_dates_d, to_dates_d, strict=True):
         workdays_in_range = workdays[(workdays >= from_date) & (workdays <= to_date)]
         workdays_list.append(len(workdays_in_range))
 
@@ -261,7 +260,7 @@ def indicate_merge(
     # Print the frequency of each merge type
     unique, counts = np.unique(merge_type, return_counts=True)
     print(f"Sum of entries after merge: {merged_df.shape[0]}")
-    for i, j in zip(unique, counts):
+    for i, j in zip(unique, counts, strict=True):
         print(f"Number of entries of type '{i}': {j}")
 
     # Drop the _merge column and return the result
@@ -327,7 +326,7 @@ def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
     values: list[str],
-    agg_func: Optional[dict[str, Any | list[Any]]] = None,
+    agg_func: dict[str, Any | list[Any]] | None = None,
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
 
@@ -505,7 +504,10 @@ def ref_week(from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp) -> PdSe
     # Create a reference day for each month
     ref_days = pd.Series(
         pd.to_datetime(
-            [f"{y}-{m:02d}-16" for y, m in zip(from_dates.dt.year, from_dates.dt.month)]
+            [
+                f"{y}-{m:02d}-16"
+                for y, m in zip(from_dates.dt.year, from_dates.dt.month, strict=True)
+            ]
         )
     )
 
