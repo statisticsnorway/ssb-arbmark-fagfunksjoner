@@ -23,4 +23,12 @@ ssb\_arbmark\_fagfunksjoner.functions module
    :members:
    :undoc-members:
    :show-inheritance:
+
+ssb\_arbmark\_fagfunksjoner.groups module
+-----------------------------------------
+
+.. automodule:: ssb_arbmark_fagfunksjoner.groups
+   :members:
+   :undoc-members:
+   :show-inheritance:
 ```
