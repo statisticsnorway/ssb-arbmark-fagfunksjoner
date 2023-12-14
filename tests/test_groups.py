@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ssb_arbmark_fagfunksjoner.functions import alder_grp
-from ssb_arbmark_fagfunksjoner.functions import nace_sn07_17grp
-from ssb_arbmark_fagfunksjoner.functions import nace_sn07_47grp
-from ssb_arbmark_fagfunksjoner.functions import sektor2_grp
-from ssb_arbmark_fagfunksjoner.functions import virk_str_8grp
+from ssb_arbmark_fagfunksjoner.groups import alder_grp
+from ssb_arbmark_fagfunksjoner.groups import nace_sn07_17grp
+from ssb_arbmark_fagfunksjoner.groups import nace_sn07_47grp
+from ssb_arbmark_fagfunksjoner.groups import sektor2_grp
+from ssb_arbmark_fagfunksjoner.groups import virk_str_8grp
 
 
 @pytest.fixture
