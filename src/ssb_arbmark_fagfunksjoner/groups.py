@@ -21,12 +21,12 @@ def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of person ages into predefined groups.
 
     Parameters:
-        alder (pd.Series): A pandas Series containing the person ages.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        alder: A pandas Series containing the person ages.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
+        A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
     """
     # Define the conditions for each group
     conditions = [
@@ -80,12 +80,12 @@ def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
-        nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        nace_sn07: A pandas Series containing the NACE-codes.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
+        A pandas Series where the original NACE-codes are replaced by group labels or keys.
     """
     # Removes periods in the NACE codes (if any)
     nace_sn07 = nace_sn07.replace(".", "")
@@ -230,12 +230,12 @@ def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
-        nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        nace_sn07: A pandas Series containing the NACE-codes.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
+        A pandas Series where the original NACE-codes are replaced by group labels or keys.
     """
     # Removes labels (if any)
     nace_str2 = nace_sn07.str[:2]
@@ -330,13 +330,13 @@ def sektor2_grp(
     """Categorize a pandas Series of sectors and subsectors into predefined groups.
 
     Parameters:
-        sektor (pd.Series): A pandas Series containing the sector codes.
-        undersektor (pd.Series): A pandas Series containing the subsector codes.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        sektor: A pandas Series containing the sector codes.
+        undersektor: A pandas Series containing the subsector codes.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original sector and subsectors are replaced by group labels or keys.
+        A pandas Series where the original sector and subsectors are replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
@@ -373,12 +373,12 @@ def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of employee counts into predefined groups.
 
     Parameters:
-        ansatte (pd.Series): A pandas Series containing the employee counts.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        ansatte: A pandas Series containing the employee counts.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original employee counts are replaced by group labels or keys.
+        A pandas Series where the original employee counts are replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
