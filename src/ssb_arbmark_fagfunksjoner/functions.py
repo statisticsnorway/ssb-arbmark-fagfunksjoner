@@ -8,6 +8,7 @@ https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
 # Itertools for functions creating iterators for efficient looping
 import itertools
+from typing import TYPE_CHECKING
 
 # Type hints
 from typing import Any
@@ -23,25 +24,44 @@ import numpy as np
 # Pandas for table management
 import pandas as pd
 
+if TYPE_CHECKING:
+    PdSeriesTimestamp = pd.Series[pd.Timestamp]  # type: ignore[misc]
+    PdSeriesInt = pd.Series[int]  # type: ignore[misc]
+    PdSeriesStr = pd.Series[str]  # type: ignore[misc]
+    PdSeriesBool = pd.Series[bool]  # type: ignore[misc]
+else:
+    PdSeriesTimestamp = pd.Series
+    PdSeriesInt = pd.Series
+    PdSeriesStr = pd.Series
+    PdSeriesBool = pd.Series
 
-def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
+
+def count_workdays(
+    from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp
+) -> PdSeriesInt:
     """Counts the number of workdays between pairs of dates in given series.
 
-    This function calculates the number of workdays for each pair of start and end dates provided in the `from_dates` and `to_dates` series. It handles date ranges spanning multiple years and excludes weekends and holidays specific to Norway. The function dynamically fetches Norwegian holidays for the relevant years based on the input dates.
+    This function calculates the number of workdays for each pair of start and end
+    dates provided in the `from_dates` and `to_dates` series. It handles date ranges
+    spanning multiple years and excludes weekends and holidays specific to Norway.
+    The function dynamically fetches Norwegian holidays for the relevant years based
+    on the input dates.
 
     Args:
-        from_dates (pd.Series): A pandas Series containing the start dates of the periods.
-        to_dates (pd.Series): A pandas Series containing the end dates of the periods.
+        from_dates: A pandas Series containing the start dates of the periods.
+        to_dates: A pandas Series containing the end dates of the periods.
 
     Returns:
-        pd.Series: A Pandas Series containing the number of workdays for each date pair.
+        A Pandas Series containing the number of workdays for each date pair.
 
     Raises:
-        ValueError: If the length of the calculated workdays list does not match the number of date pairs.
+        ValueError: If the length of the calculated workdays list does not match the
+            number of date pairs.
 
     Note:
         - The function can handle date ranges spanning multiple years.
-        - Holidays are determined based on the Norwegian calendar for each year in the date range.
+        - Holidays are determined based on the Norwegian calendar for each year in the
+          date range.
     """
     # Convert the from_dates and to_dates columns to numpy arrays
     from_dates_np = from_dates.to_numpy()
@@ -52,8 +72,8 @@ def count_workdays(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     to_years = to_dates_np.astype("datetime64[Y]").astype(int) + 1970
 
     # Find the max and min years
-    min_year = np.min(from_years)
-    max_year = np.max(to_years)
+    min_year = int(np.min(from_years))
+    max_year = int(np.max(to_years))
 
     if min_year == max_year:
         norwegian_holidays = holidays.country_holidays("NO", years=min_year)
@@ -103,12 +123,12 @@ def first_last_date_quarter(year_str: str, quarter_str: str) -> tuple[str, str]:
     """Given a year and a quarter, this function calculates the first and last dates of the specified quarter using pandas.
 
     Args:
-        year_str (str): The year as a string.
-        quarter_str (str): The quarter as a string.
+        year_str: The year as a string.
+        quarter_str: The quarter as a string.
 
     Returns:
-        tuple: A tuple containing two strings, the first and
-        last dates of the specified quarter in 'YYYY-MM-DD' format.
+        A tuple containing two strings, the first and last dates of the specified
+        quarter in 'YYYY-MM-DD' format.
     """
     # Convert input year and quarter strings to integers
     year = int(year_str)
@@ -139,23 +159,30 @@ def indicate_merge(
     """Perform a merge of two DataFrames and prints a frequency table indicating the merge type for each row.
 
     The merge types are determined as follows (left-to-right):
-    - 'one-to-zero': Rows that exist only in the left DataFrame.
-    - 'zero-to-one': Rows that exist only in the right DataFrame.
-    - 'many-to-zero': Rows in the right DataFrame with multiple identical entries and no matching entries in the left DataFrame.
-    - 'zero-to-many': Rows in the left DataFrame with multiple identical entries and no matching entries in the right DataFrame.
-    - 'one-to-one': Rows that have a matching entry in both left and right DataFrames.
-    - 'many-to-one': Rows in the right DataFrame with multiple matching entries in the left DataFrame.
-    - 'one-to-many': Rows in the left DataFrame with multiple matching entries in the right DataFrame.
-    - 'many-to-many': Rows in both left and right DataFrames with multiple matching entries.
+        - 'one-to-zero': Rows that exist only in the left DataFrame.
+        - 'zero-to-one': Rows that exist only in the right DataFrame.
+        - 'many-to-zero': Rows in the right DataFrame with multiple identical entries
+          and no matching entries in the left DataFrame.
+        - 'zero-to-many': Rows in the left DataFrame with multiple identical entries
+          and no matching entries in the right DataFrame.
+        - 'one-to-one': Rows that have a matching entry in both left and right
+          DataFrames.
+        - 'many-to-one': Rows in the right DataFrame with multiple matching entries in
+          the left DataFrame.
+        - 'one-to-many': Rows in the left DataFrame with multiple matching entries in
+          the right DataFrame.
+        - 'many-to-many': Rows in both left and right DataFrames with multiple matching
+          entries.
 
     Args:
-        left (pd.DataFrame): The left DataFrame to be merged.
-        right (pd.DataFrame): The right DataFrame to be merged.
-        how (str): The type of merge to be performed. Options are: 'inner', 'outer', 'left', 'right'.
-        on (list): A list of column names to merge on.
+        left: The left DataFrame to be merged.
+        right: The right DataFrame to be merged.
+        how: The type of merge to be performed. Options are: 'inner', 'outer', 'left',
+             'right'.
+        on: A list of column names to merge on.
 
     Returns:
-        pd.DataFrame: The merged DataFrame.
+        The merged DataFrame.
     """
     # Perform the merge operation
     merged_df = pd.merge(left, right, how=how, on=on, indicator=True)
@@ -246,16 +273,20 @@ def indicate_merge(
 def kv_intervall(start_p: str, slutt_p: str) -> list[str]:
     """This function generates a list of quarterly periods between two given periods.
 
-    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year and Q is a quarter (1 to 4). The function handles cases where the start and end periods are in the same year or in different years.
+    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year and Q
+    is a quarter (1 to 4). The function handles cases where the start and end periods
+    are in the same year or in different years.
 
-    Parameters:
-    start_p (str): The start period in the format 'YYYYkQ'.
-    slutt_p (str): The end period in the format 'YYYYkQ'.
+    Args:
+        start_p: The start period in the format 'YYYYkQ'.
+        slutt_p: The end period in the format 'YYYYkQ'.
 
     Returns:
-    list: A list of strings representing the quarterly periods from start_p to slutt_p, inclusive.
+        A list of strings representing the quarterly periods from start_p to slutt_p,
+        inclusive.
 
     Example:
+    >>> from ssb_arbmark_fagfunksjoner.functions import kv_intervall
     >>> kv_intervall('2022k3', '2023k2')
     ['2022k3', '2022k4', '2023k1', '2023k2']
     """
@@ -300,25 +331,24 @@ def proc_sums(
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
 
-    Parameters:
-        df : pd.DataFrame
-            The input DataFrame.
-        groups : list[str]
-            List of columns to be considered for groupings.
-        values : list[str]
-            List of columns on which the aggregation functions will be applied.
-        agg_func : Optional[Dict[str, Callable]], default None
-            Dictionary mapping columns to aggregation functions corresponding to
+    Args:
+        df: The input DataFrame.
+        groups: List of columns to be considered for groupings.
+        values: List of columns on which the aggregation functions will be applied.
+        agg_func: Dictionary mapping columns to aggregation functions corresponding to
             the 'values' list. If None, defaults to 'sum' for all columns in 'values'.
+            Default None.
 
     Returns:
-        pd.DataFrame: A DataFrame containing aggregations for all combinations of 'columns'.
+        A DataFrame containing aggregations for all combinations of 'columns'.
 
     Raises:
-        ValueError: If any of the specified columns in 'groups' or 'values' are not present in the DataFrame.
-        ValueError: If any columns in 'values' are not numeric and no aggregation function is provided.
+        ValueError: If any of the specified columns in 'groups' or 'values' are not
+            present in the DataFrame.
+        ValueError: If any columns in 'values' are not numeric and no aggregation
+            function is provided.
 
-    Notes:
+    Note:
         - The returned DataFrame also contains an additional column named 'level'
           indicating the level of grouping.
         - Columns not used in a particular level of grouping will have a value 'Total'.
@@ -382,23 +412,27 @@ def proc_sums(
     return sum_df
 
 
-def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
+def ref_day(from_dates: PdSeriesStr, to_dates: PdSeriesStr) -> PdSeriesBool:
     """Determines if the reference day falls between given date ranges.
 
-    This function checks if the 16th day of each month (reference day) is within the range specified by the corresponding 'from_dates' and 'to_dates'. It requires that both 'from_dates' and 'to_dates' are in the same year and month.
+    This function checks if the 16th day of each month (reference day) is within the
+    range specified by the corresponding 'from_dates' and 'to_dates'. It requires that
+    both 'from_dates' and 'to_dates' are in the same year and month.
 
     Args:
-        from_dates (pd.Series): A Series of dates representing the start of a period.
+        from_dates: A Series of dates representing the start of a period.
             These dates should be in the 'YYYY-MM-DD' format.
-        to_dates (pd.Series): A Series of dates representing the end of a period.
+        to_dates: A Series of dates representing the end of a period.
             These dates should also be in the 'YYYY-MM-DD' format.
 
     Returns:
-        np.ndarray: An array of booleans. Each element corresponds to whether the
+        An array of booleans. Each element corresponds to whether the
         16th day of the month for each period is within the respective date range.
 
     Raises:
-        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they are not in the same month, or if multiple years are present across the dates.
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they
+            are not in the same month, or if multiple years are present across the
+            dates.
     """
     # Convert the from_dates and to_dates columns to numpy arrays
     from_dates_np = from_dates.to_numpy().astype("datetime64[D]")
@@ -435,22 +469,28 @@ def ref_day(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
     return pd.Series(result, dtype="boolean")
 
 
-def ref_week(from_dates: pd.Series, to_dates: pd.Series) -> pd.Series:
+def ref_week(from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp) -> PdSeriesInt:
     """Determines if any date in each date range falls in the reference week.
 
-    This function checks if any date between the 'from_dates' and 'to_dates' is within the reference week. The reference week is defined as the week which includes the 16th day of each month. It requires that both 'from_dates' and 'to_dates' are in the same year and the same month.
+    This function checks if any date between the 'from_dates' and 'to_dates' is within
+    the reference week. The reference week is defined as the week which includes the
+    16th day of each month. It requires that both 'from_dates' and 'to_dates' are in
+    the same year and the same month.
 
     Args:
-        from_dates (pd.Series): A Series of dates representing the start of a period.
+        from_dates: A Series of dates representing the start of a period.
             These dates should be in the 'YYYY-MM-DD' format.
-        to_dates (pd.Series): A Series of dates representing the end of a period.
+        to_dates: A Series of dates representing the end of a period.
             These dates should also be in the 'YYYY-MM-DD' format.
 
     Returns:
-        pd.Series: A Series of booleans, where each boolean corresponds to whether any date in the period from 'from_dates' to 'to_dates' falls within the reference week of the month.
+        A Series of booleans, where each boolean corresponds to whether any date in
+        the period from 'from_dates' to 'to_dates' falls within the reference week
+        of the month.
 
     Raises:
-        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they are not in the same month.
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if
+            they are not in the same month.
     """
     # Check if the year is the same in the to_dates array
     if not np.all(from_dates.dt.year == to_dates.dt.year):
