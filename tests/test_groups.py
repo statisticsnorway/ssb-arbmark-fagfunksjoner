@@ -14,7 +14,9 @@ def sample_df() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "alder": np.random.randint(15, 70, size=100),
-            "nace_sn07": [f"{i:02d}" for i in np.random.randint(1, 100, size=100)],
+            "nace_sn07": np.random.choice(
+                ["49.100", "56.101", "84.110", "93.130", "95.110"], size=100
+            ),
             "sektor": np.random.choice(["6100", "6500", "1510", "1520"], size=100),
             "undersektor": np.random.choice(["007", "008", "009"], size=100),
             "ansatte": np.random.randint(0, 300, size=100),
