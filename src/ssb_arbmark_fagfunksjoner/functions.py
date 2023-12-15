@@ -1,9 +1,4 @@
-"""A collection of useful functions.
-
-The template and this example uses Google style docstrings as described at:
-https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
-
-"""
+"""A collection of useful functions."""
 
 
 # Itertools for functions creating iterators for efficient looping
@@ -44,7 +39,10 @@ def count_workdays(
     dates provided in the `from_dates` and `to_dates` series. It handles date ranges
     spanning multiple years and excludes weekends and holidays specific to Norway.
     The function dynamically fetches Norwegian holidays for the relevant years based
-    on the input dates.
+    on the input dates. Weekends are identified using a calculation that considers
+    the Unix epoch (1970-01-01) as the reference starting point. After adjusting
+    with a -4 shift and modulo 7, the weekdays are mapped as Monday (0) through
+    Sunday (6), with Saturday (5) and Sunday (6) identified as the weekend days.
 
     Args:
         from_dates: A pandas Series containing the start dates of the periods.
@@ -56,11 +54,6 @@ def count_workdays(
     Raises:
         ValueError: If the length of the calculated workdays list does not match the
             number of date pairs.
-
-    Note:
-        - The function can handle date ranges spanning multiple years.
-        - Holidays are determined based on the Norwegian calendar for each year in the
-          date range.
     """
     # Convert the from_dates and to_dates columns to numpy arrays
     from_dates_np = from_dates.to_numpy()
@@ -425,41 +418,36 @@ def ref_day(from_dates: PdSeriesStr, to_dates: PdSeriesStr) -> PdSeriesBool:
             These dates should also be in the 'YYYY-MM-DD' format.
 
     Returns:
-        An array of booleans. Each element corresponds to whether the
-        16th day of the month for each period is within the respective date range.
+        A Pandas Series of boolean values. Each element in the Series
+        corresponds to whether the 16th day of the month for each period is within
+        the respective date range.
 
     Raises:
-        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if they
-            are not in the same month, or if multiple years are present across the
-            dates.
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if
+            they are not in the same month.
     """
     # Convert the from_dates and to_dates columns to numpy arrays
     from_dates_np = from_dates.to_numpy().astype("datetime64[D]")
     to_dates_np = to_dates.to_numpy().astype("datetime64[D]")
 
-    # Extract the year from the from_dates array
+    # Extract the year and month from the from_dates array
     year = from_dates_np.astype("datetime64[Y]").astype(int) + 1970
-
-    # Check if the year is the same in the to_dates array
-    if not np.all(year == to_dates_np.astype("datetime64[Y]").astype(int) + 1970):
-        # If the year is not the same, raise an error
-        raise ValueError("Function can only be applied to dates in the same year!")
-
-    # Check if there is more than one unique year in the array
-    if np.unique(year).size > 1:
-        # If there is more than one unique year, raise an error
-        raise ValueError("Function can only be applied to a single year!")
-
-    # Extract the month from the from_dates array
     month = from_dates_np.astype("datetime64[M]").astype(int) % 12 + 1
 
-    # Check if the month is the same in the to_dates array
-    if not np.all(month == to_dates_np.astype("datetime64[M]").astype(int) % 12 + 1):
-        # If the month is not the same, raise an error
-        raise ValueError("Function can only be applied to dates in the same months!")
+    # Check if the year and month are the same in the to_dates array
+    if not np.all(year == to_dates_np.astype("datetime64[Y]").astype(int) + 1970):
+        raise ValueError("Function can only be applied to dates in the same year!")
 
-    # Create a reference day for each month
-    ref_days = np.array([f"{year[0]}-{m:02d}-16" for m in month], dtype="datetime64[D]")
+    if not np.all(month == to_dates_np.astype("datetime64[M]").astype(int) % 12 + 1):
+        raise ValueError(
+            "Function can only be applied to date pairs in the same month!"
+        )
+
+    # Create a reference day for each year-month pair
+    ref_days = np.array(
+        [f"{y}-{m:02d}-16" for y, m in zip(year, month, strict=True)],
+        dtype="datetime64[D]",
+    )
 
     # Check if the reference day is within the range of the from_date and to_date
     result = np.logical_and(from_dates_np <= ref_days, ref_days <= to_dates_np)
@@ -468,13 +456,17 @@ def ref_day(from_dates: PdSeriesStr, to_dates: PdSeriesStr) -> PdSeriesBool:
     return pd.Series(result, dtype="boolean")
 
 
-def ref_week(from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp) -> PdSeriesInt:
+def ref_week(
+    from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp
+) -> PdSeriesBool:
     """Determines if any date in each date range falls in the reference week.
 
     This function checks if any date between the 'from_dates' and 'to_dates' is within
-    the reference week. The reference week is defined as the week which includes the
-    16th day of each month. It requires that both 'from_dates' and 'to_dates' are in
-    the same year and the same month.
+    the reference week. The reference week is defined as the ISO week which includes the
+    16th day of each month. The use of the ISO week date system ensures consistency with
+    international standards, where the week starts on Monday and the first week of the year
+    is the one containing the first Thursday. It requires that both 'from_dates' and
+    'to_dates' are in the same year and month.
 
     Args:
         from_dates: A Series of dates representing the start of a period.
@@ -485,7 +477,7 @@ def ref_week(from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp) -> PdSe
     Returns:
         A Series of booleans, where each boolean corresponds to whether any date in
         the period from 'from_dates' to 'to_dates' falls within the reference week
-        of the month.
+        of the month as defined by the ISO week date system.
 
     Raises:
         ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if

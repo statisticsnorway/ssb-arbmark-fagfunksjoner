@@ -42,10 +42,22 @@ def test_first_last_date_quarter() -> None:
 
 def test_kv_intervall() -> None:
     test_cases = [
-        ("2022k1", "2022k4", ["2022k1", "2022k2", "2022k3", "2022k4"]),
+        ("2022k3", "2022k4", ["2022k3", "2022k4"]),
         ("2022k2", "2023k1", ["2022k2", "2022k3", "2022k4", "2023k1"]),
-        ("2022k3", "2023k2", ["2022k3", "2022k4", "2023k1", "2023k2"]),
-        # Add more test cases as necessary
+        (
+            "2021k3",
+            "2023k2",
+            [
+                "2021k3",
+                "2021k4",
+                "2022k1",
+                "2022k2",
+                "2022k3",
+                "2022k4",
+                "2023k1",
+                "2023k2",
+            ],
+        ),
     ]
 
     for start_p, slutt_p, expected in test_cases:
@@ -143,3 +155,43 @@ def test_ref_week_outside_range() -> None:
     assert (
         ref_week(from_dates, to_dates) == expected
     ).all(), "Reference week outside range test failed"
+
+
+def test_ref_day_different_years() -> None:
+    from_dates = pd.Series(["2023-01-01", "2023-01-20"])
+    to_dates = pd.Series(["2024-02-10", "2024-02-18"])
+    try:
+        ref_day(from_dates, to_dates)
+        raise AssertionError("Different year test should have raised ValueError")
+    except ValueError:
+        pass
+
+
+def test_ref_day_different_months() -> None:
+    from_dates = pd.Series(["2023-01-01", "2023-01-20"])
+    to_dates = pd.Series(["2023-03-10", "2023-02-18"])
+    try:
+        ref_day(from_dates, to_dates)
+        raise AssertionError("Different month test should have raised ValueError")
+    except ValueError:
+        pass
+
+
+def test_ref_week_different_years() -> None:
+    from_dates = pd.Series(pd.to_datetime(["2023-01-01", "2023-01-15"]))
+    to_dates = pd.Series(pd.to_datetime(["2024-04-01", "2024-04-15"]))
+    try:
+        ref_week(from_dates, to_dates)
+        raise AssertionError("Different year test should have raised ValueError")
+    except ValueError:
+        pass
+
+
+def test_ref_week_different_months() -> None:
+    from_dates = pd.Series(pd.to_datetime(["2023-01-01", "2023-01-15"]))
+    to_dates = pd.Series(pd.to_datetime(["2023-03-01", "2023-04-15"]))
+    try:
+        ref_week(from_dates, to_dates)
+        raise AssertionError("Different month test should have raised ValueError")
+    except ValueError:
+        pass
