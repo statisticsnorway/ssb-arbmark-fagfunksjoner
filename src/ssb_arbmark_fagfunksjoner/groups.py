@@ -235,21 +235,21 @@ def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
     Returns:
         A pandas Series where the original NACE-codes are replaced by group labels or keys.
     """
-    # Removes labels (if any)
-    nace_str2 = nace_sn07.str[:2]
+    # Split the series by space and take the first part
+    first_parts = nace_sn07.str.split(" ", n=1).str[0]
 
-    # Counts the number of unique groups of nace codes
-    n_unique_grp = len(nace_str2.unique())
+    # Check if the maximum length of the first parts exceeds 2
+    max_length = first_parts.str.len().max()
 
     # Check if nace codes are already grouped into 47-groups
-    if n_unique_grp > 48:
+    if max_length > 2:
         print(
-            f"Warning: There are {n_unique_grp} unique industry divisions on 2-number level. The function first groups the input into the 47 groups standard."
+            "Warning: The function first groups the input into the 47 groups standard."
         )
-        nace_str2 = nace_sn07_47grp(nace_sn07, "number")
-
-    # Convert series to numpy array
-    nace_str2_np = np.array(nace_str2)
+        nace_str2_np = nace_sn07_47grp(nace_sn07, "number").to_numpy()
+    else:
+        # Convert series to numpy array
+        nace_str2_np = first_parts.to_numpy()
 
     # Define the conditions for each group
     conditions = [
