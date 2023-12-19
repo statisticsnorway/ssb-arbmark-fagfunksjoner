@@ -1,22 +1,32 @@
 """A collection of useful groups."""
 
+# Type hints
+from typing import TYPE_CHECKING
+
 # Numpy for data wrangling
 import numpy as np
 
 # Pandas for table management
 import pandas as pd
 
+if TYPE_CHECKING:
+    PdSeriesInt = pd.Series[int]  # type: ignore[misc]
+    PdSeriesStr = pd.Series[str]  # type: ignore[misc]
+else:
+    PdSeriesInt = pd.Series
+    PdSeriesStr = pd.Series
 
-def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
+
+def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of person ages into predefined groups.
 
     Parameters:
-        alder (pd.Series): A pandas Series containing the person ages.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        alder: A pandas Series containing the person ages.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
+        A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
     """
     # Define the conditions for each group
     conditions = [
@@ -66,25 +76,23 @@ def alder_grp(alder: pd.Series[int], display: str = "label") -> pd.Series[str]:
     return pd.Series(np.select(conditions, results, default="."), dtype="string")
 
 
-def nace_sn07_47grp(
-    nace_sn07: pd.Series[str], display: str = "label"
-) -> pd.Series[str]:
+def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
-        nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        nace_sn07: A pandas Series containing the NACE-codes.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
+        A pandas Series where the original NACE-codes are replaced by group labels or keys.
     """
     # Removes periods in the NACE codes (if any)
     nace_sn07 = nace_sn07.replace(".", "")
 
     # Substring of NACE codes at length 2 and 3
-    nace2 = pd.Series(nace_sn07.str[:2], name="nace2")
-    nace3 = pd.Series(nace_sn07.str[:3], name="nace3")
+    nace2 = nace_sn07.str[:2].to_numpy()
+    nace3 = nace_sn07.str[:3].to_numpy()
 
     # Define the conditions for each group
     conditions = [
@@ -100,57 +108,55 @@ def nace_sn07_47grp(
         np.isin(nace2, ["10", "11", "12"]),  # Næringsmiddel-,drikkev.,tobakkind.
         np.isin(nace2, ["13", "14", "15"]),  # Tekstil-,bekledn.-,lærvareind.
         np.isin(nace2, ["16", "17"]),  # Trelast- og trevareind.
-        (nace2 == "18").to_numpy(),  # Trykking, grafisk industri
+        (nace2 == "18"),  # Trykking, grafisk industri
         np.isin(
             nace2, ["19", "20", "21"]
         ),  # Petrolieum, kull, kjemisk og farmasøytisk industri
         np.isin(nace2, ["22", "23"]),  # Gummivare-, plast-,mineralproduktind.
-        (nace2 == "24").to_numpy(),  # Metallindustri
-        (nace2 == "25").to_numpy(),  # Metallvareindustri
+        (nace2 == "24"),  # Metallindustri
+        (nace2 == "25"),  # Metallvareindustri
         np.isin(nace2, ["26", "27"]),  # Data- og elektronisk industri
-        (nace2 == "28").to_numpy(),  # Maskinindustri
+        (nace2 == "28"),  # Maskinindustri
         np.logical_or(
             np.isin(nace2, ["29", "33"]), np.logical_and(nace3 >= "302", nace3 <= "309")
         ),  # Transportmidelindustri, utenom 30.1; Produksjon av kjøretøy og tilhengere, unntatt motorvogner og motorsykler
-        (
-            nace3 == "301"
-        ).to_numpy(),  # Produksjon av skip og båter, inkl. oljeplattformer
+        (nace3 == "301"),  # Produksjon av skip og båter, inkl. oljeplattformer
         np.isin(nace2, ["31", "32"]),  # Møbel og annen industri
-        (nace2 == "35").to_numpy(),  # Elekstrisitet, gass, damp, varmtvann
+        (nace2 == "35"),  # Elekstrisitet, gass, damp, varmtvann
         np.logical_and(nace2 >= "36", nace2 <= "39"),  # Vann, avløp og renovasjon
         np.isin(nace2, ["41", "42", "43"]),  # Bygge- og anleggsvirksomhet
-        (nace2 == "45").to_numpy(),  # Motorvognrep og -handel
-        (nace2 == "46").to_numpy(),  # Agentur- og engroshandel
-        (nace2 == "47").to_numpy(),  # Detaljhandel, unntatt motorvogner
-        (nace2 == "49").to_numpy(),  # Landtransport og rørtransport
-        (nace2 == "50").to_numpy(),  # Sjøfart
-        (nace2 == "51").to_numpy(),  # Lufttransport
-        (nace2 == "52").to_numpy(),  # Lagring og tjenester tilknyttet transport
-        (nace2 == "53").to_numpy(),  # Posttjenester
-        (nace2 == "55").to_numpy(),  # Overnattingsvirksomhet
-        (nace2 == "56").to_numpy(),  # Serveringsvirksomhet
+        (nace2 == "45"),  # Motorvognrep og -handel
+        (nace2 == "46"),  # Agentur- og engroshandel
+        (nace2 == "47"),  # Detaljhandel, unntatt motorvogner
+        (nace2 == "49"),  # Landtransport og rørtransport
+        (nace2 == "50"),  # Sjøfart
+        (nace2 == "51"),  # Lufttransport
+        (nace2 == "52"),  # Lagring og tjenester tilknyttet transport
+        (nace2 == "53"),  # Posttjenester
+        (nace2 == "55"),  # Overnattingsvirksomhet
+        (nace2 == "56"),  # Serveringsvirksomhet
         np.isin(nace2, ["58", "59", "60"]),  # Forlag, film-, TV-pr, kringkasting
         np.isin(nace2, ["61", "62", "63"]),  # IKT-virksomhet
-        (nace2 == "64").to_numpy(),  # Finansieringsvirksomhet (bank, m.m.)
-        (nace2 == "65").to_numpy(),  # Forsikringsvirksomhet og pensjonskasser
-        (nace2 == "66").to_numpy(),  # Finansiell tjenesteyting
-        (nace2 == "68").to_numpy(),  # Omsetning og drift av fast eiendom
+        (nace2 == "64"),  # Finansieringsvirksomhet (bank, m.m.)
+        (nace2 == "65"),  # Forsikringsvirksomhet og pensjonskasser
+        (nace2 == "66"),  # Finansiell tjenesteyting
+        (nace2 == "68"),  # Omsetning og drift av fast eiendom
         np.isin(nace2, ["69", "70", "71"]),  # Juridisk-, hovedkontor-, konsulentj.
-        (nace2 == "72").to_numpy(),  # Forskning og utviklingsarbeid
+        (nace2 == "72"),  # Forskning og utviklingsarbeid
         np.isin(
             nace2, ["73", "74", "75"]
         ),  # Faglig, vitenskapelig og teknisk tjenesteyting ellers
         np.logical_and(
             nace2 >= "77", nace2 <= "82"
         ),  # Forretningsmessig tjenesteyting ellers
-        (nace2 == "84").to_numpy(),  # Off.adm., forsvar, sosialforsikring
-        (nace2 == "85").to_numpy(),  # Undervining
-        (nace2 == "86").to_numpy(),  # Helsetjenester
+        (nace2 == "84"),  # Off.adm., forsvar, sosialforsikring
+        (nace2 == "85"),  # Undervining
+        (nace2 == "86"),  # Helsetjenester
         np.isin(nace2, ["87", "88"]),  # Pleie og omsorg; Fritids- og sportsaktiviteter
         np.logical_and(nace2 >= "90", nace2 <= "93"),  # Kultur, underholdning og fritid
         np.isin(nace2, ["94", "95", "96"]),  # Annen tjenesteyting
-        (nace2 == "97").to_numpy(),  # Lønnet husarbeid i private husholdninger
-        (nace2 == "99").to_numpy(),  # Internasjonale organisasjoner
+        (nace2 == "97"),  # Lønnet husarbeid i private husholdninger
+        (nace2 == "99"),  # Internasjonale organisasjoner
     ]
 
     # Define the group labels with string keys
@@ -218,69 +224,60 @@ def nace_sn07_47grp(
     return pd.Series(grouped, dtype="string")
 
 
-def nace_sn07_17grp(
-    nace_sn07: pd.Series[str], display: str = "label"
-) -> pd.Series[str]:
+def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
-        nace_sn07 (pd.Series): A pandas Series containing the NACE-codes.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        nace_sn07: A pandas Series containing the NACE-codes.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original NACE-codes are replaced by group labels or keys.
+        A pandas Series where the original NACE-codes are replaced by group labels or keys.
     """
-    # Removes labels (if any)
-    nace_str2 = nace_sn07.str[:2]
+    # Split the series by space and take the first part
+    first_parts = nace_sn07.str.split(" ", n=1).str[0]
 
-    # Counts the number of unique groups of nace codes
-    n_unique_grp = len(nace_str2.unique())
+    # Check if the maximum length of the first parts exceeds 2
+    max_length = first_parts.str.len().max()
 
     # Check if nace codes are already grouped into 47-groups
-    if n_unique_grp > 48:
+    if max_length > 2:
         print(
-            f"Warning: There are {n_unique_grp} unique industry divisions on 2-number level. The function first groups the input into the 47 groups standard."
+            "Warning: The function first groups the input into the 47 groups standard."
         )
-        nace_str2 = nace_sn07_47grp(nace_sn07, display="number")
+        nace_str2_np = nace_sn07_47grp(nace_sn07, "number").to_numpy()
+    else:
+        # Convert series to numpy array
+        nace_str2_np = first_parts.to_numpy()
 
     # Define the conditions for each group
     conditions = [
-        (nace_str2 == "01").to_numpy(),  # 01-03 Jordbruk, skogbruk og fiske
-        np.logical_and(
-            nace_str2 >= "01", nace_str2 <= "03"
-        ),  # 05-09 Bergverksdrift og utvinning
-        np.logical_and(nace_str2 >= "04", nace_str2 <= "16"),  # 10-33 Industri
-        np.logical_and(
-            nace_str2 >= "17", nace_str2 <= "18"
-        ),  # 35-39 Elektrisitet, vann og renovasjon
-        (nace_str2 == "19").to_numpy(),  # 41-43 Bygge- og anleggsvirksomhet
-        np.logical_and(
-            nace_str2 >= "20", nace_str2 <= "22"
+        (nace_str2_np == "01"),  # 01-03 Jordbruk, skogbruk og fiske
+        np.isin(nace_str2_np, ["02", "03"]),  # 05-09 Bergverksdrift og utvinning
+        np.logical_and(nace_str2_np >= "04", nace_str2_np <= "16"),  # 10-33 Industri
+        np.isin(nace_str2_np, ["17", "18"]),  # 35-39 Elektrisitet, vann og renovasjon
+        (nace_str2_np == "19"),  # 41-43 Bygge- og anleggsvirksomhet
+        np.isin(
+            nace_str2_np, ["20", "21", "22"]
         ),  # 45-47 Varehandel, reparasjon av motorvogner
         np.logical_and(
-            nace_str2 >= "23", nace_str2 <= "27"
+            nace_str2_np >= "23", nace_str2_np <= "27"
         ),  # 49-53 Transport og lagring
-        np.logical_and(
-            nace_str2 >= "28", nace_str2 <= "29"
+        np.isin(
+            nace_str2_np, ["28", "29"]
         ),  # 55-56 Overnattings- og serveringsvirksomhet
+        np.isin(nace_str2_np, ["30", "31"]),  # 58-63 Informasjon og kommunikasjon
+        np.isin(nace_str2_np, ["32", "33", "34"]),  # 64-66 Finansiering og forsikring
         np.logical_and(
-            nace_str2 >= "30", nace_str2 <= "31"
-        ),  # 58-63 Informasjon og kommunikasjon
-        np.logical_and(
-            nace_str2 >= "32", nace_str2 <= "34"
-        ),  # 64-66 Finansiering og forsikring
-        np.logical_and(
-            nace_str2 >= "35", nace_str2 <= "38"
+            nace_str2_np >= "35", nace_str2_np <= "38"
         ),  # 68-75 Teknisk tjenesteyting, eiendomsdrift
-        (nace_str2 == "39").to_numpy(),  # 77-82 Forretningsmessig tjenesteyting
-        (nace_str2 == "40").to_numpy(),  # 84 Off.adm., forsvar, sosialforsikring
-        (nace_str2 == "41").to_numpy(),  # 85 Undervisning
+        (nace_str2_np == "39"),  # 77-82 Forretningsmessig tjenesteyting
+        (nace_str2_np == "40"),  # 84 Off.adm., forsvar, sosialforsikring
+        (nace_str2_np == "41"),  # 85 Undervisning
+        np.isin(nace_str2_np, ["42", "43"]),  # 86-88 Helse- og sosialtjenester
         np.logical_and(
-            nace_str2 >= "42", nace_str2 <= "43"
-        ),  # 86-88 Helse- og sosialtjenester
-        np.logical_and(
-            nace_str2 >= "44", nace_str2 <= "47"
+            nace_str2_np >= "44", nace_str2_np <= "47"
         ),  # 90-99 Personlig tjenesteyting
     ]
 
@@ -319,18 +316,18 @@ def nace_sn07_17grp(
 
 
 def sektor2_grp(
-    sektor: pd.Series[str], undersektor: pd.Series[str], display: str = "label"
-) -> pd.Series[str]:
+    sektor: PdSeriesStr, undersektor: PdSeriesStr, display: str = "label"
+) -> PdSeriesStr:
     """Categorize a pandas Series of sectors and subsectors into predefined groups.
 
     Parameters:
-        sektor (pd.Series): A pandas Series containing the sector codes.
-        undersektor (pd.Series): A pandas Series containing the subsector codes.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        sektor: A pandas Series containing the sector codes.
+        undersektor: A pandas Series containing the subsector codes.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original sector and subsectors are replaced by group labels or keys.
+        A pandas Series where the original sector and subsectors are replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
@@ -363,16 +360,16 @@ def sektor2_grp(
     return pd.Series(grouped, dtype="string")
 
 
-def virk_str_8grp(ansatte: pd.Series[int], display: str = "label") -> pd.Series[str]:
+def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of employee counts into predefined groups.
 
     Parameters:
-        ansatte (pd.Series): A pandas Series containing the employee counts.
-        display (str): If 'label', returns group labels; if 'number', returns keys;
+        ansatte: A pandas Series containing the employee counts.
+        display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        pd.Series: A pandas Series where the original employee counts are replaced by group labels or keys.
+        A pandas Series where the original employee counts are replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
