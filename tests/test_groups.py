@@ -3,6 +3,7 @@ import pandas as pd
 import pytest
 
 from ssb_arbmark_fagfunksjoner.groups import alder_grp
+from ssb_arbmark_fagfunksjoner.groups import landbakgrunn_grp
 from ssb_arbmark_fagfunksjoner.groups import nace_sn07_17grp
 from ssb_arbmark_fagfunksjoner.groups import nace_sn07_47grp
 from ssb_arbmark_fagfunksjoner.groups import sektor2_grp
@@ -20,6 +21,9 @@ def sample_df() -> pd.DataFrame:
             "sektor": np.random.choice(["6100", "6500", "1510", "1520"], size=100),
             "undersektor": np.random.choice(["007", "008", "009"], size=100),
             "ansatte": np.random.randint(0, 300, size=100),
+            "landbakgrunn": np.char.zfill(
+                np.random.randint(0, 799, size=100).astype("str"), 3
+            ),
         }
     )
 
@@ -153,3 +157,24 @@ def test_virk_str_8grp_combined(sample_df):
     df["virk_str_8grp"] = virk_str_8grp(df["ansatte"], display="combined")
     assert not df["virk_str_8grp"].isnull().any(), "Employee group contains null values"
     assert df["virk_str_8grp"].dtype == "string", "Employee group is not of type string"
+
+
+def test_landbakgrunn_grp(sample_df):
+    df = sample_df
+    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"])
+    assert not df["verdensregion"].isnull().any(), "World region contains null values"
+    assert df["verdensregion"].dtype == "string", "World region is not of type string"
+
+
+def test_landbakgrunn_grp_number(sample_df):
+    df = sample_df
+    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="number")
+    assert not df["verdensregion"].isnull().any(), "World region contains null values"
+    assert df["verdensregion"].dtype == "string", "World region is not of type string"
+
+
+def test_landbakgrunn_grp_combined(sample_df):
+    df = sample_df
+    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="combined")
+    assert not df["verdensregion"].isnull().any(), "World region contains null values"
+    assert df["verdensregion"].dtype == "string", "World region is not of type string"
