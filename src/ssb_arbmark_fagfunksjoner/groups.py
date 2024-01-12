@@ -18,7 +18,7 @@ else:
 
 
 def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
-    """Categorize a pandas Series of person ages into predefined groups.
+    """Categorize a pandas Series of person ages into predefined groups used in SYKEFR.
 
     Parameters:
         alder: A pandas Series containing the person ages.
@@ -76,6 +76,47 @@ def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
     return pd.Series(np.select(conditions, results, default="."), dtype="string")
 
 
+def alder_5grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
+    """Categorize a pandas Series of person ages into predefined groups used in ARBLONN.
+
+    Parameters:
+        alder: A pandas Series containing the person ages.
+        display: If 'label', returns group labels; if 'number', returns keys;
+                       for any other string, returns a combination of keys and labels.
+
+    Returns:
+        A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
+    """
+    # Define the conditions for each group
+    conditions = [
+        np.logical_and(alder >= 0, alder <= 24),  # Under 25 år
+        np.logical_and(alder >= 25, alder <= 39),  # 25-39 år
+        np.logical_and(alder >= 40, alder <= 54),  # 40-54 år
+        np.logical_and(alder >= 55, alder <= 66),  # 55-66 år
+        (alder >= 67).to_numpy(),  # 67 år eller eldre
+    ]
+
+    # Define the group labels with string keys
+    groups = {
+        "1": "-24",
+        "2": "25-39",
+        "3": "40-54",
+        "4": "55-66",
+        "5": "67+",
+    }
+
+    # Determine the format of the results based on the display parameter
+    if display == "label":
+        results = [str(value) for value in groups.values()]
+    elif display == "number":
+        results = [str(key) for key in groups.keys()]
+    else:
+        results = [f"{key} {value}" for key, value in groups.items()]
+
+    # Apply the selected format to the series
+    return pd.Series(np.select(conditions, results, default=""), dtype="string")
+
+
 def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesStr:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
@@ -91,72 +132,72 @@ def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
     nace_sn07 = nace_sn07.replace(".", "")
 
     # Substring of NACE codes at length 2 and 3
-    nace2 = nace_sn07.str[:2].to_numpy()
-    nace3 = nace_sn07.str[:3].to_numpy()
+    nace2 = pd.to_numeric(nace_sn07.str[:2]).to_numpy()
+    nace3 = pd.to_numeric(nace_sn07.str[:3]).to_numpy()
 
     # Define the conditions for each group
     conditions = [
         np.isin(
-            nace2, ["01", "02", "03"]
+            nace2, [1, 2, 3]
         ),  # Jordbruk, skogbruk, fiske; Bergverksdrift og utvinning, utenom olje og gass
         np.logical_or(
-            np.isin(nace2, ["05", "07", "08"]), nace3 == "099"
+            np.isin(nace2, [5, 7, 8]), nace3 == 99
         ),  # Annen utvinning; Bygging av skip og båter; Reparasjon og installasjon av maskiner og utstyr; Uoppgitt utvinning
         np.logical_or(
-            nace2 == "06", nace3 == "091"
+            nace2 == 6, nace3 == 91
         ),  # Olje- og gassutvinning; Uoppgitt utvinning av petroleum
-        np.isin(nace2, ["10", "11", "12"]),  # Næringsmiddel-,drikkev.,tobakkind.
-        np.isin(nace2, ["13", "14", "15"]),  # Tekstil-,bekledn.-,lærvareind.
-        np.isin(nace2, ["16", "17"]),  # Trelast- og trevareind.
-        (nace2 == "18"),  # Trykking, grafisk industri
+        np.isin(nace2, [10, 11, 12]),  # Næringsmiddel-,drikkev.,tobakkind.
+        np.isin(nace2, [13, 14, 15]),  # Tekstil-,bekledn.-,lærvareind.
+        np.isin(nace2, [16, 17]),  # Trelast- og trevareind.
+        (nace2 == 18),  # Trykking, grafisk industri
         np.isin(
-            nace2, ["19", "20", "21"]
+            nace2, [19, 20, 21]
         ),  # Petrolieum, kull, kjemisk og farmasøytisk industri
-        np.isin(nace2, ["22", "23"]),  # Gummivare-, plast-,mineralproduktind.
-        (nace2 == "24"),  # Metallindustri
-        (nace2 == "25"),  # Metallvareindustri
-        np.isin(nace2, ["26", "27"]),  # Data- og elektronisk industri
-        (nace2 == "28"),  # Maskinindustri
+        np.isin(nace2, [22, 23]),  # Gummivare-, plast-,mineralproduktind.
+        (nace2 == 24),  # Metallindustri
+        (nace2 == 25),  # Metallvareindustri
+        np.isin(nace2, [26, 27]),  # Data- og elektronisk industri
+        (nace2 == 28),  # Maskinindustri
         np.logical_or(
-            np.isin(nace2, ["29", "33"]), np.logical_and(nace3 >= "302", nace3 <= "309")
+            np.isin(nace2, [29, 33]), np.logical_and(nace3 >= 302, nace3 <= 309)
         ),  # Transportmidelindustri, utenom 30.1; Produksjon av kjøretøy og tilhengere, unntatt motorvogner og motorsykler
-        (nace3 == "301"),  # Produksjon av skip og båter, inkl. oljeplattformer
-        np.isin(nace2, ["31", "32"]),  # Møbel og annen industri
-        (nace2 == "35"),  # Elekstrisitet, gass, damp, varmtvann
-        np.logical_and(nace2 >= "36", nace2 <= "39"),  # Vann, avløp og renovasjon
-        np.isin(nace2, ["41", "42", "43"]),  # Bygge- og anleggsvirksomhet
-        (nace2 == "45"),  # Motorvognrep og -handel
-        (nace2 == "46"),  # Agentur- og engroshandel
-        (nace2 == "47"),  # Detaljhandel, unntatt motorvogner
-        (nace2 == "49"),  # Landtransport og rørtransport
-        (nace2 == "50"),  # Sjøfart
-        (nace2 == "51"),  # Lufttransport
-        (nace2 == "52"),  # Lagring og tjenester tilknyttet transport
-        (nace2 == "53"),  # Posttjenester
-        (nace2 == "55"),  # Overnattingsvirksomhet
-        (nace2 == "56"),  # Serveringsvirksomhet
-        np.isin(nace2, ["58", "59", "60"]),  # Forlag, film-, TV-pr, kringkasting
-        np.isin(nace2, ["61", "62", "63"]),  # IKT-virksomhet
-        (nace2 == "64"),  # Finansieringsvirksomhet (bank, m.m.)
-        (nace2 == "65"),  # Forsikringsvirksomhet og pensjonskasser
-        (nace2 == "66"),  # Finansiell tjenesteyting
-        (nace2 == "68"),  # Omsetning og drift av fast eiendom
-        np.isin(nace2, ["69", "70", "71"]),  # Juridisk-, hovedkontor-, konsulentj.
-        (nace2 == "72"),  # Forskning og utviklingsarbeid
+        (nace3 == 301),  # Produksjon av skip og båter, inkl. oljeplattformer
+        np.isin(nace2, [31, 32]),  # Møbel og annen industri
+        (nace2 == 35),  # Elekstrisitet, gass, damp, varmtvann
+        np.logical_and(nace2 >= 36, nace2 <= 39),  # Vann, avløp og renovasjon
+        np.isin(nace2, [41, 42, 43]),  # Bygge- og anleggsvirksomhet
+        (nace2 == 45),  # Motorvognrep og -handel
+        (nace2 == 46),  # Agentur- og engroshandel
+        (nace2 == 47),  # Detaljhandel, unntatt motorvogner
+        (nace2 == 49),  # Landtransport og rørtransport
+        (nace2 == 50),  # Sjøfart
+        (nace2 == 51),  # Lufttransport
+        (nace2 == 52),  # Lagring og tjenester tilknyttet transport
+        (nace2 == 53),  # Posttjenester
+        (nace2 == 55),  # Overnattingsvirksomhet
+        (nace2 == 56),  # Serveringsvirksomhet
+        np.isin(nace2, [58, 59, 60]),  # Forlag, film-, TV-pr, kringkasting
+        np.isin(nace2, [61, 62, 63]),  # IKT-virksomhet
+        (nace2 == 64),  # Finansieringsvirksomhet (bank, m.m.)
+        (nace2 == 65),  # Forsikringsvirksomhet og pensjonskasser
+        (nace2 == 66),  # Finansiell tjenesteyting
+        (nace2 == 68),  # Omsetning og drift av fast eiendom
+        np.isin(nace2, [69, 70, 71]),  # Juridisk-, hovedkontor-, konsulentj.
+        (nace2 == 72),  # Forskning og utviklingsarbeid
         np.isin(
-            nace2, ["73", "74", "75"]
+            nace2, [73, 74, 75]
         ),  # Faglig, vitenskapelig og teknisk tjenesteyting ellers
         np.logical_and(
-            nace2 >= "77", nace2 <= "82"
+            nace2 >= 77, nace2 <= 82
         ),  # Forretningsmessig tjenesteyting ellers
-        (nace2 == "84"),  # Off.adm., forsvar, sosialforsikring
-        (nace2 == "85"),  # Undervining
-        (nace2 == "86"),  # Helsetjenester
-        np.isin(nace2, ["87", "88"]),  # Pleie og omsorg; Fritids- og sportsaktiviteter
-        np.logical_and(nace2 >= "90", nace2 <= "93"),  # Kultur, underholdning og fritid
-        np.isin(nace2, ["94", "95", "96"]),  # Annen tjenesteyting
-        (nace2 == "97"),  # Lønnet husarbeid i private husholdninger
-        (nace2 == "99"),  # Internasjonale organisasjoner
+        (nace2 == 84),  # Off.adm., forsvar, sosialforsikring
+        (nace2 == 85),  # Undervining
+        (nace2 == 86),  # Helsetjenester
+        np.isin(nace2, [87, 88]),  # Pleie og omsorg; Fritids- og sportsaktiviteter
+        np.logical_and(nace2 >= 90, nace2 <= 93),  # Kultur, underholdning og fritid
+        np.isin(nace2, [94, 95, 96]),  # Annen tjenesteyting
+        (nace2 == 97),  # Lønnet husarbeid i private husholdninger
+        (nace2 == 99),  # Internasjonale organisasjoner
     ]
 
     # Define the group labels with string keys
@@ -246,38 +287,36 @@ def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
         print(
             "Warning: The function first groups the input into the 47 groups standard."
         )
-        nace_str2_np = nace_sn07_47grp(nace_sn07, "number").to_numpy()
+        nace_str2_np = pd.to_numeric(nace_sn07_47grp(nace_sn07, "number")).to_numpy()
     else:
         # Convert series to numpy array
-        nace_str2_np = first_parts.to_numpy()
+        nace_str2_np = pd.to_numeric(first_parts).to_numpy()
 
     # Define the conditions for each group
     conditions = [
-        (nace_str2_np == "01"),  # 01-03 Jordbruk, skogbruk og fiske
-        np.isin(nace_str2_np, ["02", "03"]),  # 05-09 Bergverksdrift og utvinning
-        np.logical_and(nace_str2_np >= "04", nace_str2_np <= "16"),  # 10-33 Industri
-        np.isin(nace_str2_np, ["17", "18"]),  # 35-39 Elektrisitet, vann og renovasjon
-        (nace_str2_np == "19"),  # 41-43 Bygge- og anleggsvirksomhet
+        (nace_str2_np == 1),  # 01-03 Jordbruk, skogbruk og fiske
+        np.isin(nace_str2_np, [2, 3]),  # 05-09 Bergverksdrift og utvinning
+        np.logical_and(nace_str2_np >= 4, nace_str2_np <= 16),  # 10-33 Industri
+        np.isin(nace_str2_np, [17, 18]),  # 35-39 Elektrisitet, vann og renovasjon
+        (nace_str2_np == 19),  # 41-43 Bygge- og anleggsvirksomhet
         np.isin(
-            nace_str2_np, ["20", "21", "22"]
+            nace_str2_np, [20, 21, 22]
         ),  # 45-47 Varehandel, reparasjon av motorvogner
         np.logical_and(
-            nace_str2_np >= "23", nace_str2_np <= "27"
+            nace_str2_np >= 23, nace_str2_np <= 27
         ),  # 49-53 Transport og lagring
-        np.isin(
-            nace_str2_np, ["28", "29"]
-        ),  # 55-56 Overnattings- og serveringsvirksomhet
-        np.isin(nace_str2_np, ["30", "31"]),  # 58-63 Informasjon og kommunikasjon
-        np.isin(nace_str2_np, ["32", "33", "34"]),  # 64-66 Finansiering og forsikring
+        np.isin(nace_str2_np, [28, 29]),  # 55-56 Overnattings- og serveringsvirksomhet
+        np.isin(nace_str2_np, [30, 31]),  # 58-63 Informasjon og kommunikasjon
+        np.isin(nace_str2_np, [32, 33, 34]),  # 64-66 Finansiering og forsikring
         np.logical_and(
-            nace_str2_np >= "35", nace_str2_np <= "38"
+            nace_str2_np >= 35, nace_str2_np <= 38
         ),  # 68-75 Teknisk tjenesteyting, eiendomsdrift
-        (nace_str2_np == "39"),  # 77-82 Forretningsmessig tjenesteyting
-        (nace_str2_np == "40"),  # 84 Off.adm., forsvar, sosialforsikring
-        (nace_str2_np == "41"),  # 85 Undervisning
-        np.isin(nace_str2_np, ["42", "43"]),  # 86-88 Helse- og sosialtjenester
+        (nace_str2_np == 39),  # 77-82 Forretningsmessig tjenesteyting
+        (nace_str2_np == 40),  # 84 Off.adm., forsvar, sosialforsikring
+        (nace_str2_np == 41),  # 85 Undervisning
+        np.isin(nace_str2_np, [42, 43]),  # 86-88 Helse- og sosialtjenester
         np.logical_and(
-            nace_str2_np >= "44", nace_str2_np <= "47"
+            nace_str2_np >= 44, nace_str2_np <= 47
         ),  # 90-99 Personlig tjenesteyting
     ]
 
@@ -415,13 +454,14 @@ def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> PdSer
     Parameters:
         landbakgrunn: A pandas Series containing the country origins.
         display: If 'label', returns group labels; if 'number', returns keys;
+                       if 'arblonn', returns specific labels for ARBLONN;
                        for any other string, returns a combination of keys and labels.
 
     Returns:
         A pandas Series where the original country origins are replaced by group labels or keys.
     """
     # Convert Series to Numpy array
-    landbakgrunn_np = landbakgrunn.to_numpy().astype(int)
+    landbakgrunn_np = pd.to_numeric(landbakgrunn).to_numpy()
 
     # Define the conditions for each group
     conditions = [
@@ -499,6 +539,8 @@ def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> PdSer
         "794a": "Sør- og Mellom-Amerika",
     }
 
+    arblonn_groups = ["200", "2", "3", "40", "350", "60", "5", "8"]
+
     # Determine and apply the selected format based on the labels parameter
     if display == "label":
         results = [str(value) for value in groups.values()]
@@ -506,6 +548,9 @@ def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> PdSer
     elif display == "number":
         results = [str(key) for key in groups.keys()]
         default_code = "999"
+    elif display == "arblonn":
+        results = [str(i) for i in arblonn_groups]
+        default_code = "980-990"
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Ukjent"
