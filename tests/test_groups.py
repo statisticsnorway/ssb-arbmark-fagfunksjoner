@@ -14,6 +14,7 @@ from ssb_arbmark_fagfunksjoner.groups import virk_str_8grp
 def sample_df() -> pd.DataFrame:
     return pd.DataFrame(
         {
+            "alder_all": np.random.randint(0, 75, size=100),
             "alder": np.random.randint(15, 70, size=100),
             "nace_sn07": np.random.choice(
                 ["49.100", "56.101", "84.110", "93.130", "95.110"], size=100
@@ -26,6 +27,27 @@ def sample_df() -> pd.DataFrame:
             ),
         }
     )
+
+
+def test_alder_5grp(sample_df):
+    df = sample_df
+    df["alder_5grp"] = alder_grp(df["alder_all"])
+    assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
+    assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
+
+
+def test_alder_5grp_number(sample_df):
+    df = sample_df
+    df["alder_5grp"] = alder_grp(df["alder_all"], display="number")
+    assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
+    assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
+
+
+def test_alder_5grp_combined(sample_df):
+    df = sample_df
+    df["alder_5grp"] = alder_grp(df["alder_all"], display="combined")
+    assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
+    assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_grp(sample_df):
@@ -176,5 +198,12 @@ def test_landbakgrunn_grp_number(sample_df):
 def test_landbakgrunn_grp_combined(sample_df):
     df = sample_df
     df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="combined")
+    assert not df["verdensregion"].isnull().any(), "World region contains null values"
+    assert df["verdensregion"].dtype == "string", "World region is not of type string"
+
+
+def test_landbakgrunn_grp_arblonn(sample_df):
+    df = sample_df
+    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="arblonn")
     assert not df["verdensregion"].isnull().any(), "World region contains null values"
     assert df["verdensregion"].dtype == "string", "World region is not of type string"
