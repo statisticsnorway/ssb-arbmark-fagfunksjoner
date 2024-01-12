@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from ssb_arbmark_fagfunksjoner.groups import alder_5grp
 from ssb_arbmark_fagfunksjoner.groups import alder_grp
 from ssb_arbmark_fagfunksjoner.groups import landbakgrunn_grp
 from ssb_arbmark_fagfunksjoner.groups import nace_sn07_17grp
@@ -31,21 +32,21 @@ def sample_df() -> pd.DataFrame:
 
 def test_alder_5grp(sample_df):
     df = sample_df
-    df["alder_5grp"] = alder_grp(df["alder_all"])
+    df["alder_5grp"] = alder_5grp(df["alder_all"])
     assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
     assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_5grp_number(sample_df):
     df = sample_df
-    df["alder_5grp"] = alder_grp(df["alder_all"], display="number")
+    df["alder_5grp"] = alder_5grp(df["alder_all"], display="number")
     assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
     assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_5grp_combined(sample_df):
     df = sample_df
-    df["alder_5grp"] = alder_grp(df["alder_all"], display="combined")
+    df["alder_5grp"] = alder_5grp(df["alder_all"], display="combined")
     assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
     assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
 
