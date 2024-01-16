@@ -262,110 +262,63 @@ def indicate_merge(
     return merged_df
 
 
-def kv_intervall(start_p: str, slutt_p: str) -> list[str]:
-    """This function generates a list of quarterly periods between two given periods.
+def pinterval(start_p: str, end_p: str, sep: str = "", freq: str = "m") -> list[str]:
+    """This function generates a list of monthly or quarterly periods between two given periods.
 
-    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year and Q
-    is a quarter (1 to 4). The function handles cases where the start and end periods
-    are in the same year or in different years.
-
-    Args:
-        start_p: The start period in the format 'YYYYkQ'.
-        slutt_p: The end period in the format 'YYYYkQ'.
-
-    Returns:
-        A list of strings representing the quarterly periods from start_p to slutt_p,
-        inclusive.
-
-    Example:
-    >>> from ssb_arbmark_fagfunksjoner.functions import kv_intervall
-    >>> kv_intervall('2022k3', '2023k2')
-    ['2022k3', '2022k4', '2023k1', '2023k2']
-    """
-    # Extract the year and quarter from the start period
-    start_aar4 = int(start_p[:4])
-    start_kv = int(start_p[-1])
-
-    # Extract the year and quarter from the end period
-    slutt_aar4 = int(slutt_p[:4])
-    slutt_kv = int(slutt_p[-1])
-
-    # Initialize an empty list to store the periods
-    intervall = []
-
-    # Generate the periods
-    for i in range(start_aar4, slutt_aar4 + 1):
-        if start_aar4 == slutt_aar4:
-            # If the start and end periods are in the same year
-            for j in range(start_kv, slutt_kv + 1):
-                intervall.append(f"{i}k{j}")
-        elif i == start_aar4:
-            # If the current year is the start year
-            for j in range(start_kv, 4 + 1):
-                intervall.append(f"{i}k{j}")
-        elif start_aar4 < i and slutt_aar4 > i:
-            # If the current year is between the start and end years
-            for j in range(1, 4 + 1):
-                intervall.append(f"{i}k{j}")
-        elif i == slutt_aar4:
-            # If the current year is the end year
-            for j in range(1, slutt_kv + 1):
-                intervall.append(f"{i}k{j}")
-
-    return intervall
-
-
-def m_intervall(start_p: str, slutt_p: str) -> list[str]:
-    """This function generates a list of monthly periods between two given periods.
-
-    The periods are strings in the format 'YYYYmMM', where YYYY is a 4-digit year and MM
-    is a 2-digit month (01 to 12). The function handles cases where the start and end periods
-    are in the same year or in different years.
+    The periods are strings in the format 'YYYY<separator>MM' or 'YYYYMM' for monthly intervals,
+    and 'YYYY<separator>Q' for quarterly intervals, where YYYY is a 4-digit year and MM is a 2-digit month
+    (01 to 12) or Q is a 1-digit quarter (1 to 4). The function handles cases where the start and end
+    periods are in the same year or in different years. The separator between year and month/quarter is customizable.
 
     Args:
-        start_p: The start period in the format 'YYYYmMM'.
-        slutt_p: The end period in the format 'YYYYmMM'.
+        start_p: The start period in the format 'YYYY<sep>MM' or 'YYYYMM' for monthly intervals,
+                 and 'YYYY<sep>Q' for quarterly intervals.
+        end_p: The end period in the format 'YYYY<sep>MM' or 'YYYYMM' for monthly intervals,
+               and 'YYYY<sep>Q' for quarterly intervals.
+        sep: A string to separate the year and month/quarter. Defaults to empty.
+        freq: The intervals frequency, 'm' for monthly or 'q' for quarterly. Defaults to 'm'.
 
     Returns:
-        A list of strings representing the quarterly periods from start_p to slutt_p,
-        inclusive.
+        A list of strings representing the monthly or quarterly periods from start_p to end_p, inclusive.
 
     Example:
-    >>> from ssb_arbmark_fagfunksjoner.functions import kv_intervall
-    >>> m_intervall('2022m08', '2023m02')
-    ['2022m08', '2022m09', '2022m10', '2022m11', '2022m12', '2023m01', '2023m02']
+    >>> pinterval('2022k1', '2023k2', sep='k', freq='quarterly')
+    ['2022k1', '2022k2', '2022k3', '2022k4', '2023k1', '2023k2']
     """
-    # Extract the year and quarter from the start period
-    start_aar4 = int(start_p[:4])
-    start_m = int(start_p[-2:])
+    freq = freq[:1].lower()
+    if freq not in ["m", "q"]:
+        raise ValueError("Frequency needs to be either monthly or quarterly.")
+    if sep not in start_p or sep not in end_p:
+        raise ValueError(
+            "Start and end period must be in the same format as the interval."
+        )
 
-    # Extract the year and quarter from the end period
-    slutt_aar4 = int(slutt_p[:4])
-    slutt_m = int(slutt_p[-2:])
+    # Extract the year and month/quarter from the start and end periods based on the separator
+    if sep:
+        start_year, start_unit = start_p.split(sep)
+        end_year, end_unit = end_p.split(sep)
+    else:
+        start_year, start_unit = start_p[:4], start_p[4:]
+        end_year, end_unit = end_p[:4], end_p[4:]
+
+    # Determine the range for the loop based on interval type
+    unit_range = 4 if freq == "q" else 12
 
     # Initialize an empty list to store the periods
-    intervall = []
+    interval = []
 
     # Generate the periods
-    for i in range(start_aar4, slutt_aar4 + 1):
-        if start_aar4 == slutt_aar4:
-            # If the start and end periods are in the same year
-            for j in range(start_m, slutt_m + 1):
-                intervall.append(f"{i}m{str(j).zfill(2)}")
-        elif i == start_aar4:
-            # If the current year is the start year
-            for j in range(start_m, 12 + 1):
-                intervall.append(f"{i}m{str(j).zfill(2)}")
-        elif start_aar4 < i and slutt_aar4 > i:
-            # If the current year is between the start and end years
-            for j in range(1, 12 + 1):
-                intervall.append(f"{i}m{str(j).zfill(2)}")
-        elif i == slutt_aar4:
-            # If the current year is the end year
-            for j in range(1, slutt_m + 1):
-                intervall.append(f"{i}m{str(j).zfill(2)}")
+    for year in range(int(start_year), int(end_year) + 1):
+        start = int(start_unit) if year == int(start_year) else 1
+        end = int(end_unit) if year == int(end_year) else unit_range
 
-    return intervall
+        for unit in range(start, end + 1):
+            unit_str = str(unit).zfill(2) if freq == "m" else str(unit)
+            formatted_period = f"{year}{sep}{unit_str}"
+
+            interval.append(formatted_period)
+
+    return interval
 
 
 def proc_sums(
