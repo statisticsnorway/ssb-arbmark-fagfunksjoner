@@ -315,6 +315,59 @@ def kv_intervall(start_p: str, slutt_p: str) -> list[str]:
     return intervall
 
 
+def m_intervall(start_p: str, slutt_p: str) -> list[str]:
+    """This function generates a list of monthly periods between two given periods.
+
+    The periods are strings in the format 'YYYYmMM', where YYYY is a 4-digit year and MM
+    is a 2-digit month (01 to 12). The function handles cases where the start and end periods
+    are in the same year or in different years.
+
+    Args:
+        start_p: The start period in the format 'YYYYmMM'.
+        slutt_p: The end period in the format 'YYYYmMM'.
+
+    Returns:
+        A list of strings representing the quarterly periods from start_p to slutt_p,
+        inclusive.
+
+    Example:
+    >>> from ssb_arbmark_fagfunksjoner.functions import kv_intervall
+    >>> m_intervall('2022m08', '2023m02')
+    ['2022m08', '2022m09', '2022m10', '2022m11', '2022m12', '2023m01', '2023m02']
+    """
+    # Extract the year and quarter from the start period
+    start_aar4 = int(start_p[:4])
+    start_m = int(start_p[-2:])
+
+    # Extract the year and quarter from the end period
+    slutt_aar4 = int(slutt_p[:4])
+    slutt_m = int(slutt_p[-2:])
+
+    # Initialize an empty list to store the periods
+    intervall = []
+
+    # Generate the periods
+    for i in range(start_aar4, slutt_aar4 + 1):
+        if start_aar4 == slutt_aar4:
+            # If the start and end periods are in the same year
+            for j in range(start_m, slutt_m + 1):
+                intervall.append(f"{i}m{str(j).zfill(2)}")
+        elif i == start_aar4:
+            # If the current year is the start year
+            for j in range(start_m, 12 + 1):
+                intervall.append(f"{i}m{str(j).zfill(2)}")
+        elif start_aar4 < i and slutt_aar4 > i:
+            # If the current year is between the start and end years
+            for j in range(1, 12 + 1):
+                intervall.append(f"{i}m{str(j).zfill(2)}")
+        elif i == slutt_aar4:
+            # If the current year is the end year
+            for j in range(1, slutt_m + 1):
+                intervall.append(f"{i}m{str(j).zfill(2)}")
+
+    return intervall
+
+
 def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
