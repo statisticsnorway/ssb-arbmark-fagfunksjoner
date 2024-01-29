@@ -262,63 +262,73 @@ def indicate_merge(
     return merged_df
 
 
-def kv_intervall(start_p: str, slutt_p: str) -> list[str]:
-    """This function generates a list of quarterly periods between two given periods.
+def pinterval(start_p: str, end_p: str, sep: str = "", freq: str = "m") -> list[str]:
+    """This function generates a list of monthly or quarterly periods between two given periods.
 
-    The periods are strings in the format 'YYYYkQ', where YYYY is a 4-digit year and Q
-    is a quarter (1 to 4). The function handles cases where the start and end periods
-    are in the same year or in different years.
+    The periods are strings in the format 'YYYY<separator>MM' or 'YYYYMM' for monthly intervals,
+    and 'YYYY<separator>Q' for quarterly intervals, where YYYY is a 4-digit year and MM is a 2-digit month
+    (01 to 12) or Q is a 1-digit quarter (1 to 4). The function handles cases where the start and end
+    periods are in the same year or in different years. The separator between year and month/quarter is customizable.
 
     Args:
-        start_p: The start period in the format 'YYYYkQ'.
-        slutt_p: The end period in the format 'YYYYkQ'.
+        start_p: The start period in the format 'YYYY<sep>MM' or 'YYYYMM' for monthly intervals,
+                 and 'YYYY<sep>Q' for quarterly intervals.
+        end_p: The end period in the format 'YYYY<sep>MM' or 'YYYYMM' for monthly intervals,
+               and 'YYYY<sep>Q' for quarterly intervals.
+        sep: A string to separate the year and month/quarter. Defaults to empty.
+        freq: The intervals frequency, 'm' for monthly or 'q' for quarterly. Defaults to 'm'.
 
     Returns:
-        A list of strings representing the quarterly periods from start_p to slutt_p,
-        inclusive.
+        A list of strings representing the monthly or quarterly periods from start_p to end_p, inclusive.
+
+    Raises:
+        ValueError: If the frequency is not 'monthly' or 'quarterly'.
+        ValueError: If the start and end period do not include the specified separator.
 
     Example:
-    >>> from ssb_arbmark_fagfunksjoner.functions import kv_intervall
-    >>> kv_intervall('2022k3', '2023k2')
-    ['2022k3', '2022k4', '2023k1', '2023k2']
+    >>> pinterval('2022k1', '2023k2', sep='k', freq='quarterly')
+    ['2022k1', '2022k2', '2022k3', '2022k4', '2023k1', '2023k2']
     """
-    # Extract the year and quarter from the start period
-    start_aar4 = int(start_p[:4])
-    start_kv = int(start_p[-1])
+    freq = freq[:1].lower()
+    if freq not in ["m", "q"]:
+        raise ValueError("Frequency needs to be either monthly or quarterly.")
+    if sep not in start_p or sep not in end_p:
+        raise ValueError(
+            "Start and end period must be in the same format as the interval."
+        )
 
-    # Extract the year and quarter from the end period
-    slutt_aar4 = int(slutt_p[:4])
-    slutt_kv = int(slutt_p[-1])
+    # Extract the year and month/quarter from the start and end periods based on the separator
+    if sep:
+        start_year, start_unit = start_p.split(sep)
+        end_year, end_unit = end_p.split(sep)
+    else:
+        start_year, start_unit = start_p[:4], start_p[4:]
+        end_year, end_unit = end_p[:4], end_p[4:]
+
+    # Determine the range for the loop based on interval type
+    unit_range = 4 if freq == "q" else 12
 
     # Initialize an empty list to store the periods
-    intervall = []
+    interval = []
 
     # Generate the periods
-    for i in range(start_aar4, slutt_aar4 + 1):
-        if start_aar4 == slutt_aar4:
-            # If the start and end periods are in the same year
-            for j in range(start_kv, slutt_kv + 1):
-                intervall.append(f"{i}k{j}")
-        elif i == start_aar4:
-            # If the current year is the start year
-            for j in range(start_kv, 4 + 1):
-                intervall.append(f"{i}k{j}")
-        elif start_aar4 < i and slutt_aar4 > i:
-            # If the current year is between the start and end years
-            for j in range(1, 4 + 1):
-                intervall.append(f"{i}k{j}")
-        elif i == slutt_aar4:
-            # If the current year is the end year
-            for j in range(1, slutt_kv + 1):
-                intervall.append(f"{i}k{j}")
+    for year in range(int(start_year), int(end_year) + 1):
+        start = int(start_unit) if year == int(start_year) else 1
+        end = int(end_unit) if year == int(end_year) else unit_range
 
-    return intervall
+        for unit in range(start, end + 1):
+            unit_str = str(unit).zfill(2) if freq == "m" else str(unit)
+            formatted_period = f"{year}{sep}{unit_str}"
+
+            interval.append(formatted_period)
+
+    return interval
 
 
 def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
-    values: list[str],
+    values: list[str] | None = None,
     agg_func: dict[str, Any | list[Any]] | None = None,
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
@@ -327,6 +337,7 @@ def proc_sums(
         df: The input DataFrame.
         groups: List of columns to be considered for groupings.
         values: List of columns on which the aggregation functions will be applied.
+               If None and agg_func is provided, it defaults to the keys of agg_func.
         agg_func: Dictionary mapping columns to aggregation functions corresponding to
             the 'values' list. If None, defaults to 'sum' for all columns in 'values'.
             Default None.
@@ -344,39 +355,52 @@ def proc_sums(
         - The returned DataFrame also contains an additional column named 'level'
           indicating the level of grouping.
         - Columns not used in a particular level of grouping will have a value 'Total'.
+        - If 'values' is None and 'agg_func' is provided, 'values' is automatically
+          set to the keys of 'agg_func'.
     """
-    # All columns used from the input dataframe
-    required_columns = groups + values
+    # Set 'values' based on 'agg_func' if 'values' is not provided
+    if values is None:
+        if agg_func is not None:
+            values = list(agg_func.keys())
+        else:
+            values = []
 
-    # Check that the parameters references columns in the dataframe
-    missing_columns = [col for col in required_columns if col not in df.columns]
+    # Combine groups and values for column existence check
+    required_columns = set(groups + values)
+
+    # Initialize lists for missing and non-numeric columns
+    missing_columns = []
+    non_numeric_cols = []
+
+    # Check for missing and non-numeric columns in a single loop
+    for col in required_columns:
+        if col not in df.columns:
+            missing_columns.append(col)
+        elif col in values and not pd.api.types.is_numeric_dtype(df[col]):
+            non_numeric_cols.append(col)
+
+    # Raise errors if necessary
     if missing_columns:
         raise ValueError(
             f"Columns {', '.join(missing_columns)} are not present in the dataframe!"
         )
+    if non_numeric_cols and agg_func is None:
+        raise ValueError(
+            f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
+        )
 
-    # Check if all columns in 'values' are numeric
-    non_numeric_cols = [
-        col for col in values if not pd.api.types.is_numeric_dtype(df[col])
-    ]
-
-    # Copy the dataframe and limit input to columns in the parameter
-    df = df[required_columns].copy()
-
+    # Process 'agg_func' if provided
     if agg_func is not None:
         for col, funcs in agg_func.items():
-            # Check if funcs is a list
+            # If funcs is a list with exactly one item, use the item directly
             if isinstance(funcs, list) and len(funcs) == 1:
-                # If funcs is a list with exactly one item, extract that item
                 agg_func[col] = funcs[0]
-    elif agg_func is None:
-        if not non_numeric_cols:
-            # Default aggregation: 'sum' for all 'values' columns.
-            agg_func = {col: "sum" for col in values}
-        else:
-            raise ValueError(
-                f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
-            )
+    else:
+        # Default aggregation: 'sum' for all 'values' columns.
+        agg_func = {col: "sum" for col in values}
+
+    # Copy the dataframe and limit input to columns in the parameter
+    df = df[list(required_columns)].copy()
 
     # Initialize empty datframe
     sum_df = pd.DataFrame()
@@ -400,7 +424,6 @@ def proc_sums(
             sub_sum["level"] = i
             # Append this subset's aggregation results to the final DataFrame.
             sum_df = pd.concat([sum_df, sub_sum], ignore_index=True)
-
     return sum_df
 
 

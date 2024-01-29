@@ -3,7 +3,7 @@ import pytest
 
 from ssb_arbmark_fagfunksjoner.functions import count_workdays
 from ssb_arbmark_fagfunksjoner.functions import first_last_date_quarter
-from ssb_arbmark_fagfunksjoner.functions import kv_intervall
+from ssb_arbmark_fagfunksjoner.functions import pinterval
 from ssb_arbmark_fagfunksjoner.functions import proc_sums
 from ssb_arbmark_fagfunksjoner.functions import ref_day
 from ssb_arbmark_fagfunksjoner.functions import ref_week
@@ -40,7 +40,7 @@ def test_first_last_date_quarter() -> None:
         ), f"For {year} Q{quarter}, expected {expected}, but got {result}"
 
 
-def test_kv_intervall() -> None:
+def test_pinterval_q() -> None:
     test_cases = [
         ("2022k3", "2022k4", ["2022k3", "2022k4"]),
         ("2022k2", "2023k1", ["2022k2", "2022k3", "2022k4", "2023k1"]),
@@ -61,7 +61,32 @@ def test_kv_intervall() -> None:
     ]
 
     for start_p, slutt_p, expected in test_cases:
-        result = kv_intervall(start_p, slutt_p)
+        result = pinterval(start_p, slutt_p, sep="k", freq="quarterly")
+        assert (
+            result == expected
+        ), f"For {start_p} to {slutt_p}, expected {expected}, but got {result}"
+
+
+def test_pinterval_m() -> None:
+    test_cases = [
+        ("202203", "202204", ["202203", "202204"]),
+        (
+            "202108",
+            "202202",
+            [
+                "202108",
+                "202109",
+                "202110",
+                "202111",
+                "202112",
+                "202201",
+                "202202",
+            ],
+        ),
+    ]
+
+    for start_p, slutt_p, expected in test_cases:
+        result = pinterval(start_p, slutt_p)
         assert (
             result == expected
         ), f"For {start_p} to {slutt_p}, expected {expected}, but got {result}"
@@ -82,7 +107,7 @@ def sample_df() -> pd.DataFrame:
 
 def test_proc_sums_count_nunique(sample_df: pd.DataFrame) -> None:
     test1_result = proc_sums(
-        sample_df, groups=["B"], values=["E"], agg_func={"E": ["count", "nunique"]}
+        sample_df, groups=["B"], agg_func={"E": ["count", "nunique"]}
     ).to_dict()
     test1_expected = {
         ("B", ""): {0: "one", 1: "two"},
