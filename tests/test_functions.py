@@ -107,7 +107,7 @@ def sample_df() -> pd.DataFrame:
 
 def test_proc_sums_count_nunique(sample_df: pd.DataFrame) -> None:
     test1_result = proc_sums(
-        sample_df, groups=["B"], values=["E"], agg_func={"E": ["count", "nunique"]}
+        sample_df, groups=["B"], agg_func={"E": ["count", "nunique"]}
     ).to_dict()
     test1_expected = {
         ("B", ""): {0: "one", 1: "two"},

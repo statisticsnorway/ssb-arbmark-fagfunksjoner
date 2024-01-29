@@ -328,7 +328,7 @@ def pinterval(start_p: str, end_p: str, sep: str = "", freq: str = "m") -> list[
 def proc_sums(
     df: pd.DataFrame,
     groups: list[str],
-    values: list[str],
+    values: list[str] | None = None,
     agg_func: dict[str, Any | list[Any]] | None = None,
 ) -> pd.DataFrame:
     """Compute aggregations for all combinations of columns and return a new DataFrame with these aggregations.
@@ -337,6 +337,7 @@ def proc_sums(
         df: The input DataFrame.
         groups: List of columns to be considered for groupings.
         values: List of columns on which the aggregation functions will be applied.
+               If None and agg_func is provided, it defaults to the keys of agg_func.
         agg_func: Dictionary mapping columns to aggregation functions corresponding to
             the 'values' list. If None, defaults to 'sum' for all columns in 'values'.
             Default None.
@@ -354,39 +355,49 @@ def proc_sums(
         - The returned DataFrame also contains an additional column named 'level'
           indicating the level of grouping.
         - Columns not used in a particular level of grouping will have a value 'Total'.
+        - If 'values' is None and 'agg_func' is provided, 'values' is automatically
+          set to the keys of 'agg_func'.
     """
-    # All columns used from the input dataframe
-    required_columns = groups + values
+    # Set 'values' based on 'agg_func' if 'values' is not provided
+    if values is None and agg_func is not None:
+        values = list(agg_func.keys())
 
-    # Check that the parameters references columns in the dataframe
-    missing_columns = [col for col in required_columns if col not in df.columns]
+    # Combine groups and values for column existence check
+    required_columns = set(groups + values)
+
+    # Initialize lists for missing and non-numeric columns
+    missing_columns = []
+    non_numeric_cols = []
+
+    # Check for missing and non-numeric columns in a single loop
+    for col in required_columns:
+        if col not in df.columns:
+            missing_columns.append(col)
+        elif col in values and not pd.api.types.is_numeric_dtype(df[col]):
+            non_numeric_cols.append(col)
+
+    # Raise errors if necessary
     if missing_columns:
         raise ValueError(
             f"Columns {', '.join(missing_columns)} are not present in the dataframe!"
         )
+    if non_numeric_cols and agg_func is None:
+        raise ValueError(
+            f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
+        )
 
-    # Check if all columns in 'values' are numeric
-    non_numeric_cols = [
-        col for col in values if not pd.api.types.is_numeric_dtype(df[col])
-    ]
-
-    # Copy the dataframe and limit input to columns in the parameter
-    df = df[required_columns].copy()
-
+    # Process 'agg_func' if provided
     if agg_func is not None:
         for col, funcs in agg_func.items():
-            # Check if funcs is a list
+            # If funcs is a list with exactly one item, use the item directly
             if isinstance(funcs, list) and len(funcs) == 1:
-                # If funcs is a list with exactly one item, extract that item
                 agg_func[col] = funcs[0]
-    elif agg_func is None:
-        if not non_numeric_cols:
-            # Default aggregation: 'sum' for all 'values' columns.
-            agg_func = {col: "sum" for col in values}
-        else:
-            raise ValueError(
-                f"Values {', '.join(non_numeric_cols)} are not numeric! Specify aggregation functions!"
-            )
+    else:
+        # Default aggregation: 'sum' for all 'values' columns.
+        agg_func = {col: "sum" for col in values}
+
+    # Copy the dataframe and limit input to columns in the parameter
+    df = df[list(required_columns)].copy()
 
     # Initialize empty datframe
     sum_df = pd.DataFrame()
