@@ -359,8 +359,11 @@ def proc_sums(
           set to the keys of 'agg_func'.
     """
     # Set 'values' based on 'agg_func' if 'values' is not provided
-    if values is None and agg_func is not None:
-        values = list(agg_func.keys())
+    if values is None:
+        if agg_func is not None:
+            values = list(agg_func.keys())
+        else:
+            values = []
 
     # Combine groups and values for column existence check
     required_columns = set(groups + values)
@@ -421,7 +424,6 @@ def proc_sums(
             sub_sum["level"] = i
             # Append this subset's aggregation results to the final DataFrame.
             sum_df = pd.concat([sum_df, sub_sum], ignore_index=True)
-
     return sum_df
 
 
