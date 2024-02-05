@@ -24,7 +24,7 @@ def sample_df() -> pd.DataFrame:
             "undersektor": np.random.choice(["007", "008", "009"], size=100),
             "ansatte": np.random.randint(0, 300, size=100),
             "landbakgrunn": np.char.zfill(
-                np.random.randint(0, 799, size=100).astype("str"), 3
+                np.random.randint(0, 799, size=100).astype(str), 3
             ),
         }
     )
@@ -32,179 +32,164 @@ def sample_df() -> pd.DataFrame:
 
 def test_alder_5grp(sample_df):
     df = sample_df
-    df["alder_5grp"] = alder_5grp(df["alder_all"])
+    df["alder_5grp"] = alder_5grp(df["alder_all"]).astype(str)
     assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
-    assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_5grp_number(sample_df):
     df = sample_df
-    df["alder_5grp"] = alder_5grp(df["alder_all"], display="number")
+    df["alder_5grp"] = alder_5grp(df["alder_all"], display="number").astype(str)
     assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
-    assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_5grp_combined(sample_df):
     df = sample_df
-    df["alder_5grp"] = alder_5grp(df["alder_all"], display="combined")
+    df["alder_5grp"] = alder_5grp(df["alder_all"], display="combined").astype(str)
     assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
-    assert df["alder_5grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_grp(sample_df):
     df = sample_df
-    df["alder_grp"] = alder_grp(df["alder"])
+    df["alder_grp"] = alder_grp(df["alder"]).astype(str)
     assert not df["alder_grp"].isnull().any(), "Age group contains null values"
-    assert df["alder_grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_grp_number(sample_df):
     df = sample_df
-    df["alder_grp"] = alder_grp(df["alder"], display="number")
+    df["alder_grp"] = alder_grp(df["alder"], display="number").astype(str)
     assert not df["alder_grp"].isnull().any(), "Age group contains null values"
-    assert df["alder_grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_alder_grp_combined(sample_df):
     df = sample_df
-    df["alder_grp"] = alder_grp(df["alder"], display="combined")
+    df["alder_grp"] = alder_grp(df["alder"], display="combined").astype(str)
     assert not df["alder_grp"].isnull().any(), "Age group contains null values"
-    assert df["alder_grp"].dtype == "string", "Age group is not of type string"
 
 
 def test_nace_sn07_47grp(sample_df):
     df = sample_df
-    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"])
+    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"]).astype(str)
     assert (
         not df["nace_sn07_47grp"].isnull().any()
     ), "NACE SN07 47 group contains null values"
-    assert (
-        df["nace_sn07_47grp"].dtype == "string"
-    ), "NACE SN07 47 group is not of type string"
 
 
 def test_nace_sn07_47grp_number(sample_df):
     df = sample_df
-    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"], display="number")
+    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"], display="number").astype(
+        str
+    )
     assert (
         not df["nace_sn07_47grp"].isnull().any()
     ), "NACE SN07 47 group contains null values"
-    assert (
-        df["nace_sn07_47grp"].dtype == "string"
-    ), "NACE SN07 47 group is not of type string"
 
 
 def test_nace_sn07_47grp_combined(sample_df):
     df = sample_df
-    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"], display="combined")
+    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"], display="combined").astype(
+        str
+    )
     assert (
         not df["nace_sn07_47grp"].isnull().any()
     ), "NACE SN07 47 group contains null values"
-    assert (
-        df["nace_sn07_47grp"].dtype == "string"
-    ), "NACE SN07 47 group is not of type string"
 
 
 def test_nace_sn07_17grp(sample_df):
     df = sample_df
-    df["nace_sn07_17grp"] = nace_sn07_17grp(df["nace_sn07"])
+    df["nace_sn07_17grp"] = nace_sn07_17grp(df["nace_sn07"]).astype(str)
     assert (
         not df["nace_sn07_17grp"].isnull().any()
     ), "NACE SN07 17 group contains null values"
-    assert (
-        df["nace_sn07_17grp"].dtype == "string"
-    ), "NACE SN07 17 group is not of type string"
 
 
 def test_nace_sn07_17grp_number(sample_df):
     df = sample_df
-    df["nace_sn07_17grp"] = nace_sn07_17grp(df["nace_sn07"], display="number")
-    assert (
-        not df["nace_sn07_17grp"].isnull().any()
-    ), "NACE SN07 17 group contains null values"
-    assert (
-        df["nace_sn07_17grp"].dtype == "string"
-    ), "NACE SN07 17 group is not of type string"
-
-
-def test_nace_sn07_17grp_combined(sample_df):
-    df = sample_df
-    df["nace_sn07_17grp"] = nace_sn07_17grp(
-        nace_sn07_47grp(df["nace_sn07"], display="combined"), display="combined"
+    df["nace_sn07_17grp"] = nace_sn07_17grp(df["nace_sn07"], display="number").astype(
+        str
     )
     assert (
         not df["nace_sn07_17grp"].isnull().any()
     ), "NACE SN07 17 group contains null values"
+
+
+def test_nace_sn07_17grp_combined(sample_df):
+    df = sample_df
+    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"], display="combined").astype(
+        str
+    )
+    df["nace_sn07_17grp"] = nace_sn07_17grp(
+        df["nace_sn07_47grp"], display="combined"
+    ).astype(str)
     assert (
-        df["nace_sn07_17grp"].dtype == "string"
-    ), "NACE SN07 17 group is not of type string"
+        not df["nace_sn07_17grp"].isnull().any()
+    ), "NACE SN07 17 group contains null values"
 
 
 def test_sektor2_grp(sample_df):
     df = sample_df
-    df["sektor2_grp"] = sektor2_grp(df["sektor"], df["undersektor"])
+    df["sektor2_grp"] = sektor2_grp(df["sektor"], df["undersektor"]).astype(str)
     assert not df["sektor2_grp"].isnull().any(), "Sector 2 group contains null values"
-    assert df["sektor2_grp"].dtype == "string", "Sector 2 group is not of type string"
 
 
 def test_sektor2_grp_number(sample_df):
     df = sample_df
-    df["sektor2_grp"] = sektor2_grp(df["sektor"], df["undersektor"], display="number")
+    df["sektor2_grp"] = sektor2_grp(
+        df["sektor"], df["undersektor"], display="number"
+    ).astype(str)
     assert not df["sektor2_grp"].isnull().any(), "Sector 2 group contains null values"
-    assert df["sektor2_grp"].dtype == "string", "Sector 2 group is not of type string"
 
 
 def test_sektor2_grp_combined(sample_df):
     df = sample_df
-    df["sektor2_grp"] = sektor2_grp(df["sektor"], df["undersektor"], display="combined")
+    df["sektor2_grp"] = sektor2_grp(
+        df["sektor"], df["undersektor"], display="combined"
+    ).astype(str)
     assert not df["sektor2_grp"].isnull().any(), "Sector 2 group contains null values"
-    assert df["sektor2_grp"].dtype == "string", "Sector 2 group is not of type string"
 
 
 def test_virk_str_8grp(sample_df):
     df = sample_df
-    df["virk_str_8grp"] = virk_str_8grp(df["ansatte"])
+    df["virk_str_8grp"] = virk_str_8grp(df["ansatte"]).astype(str)
     assert not df["virk_str_8grp"].isnull().any(), "Employee group contains null values"
-    assert df["virk_str_8grp"].dtype == "string", "Employee group is not of type string"
 
 
 def test_virk_str_8grp_number(sample_df):
     df = sample_df
-    df["virk_str_8grp"] = virk_str_8grp(df["ansatte"], display="number")
+    df["virk_str_8grp"] = virk_str_8grp(df["ansatte"], display="number").astype(str)
     assert not df["virk_str_8grp"].isnull().any(), "Employee group contains null values"
-    assert df["virk_str_8grp"].dtype == "string", "Employee group is not of type string"
 
 
 def test_virk_str_8grp_combined(sample_df):
     df = sample_df
-    df["virk_str_8grp"] = virk_str_8grp(df["ansatte"], display="combined")
+    df["virk_str_8grp"] = virk_str_8grp(df["ansatte"], display="combined").astype(str)
     assert not df["virk_str_8grp"].isnull().any(), "Employee group contains null values"
-    assert df["virk_str_8grp"].dtype == "string", "Employee group is not of type string"
 
 
 def test_landbakgrunn_grp(sample_df):
     df = sample_df
-    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"])
+    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"]).astype(str)
     assert not df["verdensregion"].isnull().any(), "World region contains null values"
-    assert df["verdensregion"].dtype == "string", "World region is not of type string"
 
 
 def test_landbakgrunn_grp_number(sample_df):
     df = sample_df
-    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="number")
+    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="number").astype(
+        str
+    )
     assert not df["verdensregion"].isnull().any(), "World region contains null values"
-    assert df["verdensregion"].dtype == "string", "World region is not of type string"
 
 
 def test_landbakgrunn_grp_combined(sample_df):
     df = sample_df
-    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="combined")
+    df["verdensregion"] = landbakgrunn_grp(
+        df["landbakgrunn"], display="combined"
+    ).astype(str)
     assert not df["verdensregion"].isnull().any(), "World region contains null values"
-    assert df["verdensregion"].dtype == "string", "World region is not of type string"
 
 
 def test_landbakgrunn_grp_arblonn(sample_df):
     df = sample_df
-    df["verdensregion"] = landbakgrunn_grp(df["landbakgrunn"], display="arblonn")
+    df["verdensregion"] = landbakgrunn_grp(
+        df["landbakgrunn"], display="arblonn"
+    ).astype(str)
     assert not df["verdensregion"].isnull().any(), "World region contains null values"
-    assert df["verdensregion"].dtype == "string", "World region is not of type string"

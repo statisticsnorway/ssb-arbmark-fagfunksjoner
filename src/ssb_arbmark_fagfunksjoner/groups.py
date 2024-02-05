@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 # Numpy for data wrangling
 import numpy as np
+import numpy.typing as npt
 
 # Pandas for table management
 import pandas as pd
@@ -12,12 +13,16 @@ import pandas as pd
 if TYPE_CHECKING:
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
     PdSeriesStr = pd.Series[str]  # type: ignore[misc]
+    NpArrayInt = npt.NDArray[np.int_]  # type: ignore[misc]
+    NpArrayStr = npt.NDArray[np.str_]  # type: ignore[misc]
 else:
     PdSeriesInt = pd.Series
     PdSeriesStr = pd.Series
+    NpArrayInt = npt.NDArray
+    NpArrayStr = npt.NDArray
 
 
-def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
+def alder_grp(alder: PdSeriesInt, display: str = "label") -> NpArrayStr:
     """Categorize a pandas Series of person ages into predefined groups used in SYKEFR.
 
     Parameters:
@@ -26,7 +31,7 @@ def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
+        A numpy Array where the original person ages are replaced by group labels, keys, or a combination.
     """
     # Define the conditions for each group
     conditions = [
@@ -73,10 +78,10 @@ def alder_grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
         results = [f"{key} {value}" for key, value in groups.items()]
 
     # Apply the selected format to the series
-    return pd.Series(np.select(conditions, results, default="."), dtype="string")
+    return np.select(conditions, results, default=".")
 
 
-def alder_5grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
+def alder_5grp(alder: PdSeriesInt, display: str = "label") -> NpArrayStr:
     """Categorize a pandas Series of person ages into predefined groups used in ARBLONN.
 
     Parameters:
@@ -85,7 +90,7 @@ def alder_5grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A pandas Series where the original person ages are replaced by group labels, keys, or a combination.
+        A numpy Array where the original person ages are replaced by group labels, keys, or a combination.
     """
     # Define the conditions for each group
     conditions = [
@@ -114,10 +119,10 @@ def alder_5grp(alder: PdSeriesInt, display: str = "label") -> PdSeriesStr:
         results = [f"{key} {value}" for key, value in groups.items()]
 
     # Apply the selected format to the series
-    return pd.Series(np.select(conditions, results, default=""), dtype="string")
+    return np.select(conditions, results, default="")
 
 
-def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesStr:
+def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> NpArrayStr:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -126,7 +131,7 @@ def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A pandas Series where the original NACE-codes are replaced by group labels or keys.
+        A numpy Array where the original NACE-codes are replaced by group labels or keys.
     """
     # Removes periods in the NACE codes (if any)
     nace_sn07 = nace_sn07.replace(".", "")
@@ -262,10 +267,10 @@ def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "99 Uoppgitt"
     grouped = np.select(conditions, results, default=default_code)
-    return pd.Series(grouped, dtype="string")
+    return grouped
 
 
-def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesStr:
+def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> NpArrayStr:
     """Categorize a pandas Series of NACE-codes (SN07) into predefined groups.
 
     Parameters:
@@ -274,7 +279,7 @@ def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A pandas Series where the original NACE-codes are replaced by group labels or keys.
+        A numpy Array where the original NACE-codes are replaced by group labels or keys.
     """
     # Split the series by space and take the first part
     first_parts = nace_sn07.str.split(" ", n=1).str[0]
@@ -287,7 +292,7 @@ def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
         print(
             "Warning: The function first groups the input into the 47 groups standard."
         )
-        nace_str2_np = pd.to_numeric(nace_sn07_47grp(nace_sn07, "number")).to_numpy()
+        nace_str2_np = pd.to_numeric(nace_sn07_47grp(nace_sn07, "number"))
     else:
         # Convert series to numpy array
         nace_str2_np = pd.to_numeric(first_parts).to_numpy()
@@ -351,12 +356,12 @@ def nace_sn07_17grp(nace_sn07: PdSeriesStr, display: str = "label") -> PdSeriesS
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Uoppgitt"
     grouped = np.select(conditions, results, default=default_code)
-    return pd.Series(grouped, dtype="string")
+    return grouped
 
 
 def sektor2_grp(
     sektor: PdSeriesStr, undersektor: PdSeriesStr, display: str = "label"
-) -> PdSeriesStr:
+) -> NpArrayStr:
     """Categorize a pandas Series of sectors and subsectors into predefined groups.
 
     Parameters:
@@ -366,7 +371,7 @@ def sektor2_grp(
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A pandas Series where the original sector and subsectors are replaced by group labels or keys.
+        A numpy Array where the original sector and subsectors are replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
@@ -396,10 +401,10 @@ def sektor2_grp(
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Uoppgitt"
     grouped = np.select(conditions, results, default=default_code)
-    return pd.Series(grouped, dtype="string")
+    return grouped
 
 
-def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> PdSeriesStr:
+def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> NpArrayStr:
     """Categorize a pandas Series of employee counts into predefined groups.
 
     Parameters:
@@ -408,7 +413,7 @@ def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> PdSeriesStr:
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A pandas Series where the original employee counts are replaced by group labels or keys.
+        A numpy Array where the original employee counts are replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
@@ -445,10 +450,10 @@ def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> PdSeriesStr:
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "99 Uoppgitt"
     grouped = np.select(conditions, results, default=default_code)
-    return pd.Series(grouped, dtype="string")
+    return grouped
 
 
-def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> PdSeriesStr:
+def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> NpArrayStr:
     """Categorize a pandas Series of country origins from 3 generations into world regions.
 
     Parameters:
@@ -458,7 +463,7 @@ def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> PdSer
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A pandas Series where the original country origins are replaced by group labels or keys.
+        A numpy Array where the original country origins are replaced by group labels or keys.
     """
     # Convert Series to Numpy array
     landbakgrunn_np = pd.to_numeric(landbakgrunn).to_numpy()
@@ -555,4 +560,4 @@ def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> PdSer
         results = [f"{key} {value}" for key, value in groups.items()]
         default_code = "999 Ukjent"
     grouped = np.select(conditions, results, default=default_code)
-    return pd.Series(grouped, dtype="string")
+    return grouped

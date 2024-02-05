@@ -1,6 +1,5 @@
 """A collection of useful functions."""
 
-
 # Itertools for functions creating iterators for efficient looping
 import itertools
 
