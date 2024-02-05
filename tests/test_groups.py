@@ -33,7 +33,6 @@ def sample_df() -> pd.DataFrame:
 def test_alder_5grp(sample_df):
     df = sample_df
     df["alder_5grp"] = alder_5grp(df["alder_all"]).astype(str)
-    df["alder_5grp"] = df["alder_5grp"]
     assert not df["alder_5grp"].isnull().any(), "Age group contains null values"
 
 
