@@ -568,7 +568,11 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
     file_versions = sorted(
         glob.glob(os.path.join(path, file_name_pattern)),
         # Sorting key based on file modification time
-        key=lambda x: os.path.getmtime(x),
+        key=lambda x: (
+            os.path.getmtime(x),
+            # Fallback to filename sorting
+            x,
+        ),
     )
 
     # Check if any files were found. If not, inform the user and return None
