@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import pytest
 
@@ -5,6 +7,7 @@ from ssb_arbmark_fagfunksjoner.functions import count_workdays
 from ssb_arbmark_fagfunksjoner.functions import first_last_date_quarter
 from ssb_arbmark_fagfunksjoner.functions import pinterval
 from ssb_arbmark_fagfunksjoner.functions import proc_sums
+from ssb_arbmark_fagfunksjoner.functions import read_latest
 from ssb_arbmark_fagfunksjoner.functions import ref_day
 from ssb_arbmark_fagfunksjoner.functions import ref_week
 
@@ -220,3 +223,13 @@ def test_ref_week_different_months() -> None:
         raise AssertionError("Different month test should have raised ValueError")
     except ValueError:
         pass
+
+
+def test_read_latest() -> None:
+    cwd = os.getcwd()
+    result = read_latest(
+        path=os.path.normpath(f"{cwd}/tests/test_data"), name="dataset"
+    )
+    expected = os.path.normpath(f"{cwd}/tests/test_data/dataset3.parquet")
+
+    assert result == expected, f"Expected {expected}, but got {result}."

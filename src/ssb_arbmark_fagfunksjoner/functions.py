@@ -1,7 +1,13 @@
 """A collection of useful functions."""
 
+# Glob for Unix style pathname pattern expansion.
+import glob
+
 # Itertools for functions creating iterators for efficient looping
 import itertools
+
+# OS for interacting with the operating system
+import os
 
 # Type hints
 from typing import TYPE_CHECKING
@@ -395,7 +401,7 @@ def proc_sums(
             if isinstance(funcs, list) and len(funcs) == 1:
                 agg_func[col] = funcs[0]
     else:
-        # Default aggregation: 'sum' for all 'values' columns.
+        # Default aggregation: 'sum' for all 'values' columns
         agg_func = {col: "sum" for col in values}
 
     # Copy the dataframe and limit input to columns in the parameter
@@ -404,24 +410,24 @@ def proc_sums(
     # Initialize empty datframe
     sum_df = pd.DataFrame()
 
-    # Convert columns lists to sets for easier set operations.
+    # Convert columns lists to sets for easier set operations
     groups_set = set(groups)
 
-    # Loop over all possible combinations of 'columns' for aggregation.
+    # Loop over all possible combinations of 'columns' for aggregation
     for i in reversed(range(1, len(groups) + 1)):
         for subset in itertools.combinations(groups, i):
-            # Convert subset of columns list to a set.
+            # Convert subset of columns list to a set
             subset_set = set(subset)
-            # Group by the current subset of columns and aggregate.
+            # Group by the current subset of columns and aggregate
             sub_sum = df.groupby(list(subset)).agg(agg_func).reset_index()
             # Check if there are missing columns in the subset
             sum_columns = list(groups_set - subset_set)
             if sum_columns:
-                # For columns not in the current subset, fill with 'Total'.
+                # For columns not in the current subset, fill with 'Total'
                 sub_sum[sum_columns] = "Total"
             # Indicate level of grouping
             sub_sum["level"] = i
-            # Append this subset's aggregation results to the final DataFrame.
+            # Append this subset's aggregation results to the final DataFrame
             sum_df = pd.concat([sum_df, sub_sum], ignore_index=True)
     return sum_df
 
@@ -535,3 +541,54 @@ def ref_week(
 
     # Return the result as a series of boolean values
     return pd.Series(result, dtype="boolean")
+
+
+def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
+    """Finds the latest version of a specified file in a given directory and returns its name.
+
+    This function searches for files in the specified path that match the given name and file
+    type, sorts them by modification time, and returns the path of the latest version. If no
+    files are found, it returns None.
+
+    Args:
+        path (str): The directory path where the files are located.
+        name (str): The base name of the files to search for.
+        dottype (str): The file extension to look for. Defaults to ".parquet".
+
+    Returns:
+        Optional[str]: The path of the latest version of the file if found, None otherwise.
+    """
+    # Define the pattern to search for files based on the provided name and file type
+    file_name_pattern = f"{name}*{dottype}"
+
+    # Inform the user about the file versions being checked
+    print(f"Checking versions of file: {name}")
+
+    # Use glob to find all files matching the pattern, then sort them by modification time
+    file_versions = sorted(
+        glob.glob(os.path.join(path, file_name_pattern)),
+        # Sorting key based on file modification time
+        key=lambda x: (
+            os.path.getmtime(x),
+            # Fallback to filename sorting
+            x,
+        ),
+    )
+
+    # Check if any files were found. If not, inform the user and return None
+    if not file_versions:
+        print("No files found.")
+        return None
+
+    # Select the last file from the sorted list as it is the most recently modified one
+    latest_file = os.path.normpath(file_versions[-1])
+
+    # Extract the name of the latest file for reporting.
+    latest_file_name = os.path.basename(latest_file)
+
+    # Inform the user about the number of versions found and the latest one being read
+    print(f"Found {len(file_versions)} version(s).")
+    print(f"Reading latest version: {latest_file_name}")
+
+    # Return the path of the latest file
+    return latest_file
