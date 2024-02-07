@@ -581,7 +581,7 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
         return None
 
     # Select the last file from the sorted list as it is the most recently modified one
-    latest_file = file_versions[-1]
+    latest_file = os.path.normpath(file_versions[-1])
 
     # Extract the name of the latest file for reporting.
     latest_file_name = os.path.basename(latest_file)
