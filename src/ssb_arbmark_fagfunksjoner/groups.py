@@ -134,11 +134,11 @@ def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> NpArraySt
         A numpy Array where the original NACE-codes are replaced by group labels or keys.
     """
     # Removes periods in the NACE codes (if any)
-    nace_sn07 = nace_sn07.replace(".", "")
+    nace = nace_sn07.str.replace(".", "")
 
     # Substring of NACE codes at length 2 and 3
-    nace2 = pd.to_numeric(nace_sn07.str[:2]).to_numpy()
-    nace3 = pd.to_numeric(nace_sn07.str[:3]).to_numpy()
+    nace2 = pd.to_numeric(nace.str[:2]).to_numpy()
+    nace3 = pd.to_numeric(nace.str[:3]).to_numpy()
 
     # Define the conditions for each group
     conditions = [
