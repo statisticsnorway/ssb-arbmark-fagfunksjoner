@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ssb-arbmark-fagfunksjoner"
-version = "0.0.7"
+version = "0.0.8"
 description = "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner"
 authors = ["Jan Sebastian Rothe <jsr@ssb.no>"]
 license = "MIT"
@@ -24,6 +24,7 @@ numpy = "^1.26.2"
 holidays = "^0.37"
 pandas-stubs = "^2.1.1.230928"
 poetry-plugin-export = "^1.6.0"
+dapla-toolbelt = "^2.0.6"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"

@@ -516,20 +516,20 @@ def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> NpArr
             np.isin(landbakgrunn_np, [612, 684]),
             np.logical_and(landbakgrunn_np >= 802, landbakgrunn_np <= 899),
         ),
-        np.logical_or(
-            landbakgrunn_np == 143,
-            np.logical_or(
+        np.logical_or.reduce(
+            [
+                landbakgrunn_np == 143,
                 np.logical_and(landbakgrunn_np >= 404, landbakgrunn_np <= 496),
                 np.logical_and(landbakgrunn_np >= 502, landbakgrunn_np <= 599),
-            ),
+            ]
         ),
         np.logical_and(landbakgrunn_np >= 203, landbakgrunn_np <= 399),
-        np.logical_or(
-            np.logical_and(landbakgrunn_np >= 601, landbakgrunn_np <= 608),
-            np.logical_or(
+        np.logical_or.reduce(
+            [
+                np.logical_and(landbakgrunn_np >= 601, landbakgrunn_np <= 608),
                 np.logical_and(landbakgrunn_np >= 613, landbakgrunn_np <= 681),
                 np.logical_and(landbakgrunn_np >= 685, landbakgrunn_np <= 799),
-            ),
+            ]
         ),
     ]
 
