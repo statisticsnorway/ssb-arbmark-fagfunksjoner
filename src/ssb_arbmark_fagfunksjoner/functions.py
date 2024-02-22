@@ -582,8 +582,7 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
         # Use glob to find all files matching the pattern
         file_list = fs.glob(file_path)
 
-    # If environment is Prodsone
-    elif wenv == "ON_PREM":
+    else:
 
         # Use glob to find all files matching the pattern
         file_list = glob.glob(file_path)
