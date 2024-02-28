@@ -5,8 +5,8 @@ import pytest
 from ssb_arbmark_fagfunksjoner.groups import alder_5grp
 from ssb_arbmark_fagfunksjoner.groups import alder_grp
 from ssb_arbmark_fagfunksjoner.groups import landbakgrunn_grp
-from ssb_arbmark_fagfunksjoner.groups import nace_sn07_17grp
 from ssb_arbmark_fagfunksjoner.groups import nace_sn07_47grp
+from ssb_arbmark_fagfunksjoner.groups import nace_to_17_groups
 from ssb_arbmark_fagfunksjoner.groups import sektor2_grp
 from ssb_arbmark_fagfunksjoner.groups import virk_str_8grp
 
@@ -94,35 +94,20 @@ def test_nace_sn07_47grp_combined(sample_df):
     ), "NACE SN07 47 group contains null values"
 
 
-def test_nace_sn07_17grp(sample_df):
+def test_nace_to_17_groups(sample_df):
     df = sample_df
-    df["nace_sn07_17grp"] = nace_sn07_17grp(df["nace_sn07"]).astype(str)
+    df["nace_sn07_17grp"] = nace_to_17_groups(df["nace_sn07"]).astype(str)
+    assert (
+        not df["nace_sn07_17grp"].nunique == 1
+    ), "NACE 17 group only found 1 group, likely did not find any matches to map"
+
+
+def test_nace_to_17_groups_label(sample_df):
+    df = sample_df
+    df["nace_sn07_17grp"] = nace_to_17_groups(df["nace_sn07"], label=True).astype(str)
     assert (
         not df["nace_sn07_17grp"].isnull().any()
-    ), "NACE SN07 17 group contains null values"
-
-
-def test_nace_sn07_17grp_number(sample_df):
-    df = sample_df
-    df["nace_sn07_17grp"] = nace_sn07_17grp(df["nace_sn07"], display="number").astype(
-        str
-    )
-    assert (
-        not df["nace_sn07_17grp"].isnull().any()
-    ), "NACE SN07 17 group contains null values"
-
-
-def test_nace_sn07_17grp_combined(sample_df):
-    df = sample_df
-    df["nace_sn07_47grp"] = nace_sn07_47grp(df["nace_sn07"], display="combined").astype(
-        str
-    )
-    df["nace_sn07_17grp"] = nace_sn07_17grp(
-        df["nace_sn07_47grp"], display="combined"
-    ).astype(str)
-    assert (
-        not df["nace_sn07_17grp"].isnull().any()
-    ), "NACE SN07 17 group contains null values"
+    ), "NACE 17 group contains null values"
 
 
 def test_sektor2_grp(sample_df):

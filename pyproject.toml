@@ -25,6 +25,7 @@ holidays = "^0.37"
 pandas-stubs = "^2.1.1.230928"
 poetry-plugin-export = "^1.6.0"
 dapla-toolbelt = "^2.0.6"
+ssb-klass-python = "^0.0.9"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
