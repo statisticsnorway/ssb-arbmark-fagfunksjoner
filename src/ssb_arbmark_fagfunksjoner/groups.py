@@ -11,7 +11,7 @@ import numpy.typing as npt
 import pandas as pd
 
 # Klass for standard classifications
-from klass import KlassVariant
+from klass.classes.variant import KlassVariant
 
 if TYPE_CHECKING:
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
@@ -291,7 +291,7 @@ def nace_to_17_groups(nace: PdSeriesStr, label: bool = False) -> PdSeriesStr:
         It assumes that this mapping has a specific structure, with 'level', 'code', and 'parentCode' (or 'name' if labels are requested) columns.
     """
     # Retrieve the predefined mapping data for NACE codes
-    kv = KlassVariant(1616).data
+    kv = KlassVariant("1616").data
     # Filter the mapping to include only level 2 categories
     kv_level = kv.query('level == "2"')
     # Create a mapping dictionary from NACE codes to their parent codes
