@@ -570,11 +570,8 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
     # Join directory and file name
     file_path = os.path.join(path, file_name_pattern)
 
-    # Checking environment
-    wenv = os.environ.get("DAPLA_REGION")
-
-    # If environment is Dapla
-    if wenv == "BIP":
+    # If path is a google cloud bucket
+    if path[:4] in ["ssb-", "gs:/"]:
 
         # Get filesystem
         fs = FileClient.get_gcs_file_system()
@@ -587,14 +584,10 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
         # Use glob to find all files matching the pattern
         file_list = glob.glob(file_path)
 
-    # Sorting key based on file modification time
+    # Sorting key based on file version
     file_versions = sorted(
         file_list,
-        key=lambda x: (
-            os.path.getmtime(x),
-            # Fallback to filename sorting
-            x,
-        ),
+        key=lambda x: int(x.split("_v")[-1].split(".")[0]),
     )
 
     # Check if any files were found. If not, inform the user and return None
