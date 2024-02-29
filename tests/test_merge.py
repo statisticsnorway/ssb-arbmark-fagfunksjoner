@@ -19,4 +19,6 @@ def test_indicate_merge() -> None:
     )
     result = indicate_merge(dfa, dfb, on="id", how="outer")
     expected = pd.merge(dfa, dfb, on="id", how="outer")
-    assert result == expected, f"Expected {expected}, but got {result}"
+    assert result.equals(
+        expected
+    ), "Function indicate_merge did not return an exact merge."
