@@ -3,7 +3,7 @@
 import pytest
 from click.testing import CliRunner
 
-from ssb_arbmark_fagfunksjoner import __main__
+from arbmark import __main__
 
 
 @pytest.fixture()

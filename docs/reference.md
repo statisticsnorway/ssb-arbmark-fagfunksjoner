@@ -12,22 +12,30 @@ delete the .rst file afterwards.
 -->
 
 ```{eval-rst}
-ssb\_arbmark\_fagfunksjoner package
+arbmark package
 =============================================================================
 
+Subpackages
+-----------
 
-ssb\_arbmark\_fagfunksjoner.functions module
+.. toctree::
+   :maxdepth: 4
+
+   arbmark.functions
+   arbmark.groups
+
+arbmark.functions module
 -----------------------------------------------------------------------------
 
-.. automodule:: ssb_arbmark_fagfunksjoner.functions
+.. automodule:: arbmark.functions
    :members:
    :undoc-members:
    :show-inheritance:
 
-ssb\_arbmark\_fagfunksjoner.groups module
+arbmark.groups module
 -----------------------------------------
 
-.. automodule:: ssb_arbmark_fagfunksjoner.groups
+.. automodule:: arbmark.groups
    :members:
    :undoc-members:
    :show-inheritance:

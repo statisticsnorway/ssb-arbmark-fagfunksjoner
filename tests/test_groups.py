@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ssb_arbmark_fagfunksjoner.groups import alder_5grp
-from ssb_arbmark_fagfunksjoner.groups import alder_grp
-from ssb_arbmark_fagfunksjoner.groups import landbakgrunn_grp
-from ssb_arbmark_fagfunksjoner.groups import nace_sn07_47grp
-from ssb_arbmark_fagfunksjoner.groups import nace_to_17_groups
-from ssb_arbmark_fagfunksjoner.groups import sektor2_grp
-from ssb_arbmark_fagfunksjoner.groups import virk_str_8grp
+from arbmark import alder_5grp
+from arbmark import alder_grp
+from arbmark import landbakgrunn_grp
+from arbmark import nace_sn07_47grp
+from arbmark import nace_to_17_groups
+from arbmark import sektor2_grp
+from arbmark import virk_str_8grp
 
 
 @pytest.fixture

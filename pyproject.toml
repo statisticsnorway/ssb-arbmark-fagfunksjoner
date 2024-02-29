@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ssb-arbmark-fagfunksjoner"
-version = "0.0.9"
+version = "0.0.10"
 description = "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner"
 authors = ["Jan Sebastian Rothe <jsr@ssb.no>"]
 license = "MIT"
@@ -8,6 +8,7 @@ readme = "README.md"
 homepage = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner"
 repository = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner"
 documentation = "https://statisticsnorway.github.io/ssb-arbmark-fagfunksjoner"
+packages = [{ include = "arbmark", from = "src" }]
 classifiers = ["Development Status :: 4 - Beta"]
 
 [tool.poetry.urls]
