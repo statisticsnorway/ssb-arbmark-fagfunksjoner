@@ -7,28 +7,125 @@ from the root directory.
 
 You need to rerun the command when python files are added, deleted or renamed.
 Copy the content from the generated
-ssb_arbmark_fagfunksjoner.rst file to the {eval-rst} block below and
+arbmark.rst file to the {eval-rst} block below and
 delete the .rst file afterwards.
 -->
 
 ```{eval-rst}
-ssb\_arbmark\_fagfunksjoner package
-=============================================================================
+arbmark package
+===================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   arbmark.functions
+   arbmark.groups
 
 
-ssb\_arbmark\_fagfunksjoner.functions module
------------------------------------------------------------------------------
+arbmark.functions package
+=========================
 
-.. automodule:: ssb_arbmark_fagfunksjoner.functions
+
+arbmark.functions.aggregation module
+------------------------------------
+
+.. automodule:: arbmark.functions.aggregation
    :members:
    :undoc-members:
    :show-inheritance:
 
-ssb\_arbmark\_fagfunksjoner.groups module
------------------------------------------
+arbmark.functions.files module
+------------------------------
 
-.. automodule:: ssb_arbmark_fagfunksjoner.groups
+.. automodule:: arbmark.functions.files
    :members:
    :undoc-members:
    :show-inheritance:
-```
+
+arbmark.functions.interval module
+---------------------------------
+
+.. automodule:: arbmark.functions.interval
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.functions.merge module
+------------------------------
+
+.. automodule:: arbmark.functions.merge
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.functions.quarter module
+--------------------------------
+
+.. automodule:: arbmark.functions.quarter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.functions.reference module
+----------------------------------
+
+.. automodule:: arbmark.functions.reference
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.functions.workdays module
+---------------------------------
+
+.. automodule:: arbmark.functions.workdays
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+arbmark.groups package
+======================
+
+
+arbmark.groups.age module
+-------------------------
+
+.. automodule:: arbmark.groups.age
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.groups.company\_size module
+-----------------------------------
+
+.. automodule:: arbmark.groups.company_size
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.groups.country\_origin module
+-------------------------------------
+
+.. automodule:: arbmark.groups.country_origin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.groups.nace module
+--------------------------
+
+.. automodule:: arbmark.groups.nace
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+arbmark.groups.sector module
+----------------------------
+
+.. automodule:: arbmark.groups.sector
+   :members:
+   :undoc-members:
+   :show-inheritance:
