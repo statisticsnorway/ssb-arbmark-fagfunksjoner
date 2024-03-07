@@ -9,4 +9,4 @@ def test_turnuskoder():
     )
     result = turnuskoder(test_case)
     expected = pd.Series(["20", "20", "25", "99", "20", "99"])
-    assert result == expected, f"Expected {expected}, but got {result}"
+    assert (result == expected).all(), f"Expected {expected}, but got {result}"
