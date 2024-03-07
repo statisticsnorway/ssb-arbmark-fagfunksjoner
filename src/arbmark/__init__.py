@@ -15,6 +15,7 @@ from arbmark.groups.country_origin import landbakgrunn_grp
 from arbmark.groups.nace import nace_sn07_47grp
 from arbmark.groups.nace import nace_to_17_groups
 from arbmark.groups.sector import sektor2_grp
+from arbmark.groups.shift_work import turnuskoder
 
 __all__ = [
     "proc_sums",
@@ -32,4 +33,5 @@ __all__ = [
     "nace_to_17_groups",
     "nace_sn07_47grp",
     "sektor2_grp",
+    "turnuskoder",
 ]
