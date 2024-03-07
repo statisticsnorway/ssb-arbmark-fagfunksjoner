@@ -33,5 +33,5 @@ __all__ = [
     "nace_to_17_groups",
     "nace_sn07_47grp",
     "sektor2_grp",
-    "sektor2_grp",
+    "turnuskoder",
 ]
