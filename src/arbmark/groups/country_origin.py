@@ -119,12 +119,12 @@ def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> NpArr
         default_code = "Ukjent"
     elif display == "number":
         results = [str(key) for key in groups.keys()]
-        default_code = "999"
+        default_code = "990"
     elif display == "arblonn":
         results = [str(i) for i in arblonn_groups]
         default_code = "980-990"
     else:
         results = [f"{key} {value}" for key, value in groups.items()]
-        default_code = "999 Ukjent"
+        default_code = "990 Ukjent"
     grouped = np.select(conditions, results, default=default_code)
     return grouped
