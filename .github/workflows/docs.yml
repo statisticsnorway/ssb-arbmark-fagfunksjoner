@@ -30,7 +30,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          pipx install --pip-args "-c .github/workflows/constraints.txt" poetry
+          pipx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" poetry
           poetry --version
 
       - name: Set up Python
@@ -41,7 +41,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          poetry install --no-root
+          poetry install
 
       - name: Build doc with Sphinx
         run: |
