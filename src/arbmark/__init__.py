@@ -7,6 +7,8 @@ from arbmark.functions.merge import indicate_merge
 from arbmark.functions.quarter import first_last_date_quarter
 from arbmark.functions.reference import ref_day
 from arbmark.functions.reference import ref_week
+from arbmark.functions.workdays import count_holidays
+from arbmark.functions.workdays import count_weekenddays
 from arbmark.functions.workdays import count_workdays
 from arbmark.groups.age import alder_5grp
 from arbmark.groups.age import alder_grp
@@ -26,6 +28,8 @@ __all__ = [
     "ref_day",
     "ref_week",
     "count_workdays",
+    "count_holidays",
+    "count_weekenddays",
     "alder_grp",
     "alder_5grp",
     "virk_str_8grp",
