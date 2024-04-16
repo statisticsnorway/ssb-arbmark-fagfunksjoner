@@ -1,0 +1,49 @@
+diff a/pyproject.toml b/pyproject.toml	(rejected hunks)
+@@ -14,7 +14,7 @@ classifiers = ["Development Status :: 1 - Planning"]
+ Changelog = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner/releases"
+
+ [tool.poetry.dependencies]
+-python = "^3.9"
++python = "^3.10"
+ click = ">=8.0.1"
+
+ [tool.poetry.group.dev.dependencies]
+@@ -35,7 +35,6 @@ sphinx-click = ">=3.0.2"
+ typeguard = ">=2.13.3"
+ xdoctest = { extras = ["colors"], version = ">=0.15.10" }
+ myst-parser = { version = ">=0.16.1" }
+-ipykernel = ">=6.0.0"
+
+ [tool.pytest.ini_options]
+ pythonpath = ["src"]
+@@ -50,6 +49,7 @@ tests = ["tests", "*/tests"]
+ [tool.coverage.run]
+ branch = true
+ source = ["ssb_arbmark_fagfunksjoner", "tests"]
++relative_files = true
+
+ [tool.coverage.report]
+ show_missing = true
+@@ -66,11 +66,21 @@ show_error_context = true
+ force-exclude = true  # Apply excludes to pre-commit
+ show-fixes = true
+ src = ["src", "tests"]
+-target-version = "py39"  # Minimum Python version supported
++target-version = "py310"  # Minimum Python version supported
++include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
++extend-exclude = [
++    "__pycache__",
++    "old",
++    ".ipynb_checkpoints",
++    "noxfile.py",
++    "docs/conf.py",
++]
+
+ # Ruff rules may be customized as desired: https://docs.astral.sh/ruff/rules/
++[tool.ruff.lint]
+ select = [
+     "A",    # prevent using keywords that clobber python builtins
++    "ANN",  # check type annotations
+     "B",    # bugbear: security warnings
+     "D",    # documentation
+     "E",    # pycodestyle

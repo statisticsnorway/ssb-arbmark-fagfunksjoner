@@ -1,0 +1,16 @@
+diff a/noxfile.py b/noxfile.py	(rejected hunks)
+@@ -1,4 +1,5 @@
+ """Nox sessions."""
++
+ import os
+ import shlex
+ import shutil
+@@ -22,7 +23,7 @@ except ImportError:
+     raise SystemExit(dedent(message)) from None
+
+ package = "ssb_arbmark_fagfunksjoner"
+-python_versions = ["3.10", "3.11", "3.9"]
++python_versions = ["3.10", "3.11", "3.12"]
+ nox.needs_version = ">= 2021.6.6"
+ nox.options.sessions = (
+     "pre-commit",
