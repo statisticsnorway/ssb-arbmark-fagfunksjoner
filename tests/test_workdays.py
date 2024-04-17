@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from arbmark import count_holidays
-from arbmark import count_weekenddays
+from arbmark import count_weekend_days
 from arbmark import count_workdays
 
 
@@ -38,8 +38,8 @@ def test_count_holidays(sample_df: pd.DataFrame) -> None:
     ), f"Expected {test1_expected}, but got {test1_result}"
 
 
-def test_count_weekenddays(sample_df: pd.DataFrame) -> None:
-    test1_result = count_weekenddays(
+def test_count_weekend_days(sample_df: pd.DataFrame) -> None:
+    test1_result = count_weekend_days(
         sample_df["from_dates"], sample_df["to_dates"]
     ).to_list()
     test1_expected = [3, 4, 8]
