@@ -11,11 +11,151 @@ import numpy as np
 import pandas as pd
 
 if TYPE_CHECKING:
+    from numpy.typing import NDArray
+
     PdSeriesTimestamp = pd.Series[pd.Timestamp]  # type: ignore[misc]
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
+    NpArrayInt = NDArray[np.int_]  # type: ignore[misc]
+    NpArrayDate = NDArray[np.datetime64]  # type: ignore[misc]
+    NpArrayBoolean = NDArray[np.bool_]  # type: ignore[misc]
 else:
     PdSeriesTimestamp = pd.Series
     PdSeriesInt = pd.Series
+    NpArrayInt = np.ndarray
+    NpArrayDate = np.ndarray
+    NpArrayBoolean = np.ndarray
+
+
+def numpy_dates(dates: PdSeriesTimestamp) -> NpArrayDate:
+    """Converts a Pandas Series of timestamps to a Numpy array of dates in 'datetime64[D]' format.
+
+    Args:
+        dates: A pandas Series containing timestamps.
+
+    Returns:
+        A Numpy array containing dates.
+    """
+    return dates.to_numpy().astype("datetime64[D]")
+
+
+def get_years(from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp) -> NpArrayInt:
+    """Extracts unique years from two series of dates.
+
+    Args:
+        from_dates: A Pandas Series of start dates.
+        to_dates: A Pandas Series of end dates.
+
+    Returns:
+        A Numpy array of unique years derived from the date ranges.
+    """
+    all_dates = pd.concat([from_dates, to_dates])
+    all_years = all_dates.to_numpy().astype("datetime64[Y]").astype(int) + 1970
+    return np.unique(all_years)
+
+
+def count_days(
+    from_dates: NpArrayDate, to_dates: NpArrayDate, calendar: NpArrayDate
+) -> PdSeriesInt:
+    """Counts the days between pairs of start and end dates using a provided calendar.
+
+    Args:
+        from_dates: Numpy array of start dates.
+        to_dates: Numpy array of end dates.
+        calendar: Numpy array representing the days to be counted.
+
+    Returns:
+        A Pandas Series with the count of days for each pair.
+    """
+    counts = []
+    for from_date, to_date in zip(from_dates, to_dates, strict=True):
+        dates_to_count = calendar[(calendar >= from_date) & (calendar <= to_date)]
+        counts.append(len(dates_to_count))
+    return pd.Series(counts, dtype="Int64")
+
+
+def get_calendar(from_date: np.datetime64, to_date: np.datetime64) -> NpArrayDate:
+    """Generates a calendar as a range of dates from a start date to an end date.
+
+    Args:
+        from_date: The start date.
+        to_date: The end date.
+
+    Returns:
+        A Numpy array representing a range of dates from start to end.
+    """
+    return np.arange(from_date, to_date + np.timedelta64(1, "D"), dtype="datetime64[D]")
+
+
+def get_norwegian_holidays(years: NpArrayInt) -> NpArrayDate:
+    """Fetches Norwegian holidays for a given range of years and returns them as a sorted Numpy array of dates.
+
+    Args:
+        years: Numpy array of years for which holidays are to be fetched.
+
+    Returns:
+        A Numpy array of holiday dates.
+    """
+    if len(years) == 1:
+        norwegian_holidays = holidays.country_holidays("NO", years=years[0])
+    else:
+        norwegian_holidays = holidays.country_holidays(
+            "NO", years=range(np.min(years), np.max(years) + 1)
+        )
+    return np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
+
+
+def is_weekend(calendar: NpArrayDate) -> NpArrayBoolean:
+    """Determines which days in a given calendar are weekends.
+
+    Args:
+        calendar: Numpy array of dates.
+
+    Returns:
+        A Numpy boolean array where True indicates a weekend.
+    """
+    return np.isin((calendar.astype("datetime64[D]").view("int64") - 4) % 7, [5, 6])
+
+
+def filter_workdays(calendar: NpArrayDate, holidays: NpArrayDate) -> NpArrayDate:
+    """Filters out weekends and holidays from a calendar, leaving only workdays.
+
+    Args:
+        calendar: Numpy array of dates.
+        holidays: Numpy array of holiday dates.
+
+    Returns:
+        A Numpy array of dates that are workdays.
+    """
+    return calendar[~np.isin(calendar, holidays) & ~is_weekend(calendar)]
+
+
+def filter_holidays(calendar: NpArrayDate, holidays: NpArrayDate) -> NpArrayDate:
+    """Filters out the holiday dates from a given calendar.
+
+    This function identifies and returns only the dates in the calendar that are recognized as holidays, excluding holidays on weekends.
+
+    Args:
+        calendar: Numpy array of dates.
+        holidays: Numpy array of dates that are holidays.
+
+    Returns:
+        A Numpy array of dates that are recognized as holidays.
+    """
+    return calendar[np.isin(calendar, holidays) & ~is_weekend(calendar)]
+
+
+def filter_weekends(calendar: NpArrayDate) -> NpArrayDate:
+    """Filters out the weekend dates from a given calendar.
+
+    This function identifies which days in the provided calendar are weekends and returns only those dates.
+
+    Args:
+        calendar: Numpy array of dates, typically encompassing multiple weeks.
+
+    Returns:
+        A Numpy array of dates that fall on weekends (Saturday and Sunday).
+    """
+    return calendar[is_weekend(calendar)]
 
 
 def count_workdays(
@@ -38,65 +178,17 @@ def count_workdays(
 
     Returns:
         A Pandas Series containing the number of workdays for each date pair.
-
-    Raises:
-        ValueError: If the length of the calculated workdays list does not match the
-            number of date pairs.
     """
-    # Convert the from_dates and to_dates columns to numpy arrays
-    from_dates_np = from_dates.to_numpy()
-    to_dates_np = to_dates.to_numpy()
-
-    # Extract the year from the from_dates and to_dates arrays
-    from_years = from_dates_np.astype("datetime64[Y]").astype(int) + 1970
-    to_years = to_dates_np.astype("datetime64[Y]").astype(int) + 1970
-
-    # Find the max and min years
-    min_year = int(np.min(from_years))
-    max_year = int(np.max(to_years))
-
-    if min_year == max_year:
-        norwegian_holidays = holidays.country_holidays("NO", years=min_year)
-    else:
-        norwegian_holidays = holidays.country_holidays(
-            "NO", years=range(min_year, max_year + 1)
-        )
-
-    # Convert the holiday dates to a numpy array of datetime64 objects
-    holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
-
-    # Convert from_dates and to_dates to datetime64 arrays
-    from_dates_d = from_dates_np.astype("datetime64[D]")
-    to_dates_d = to_dates_np.astype("datetime64[D]")
-
-    # Find the max and min dates
-    min_date = np.min(from_dates_d)
-    max_date = np.max(to_dates_d)
-
-    # Generate a range of dates between the min and max dates
-    dates = np.arange(
-        min_date, max_date + np.timedelta64(1, "D"), dtype="datetime64[D]"
+    from_dates_np = numpy_dates(from_dates)
+    to_dates_np = numpy_dates(to_dates)
+    return count_days(
+        from_dates_np,
+        to_dates_np,
+        filter_workdays(
+            get_calendar(np.min(from_dates_np), np.max(to_dates_np)),
+            get_norwegian_holidays(get_years(from_dates, to_dates)),
+        ),
     )
-
-    # Filter the dates array to exclude holiday dates and weekends
-    workdays = dates[
-        ~np.isin(dates, holiday_dates)
-        & ~np.isin((dates.astype("datetime64[D]").view("int64") - 4) % 7, [5, 6])
-    ]
-
-    # Calculate the number of workdays for each from and to date pair
-    workdays_list = []
-    for from_date, to_date in zip(from_dates_d, to_dates_d, strict=True):
-        workdays_in_range = workdays[(workdays >= from_date) & (workdays <= to_date)]
-        workdays_list.append(len(workdays_in_range))
-
-    # Check if the length of the workdays_list is the same as the number of date pairs
-    if len(workdays_list) != len(from_dates):
-        raise ValueError(
-            "Unexpected error: length of workdays_list does not match the number of date pairs."
-        )
-
-    return pd.Series(workdays_list, dtype="Int64")
 
 
 def count_holidays(
@@ -104,11 +196,9 @@ def count_holidays(
 ) -> PdSeriesInt:
     """Counts the number of holidays between pairs of dates in given series.
 
-    This function calculates the number of holidays for each pair of start and end
-    dates provided in the `from_dates` and `to_dates` series. It handles date ranges
-    spanning multiple years and counts holidays specific to Norway.
-    The function dynamically fetches Norwegian holidays for the relevant years based
-    on the input dates.
+    This function calculates the number of holidays for each pair of start and end dates provided in
+    the `from_dates` and `to_dates` series. It uses the holidays specific to Norway and considers
+    each pair's specific date range.
 
     Args:
         from_dates: A pandas Series containing the start dates of the periods.
@@ -116,65 +206,28 @@ def count_holidays(
 
     Returns:
         A Pandas Series containing the number of holidays for each date pair.
-
-    Raises:
-        ValueError: If the length of the calculated number of holidays does not match the
-            number of date pairs.
     """
-    # Convert the from_dates and to_dates columns to numpy arrays
-    from_dates_np = from_dates.to_numpy()
-    to_dates_np = to_dates.to_numpy()
-
-    # Extract the year from the from_dates and to_dates arrays
-    from_years = from_dates_np.astype("datetime64[Y]").astype(int) + 1970
-    to_years = to_dates_np.astype("datetime64[Y]").astype(int) + 1970
-
-    # Find the max and min years
-    min_year = int(np.min(from_years))
-    max_year = int(np.max(to_years))
-
-    if min_year == max_year:
-        norwegian_holidays = holidays.country_holidays("NO", years=min_year)
-    else:
-        norwegian_holidays = holidays.country_holidays(
-            "NO", years=range(min_year, max_year + 1)
-        )
-
-    # Convert the holiday dates to a numpy array of datetime64 objects
-    holiday_dates = np.array(sorted(norwegian_holidays.keys()), dtype="datetime64[D]")
-
-    # Convert from_dates and to_dates to datetime64 arrays
-    from_dates_d = from_dates_np.astype("datetime64[D]")
-    to_dates_d = to_dates_np.astype("datetime64[D]")
-
-    # Create a list to store the number of holidays for each date range
-    holiday_counts = []
-    for from_date, to_date in zip(from_dates_d, to_dates_d, strict=True):
-        holidays_in_range = holiday_dates[
-            (holiday_dates >= from_date) & (holiday_dates <= to_date)
-        ]
-        holiday_counts.append(len(holidays_in_range))
-
-    # Check if the length of the workdays_list is the same as the number of date pairs
-    if len(holiday_counts) != len(from_dates):
-        raise ValueError(
-            "Unexpected error: length of holiday_counts does not match the number of date pairs."
-        )
-
-    return pd.Series(holiday_counts, dtype="Int64")
+    from_dates_np = numpy_dates(from_dates)
+    to_dates_np = numpy_dates(to_dates)
+    return count_days(
+        from_dates_np,
+        to_dates_np,
+        filter_holidays(
+            get_calendar(np.min(from_dates_np), np.max(to_dates_np)),
+            get_norwegian_holidays(get_years(from_dates, to_dates)),
+        ),
+    )
 
 
-def count_weekenddays(
+def count_weekend_days(
     from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp
 ) -> PdSeriesInt:
     """Counts the number of weekend days between pairs of dates in given series.
 
-    This function calculates the number of weekend days for each pair of start and
-    end dates provided in the `from_dates` and `to_dates` series. Weekends are
-    identified using a calculation that considers the Unix epoch (1970-01-01) as
-    the reference starting point. After adjusting with a -4 shift and modulo 7,
-    the weekdays are mapped as Monday (0) through Sunday (6), with Saturday (5)
-    and Sunday (6) identified as the weekend days.
+    This function calculates the number of weekend days for each pair of start and end dates provided in
+    the `from_dates` and `to_dates` series. It identifies weekends based on a calculation using the Unix
+    epoch as the reference point. The result includes the total number of Saturdays and Sundays within each
+    specified date range.
 
     Args:
         from_dates: A pandas Series containing the start dates of the periods.
@@ -182,45 +235,11 @@ def count_weekenddays(
 
     Returns:
         A Pandas Series containing the number of weekend days for each date pair.
-
-    Raises:
-        ValueError: If the length of the calculated number of weekend days does not
-            match the number of date pairs.
     """
-    # Convert the from_dates and to_dates columns to numpy arrays
-    from_dates_np = from_dates.to_numpy()
-    to_dates_np = to_dates.to_numpy()
-
-    # Convert from_dates and to_dates to datetime64 arrays
-    from_dates_d = from_dates_np.astype("datetime64[D]")
-    to_dates_d = to_dates_np.astype("datetime64[D]")
-
-    # Find the max and min dates
-    min_date = np.min(from_dates_d)
-    max_date = np.max(to_dates_d)
-
-    # Generate a range of dates between the min and max dates
-    dates = np.arange(
-        min_date, max_date + np.timedelta64(1, "D"), dtype="datetime64[D]"
+    from_dates_np = numpy_dates(from_dates)
+    to_dates_np = numpy_dates(to_dates)
+    return count_days(
+        from_dates_np,
+        to_dates_np,
+        filter_weekends(get_calendar(np.min(from_dates_np), np.max(to_dates_np))),
     )
-
-    # Filter the dates array to exclude holiday dates and weekends
-    weekenddays = dates[
-        np.isin((dates.astype("datetime64[D]").view("int64") - 4) % 7, [5, 6])
-    ]
-
-    # Calculate the number of workdays for each from and to date pair
-    weekenddays_counts = []
-    for from_date, to_date in zip(from_dates_d, to_dates_d, strict=True):
-        weekenddays_in_range = weekenddays[
-            (weekenddays >= from_date) & (weekenddays <= to_date)
-        ]
-        weekenddays_counts.append(len(weekenddays_in_range))
-
-    # Check if the length of the workdays_list is the same as the number of date pairs
-    if len(weekenddays_counts) != len(from_dates):
-        raise ValueError(
-            "Unexpected error: length of weekenddays_counts does not match the number of date pairs."
-        )
-
-    return pd.Series(weekenddays_counts, dtype="Int64")
