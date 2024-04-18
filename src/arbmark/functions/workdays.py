@@ -132,7 +132,7 @@ def filter_workdays(calendar: NpArrayDate, holidays: NpArrayDate) -> NpArrayDate
 def filter_holidays(calendar: NpArrayDate, holidays: NpArrayDate) -> NpArrayDate:
     """Filters out the holiday dates from a given calendar.
 
-    This function identifies and returns only the dates in the calendar that are recognized as holidays.
+    This function identifies and returns only the dates in the calendar that are recognized as holidays, excluding holidays on weekends.
 
     Args:
         calendar: Numpy array of dates.
@@ -141,7 +141,7 @@ def filter_holidays(calendar: NpArrayDate, holidays: NpArrayDate) -> NpArrayDate
     Returns:
         A Numpy array of dates that are recognized as holidays.
     """
-    return calendar[np.isin(calendar, holidays)]
+    return calendar[np.isin(calendar, holidays) & ~is_weekend(calendar)]
 
 
 def filter_weekends(calendar: NpArrayDate) -> NpArrayDate:

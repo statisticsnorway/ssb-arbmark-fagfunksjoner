@@ -31,7 +31,7 @@ def test_count_holidays(sample_df: pd.DataFrame) -> None:
     test1_result = count_holidays(
         sample_df["from_dates"], sample_df["to_dates"]
     ).to_list()
-    test1_expected = [1, 3, 4]
+    test1_expected = [0, 3, 3]
 
     assert (
         test1_result == test1_expected
