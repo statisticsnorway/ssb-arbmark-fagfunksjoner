@@ -96,7 +96,7 @@ def get_norwegian_holidays(years: NpArrayInt) -> NpArrayDate:
         A Numpy array of holiday dates.
     """
     if len(years) == 1:
-        norwegian_holidays = holidays.country_holidays("NO", years=years[0])
+        norwegian_holidays = holidays.country_holidays("NO", years=int(years[0]))
     else:
         norwegian_holidays = holidays.country_holidays(
             "NO", years=range(np.min(years), np.max(years) + 1)
