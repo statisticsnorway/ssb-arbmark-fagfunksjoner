@@ -1,6 +1,7 @@
 import pandas as pd
 
 from arbmark import ref_day
+from arbmark import ref_tuesday
 from arbmark import ref_week
 
 
@@ -40,6 +41,24 @@ def test_ref_week_outside_range() -> None:
     ).all(), "Reference week outside range test failed"
 
 
+def test_ref_tuesday_within_range() -> None:
+    from_dates = pd.Series(pd.to_datetime(["2023-12-11", "2023-11-13"]))
+    to_dates = pd.Series(pd.to_datetime(["2023-12-15", "2023-11-14"]))
+    expected = pd.Series([True, True])
+    assert (
+        ref_tuesday(from_dates, to_dates) == expected
+    ).all(), "Tuesday in the same week as the 16th within range test failed"
+
+
+def test_ref_tuesday_outside_range() -> None:
+    from_dates = pd.Series(pd.to_datetime(["2023-11-15", "2023-12-14"]))
+    to_dates = pd.Series(pd.to_datetime(["2023-11-30", "2023-12-24"]))
+    expected = pd.Series([False, False])
+    assert (
+        ref_tuesday(from_dates, to_dates) == expected
+    ).all(), "Tuesday in the same week as the 16th outside range test failed"
+
+
 def test_ref_day_different_years() -> None:
     from_dates = pd.Series(["2023-01-01", "2023-01-20"])
     to_dates = pd.Series(["2024-02-10", "2024-02-18"])
@@ -75,6 +94,26 @@ def test_ref_week_different_months() -> None:
     to_dates = pd.Series(pd.to_datetime(["2023-03-01", "2023-04-15"]))
     try:
         ref_week(from_dates, to_dates)
+        raise AssertionError("Different month test should have raised ValueError")
+    except ValueError:
+        pass
+
+
+def test_ref_tuesday_different_years() -> None:
+    from_dates = pd.Series(pd.to_datetime(["2023-01-01", "2023-01-20"]))
+    to_dates = pd.Series(pd.to_datetime(["2024-02-10", "2024-02-18"]))
+    try:
+        ref_tuesday(from_dates, to_dates)
+        raise AssertionError("Different year test should have raised ValueError")
+    except ValueError:
+        pass
+
+
+def test_ref_tuesday_different_months() -> None:
+    from_dates = pd.Series(pd.to_datetime(["2023-01-01", "2023-01-20"]))
+    to_dates = pd.Series(pd.to_datetime(["2023-03-10", "2023-02-18"]))
+    try:
+        ref_tuesday(from_dates, to_dates)
         raise AssertionError("Different month test should have raised ValueError")
     except ValueError:
         pass
