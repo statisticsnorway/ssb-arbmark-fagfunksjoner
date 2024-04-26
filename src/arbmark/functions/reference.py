@@ -128,3 +128,54 @@ def ref_week(
 
     # Return the result as a series of boolean values
     return pd.Series(result, dtype="boolean")
+
+
+def ref_tuesday(
+    from_dates: PdSeriesTimestamp, to_dates: PdSeriesTimestamp
+) -> PdSeriesBool:
+    """Determines if the Tuesday in the same week as the 16th falls between given date ranges.
+
+    This function finds the Tuesday in the same week as the 16th day of each month
+    and checks if it is within the range specified by the corresponding 'from_dates'
+    and 'to_dates'. It requires that both 'from_dates' and 'to_dates' are in the
+    same year and month.
+
+    Args:
+        from_dates: A Series of dates representing the start of a period.
+            These dates should be in the 'YYYY-MM-DD' format.
+        to_dates: A Series of dates representing the end of a period.
+            These dates should also be in the 'YYYY-MM-DD' format.
+
+    Returns:
+        A Pandas Series of boolean values. Each element in the Series
+        corresponds to whether the Tuesday in the week of the 16th day of the month
+        for each period is within the respective date range.
+
+    Raises:
+        ValueError: If 'from_dates' and 'to_dates' are not in the same year, or if
+            they are not in the same month.
+    """
+    # Check if the year and month are the same in the from_dates and to_dates
+    if not np.all(from_dates.dt.year == to_dates.dt.year):
+        raise ValueError("Function can only be applied to dates in the same year!")
+    if not np.all(from_dates.dt.month == to_dates.dt.month):
+        raise ValueError(
+            "Function can only be applied to date pairs in the same month!"
+        )
+
+    # Compute the date of the 16th for each period
+    reference_16th = pd.to_datetime(
+        from_dates.dt.year.astype(str) + "-" + from_dates.dt.month.astype(str) + "-16"
+    )
+
+    # Calculate the day of the week for the 16th (0=Monday, ..., 6=Sunday)
+    weekday_16th = reference_16th.dt.dayofweek
+
+    # Calculate the Tuesday in the same week as the 16th
+    tuesday_ref = reference_16th + pd.to_timedelta(1 - weekday_16th, unit="d")
+
+    # Check if the Tuesday reference day is within the range of the from_date and to_date
+    result = np.logical_and(from_dates <= tuesday_ref, tuesday_ref <= to_dates)
+
+    # Return the result as an array of boolean values
+    return pd.Series(result, dtype="boolean")

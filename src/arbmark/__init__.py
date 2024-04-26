@@ -6,6 +6,7 @@ from arbmark.functions.interval import pinterval
 from arbmark.functions.merge import indicate_merge
 from arbmark.functions.quarter import first_last_date_quarter
 from arbmark.functions.reference import ref_day
+from arbmark.functions.reference import ref_tuesday
 from arbmark.functions.reference import ref_week
 from arbmark.functions.workdays import count_days
 from arbmark.functions.workdays import count_holidays
@@ -36,6 +37,7 @@ __all__ = [
     "first_last_date_quarter",
     "ref_day",
     "ref_week",
+    "ref_tuesday",
     "count_days",
     "count_holidays",
     "count_weekend_days",
