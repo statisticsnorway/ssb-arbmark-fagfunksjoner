@@ -24,9 +24,13 @@ def test_ref_day_outside_range() -> None:
 
 
 def test_ref_week_within_range() -> None:
-    from_dates = pd.Series(pd.to_datetime(["2023-01-22", "2023-04-01"]))
-    to_dates = pd.Series(pd.to_datetime(["2023-01-31", "2023-04-15"]))
-    expected = pd.Series([True, True])
+    from_dates = pd.Series(
+        pd.to_datetime(["2022-02-20", "2022-04-01", "2022-01-01", "2022-12-01"])
+    )
+    to_dates = pd.Series(
+        pd.to_datetime(["2022-02-28", "2022-04-11", "2022-01-31", "2022-12-31"])
+    )
+    expected = pd.Series([True, True, True, True])
     assert (
         ref_week(from_dates, to_dates) == expected
     ).all(), "Reference week within range test failed"
