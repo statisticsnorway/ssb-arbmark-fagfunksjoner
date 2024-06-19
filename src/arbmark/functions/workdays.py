@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
     NpArrayInt = npt.NDArray[np.int_]  # type: ignore[misc]
     NpArrayDate = npt.NDArray[np.datetime64]  # type: ignore[misc]
-    NpArrayBoolean = npt.NDArray[np.dtype[bool]]  # type: ignore[misc]
+    NpArrayBoolean = npt.NDArray[np.bool_]  # type: ignore[misc]
 else:
     PdSeriesTimestamp = pd.Series
     PdSeriesInt = pd.Series
