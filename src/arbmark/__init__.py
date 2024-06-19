@@ -24,6 +24,7 @@ from arbmark.groups.age import alder_5grp
 from arbmark.groups.age import alder_grp
 from arbmark.groups.company_size import virk_str_8grp
 from arbmark.groups.country_origin import landbakgrunn_grp
+from arbmark.groups.nace import clean_nace_17_groups
 from arbmark.groups.nace import nace_sn07_47grp
 from arbmark.groups.nace import nace_to_17_groups
 from arbmark.groups.sector import sektor2_grp
@@ -55,6 +56,7 @@ __all__ = [
     "alder_5grp",
     "virk_str_8grp",
     "landbakgrunn_grp",
+    "clean_nace_17_groups",
     "nace_to_17_groups",
     "nace_sn07_47grp",
     "sektor2_grp",
