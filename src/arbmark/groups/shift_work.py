@@ -10,7 +10,7 @@ import pandas as pd
 
 if TYPE_CHECKING:
     PdSeriesStr = pd.Series[str]  # type: ignore[misc]
-    NpArrayStr = npt.NDArray[np.dtype[str]]  # type: ignore[misc]
+    NpArrayStr = npt.NDArray[np.str_]  # type: ignore[misc]
 else:
     PdSeriesStr = pd.Series
     NpArrayStr = npt.NDArray
