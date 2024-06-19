@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
     PdSeriesStr = pd.Series[str]  # type: ignore[misc]
     NpArrayInt = npt.NDArray[np.int_]  # type: ignore[misc]
-    NpArrayStr = npt.NDArray[np.unicode_]  # type: ignore[misc]
+    NpArrayStr = npt.NDArray[np.dtype[str]]  # type: ignore[misc]
 else:
     PdSeriesInt = pd.Series
     PdSeriesStr = pd.Series
