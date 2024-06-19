@@ -11,13 +11,13 @@ import pandas as pd
 if TYPE_CHECKING:
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
     PdSeriesStr = pd.Series[str]  # type: ignore[misc]
-    NpArrayInt = npt.ndarray[np.int_]  # type: ignore[misc]
-    NpArrayStr = npt.ndarray[np.unicode_]  # type: ignore[misc]
+    NpArrayInt = npt.NDArray[np.int_]  # type: ignore[misc]
+    NpArrayStr = npt.NDArray[np.unicode_]  # type: ignore[misc]
 else:
     PdSeriesInt = pd.Series
     PdSeriesStr = pd.Series
-    NpArrayInt = npt.ndarray
-    NpArrayStr = npt.ndarray
+    NpArrayInt = npt.NDArray
+    NpArrayStr = npt.NDArray
 
 
 def landbakgrunn_grp(landbakgrunn: PdSeriesStr, display: str = "label") -> NpArrayStr:

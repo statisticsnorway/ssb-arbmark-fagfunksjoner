@@ -14,15 +14,15 @@ import pandas as pd
 if TYPE_CHECKING:
     PdSeriesTimestamp = pd.Series[pd.Timestamp]  # type: ignore[misc]
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
-    NpArrayInt = npt.ndarray[np.int_]  # type: ignore[misc]
-    NpArrayDate = npt.ndarray[np.datetime64]  # type: ignore[misc]
-    NpArrayBoolean = npt.ndarray[np.dtype[bool]]  # type: ignore[misc]
+    NpArrayInt = npt.NDArray[np.int_]  # type: ignore[misc]
+    NpArrayDate = npt.NDArray[np.datetime64]  # type: ignore[misc]
+    NpArrayBoolean = npt.NDArray[np.dtype[bool]]  # type: ignore[misc]
 else:
     PdSeriesTimestamp = pd.Series
     PdSeriesInt = pd.Series
-    NpArrayInt = npt.ndarray
-    NpArrayDate = npt.ndarray
-    NpArrayBoolean = npt.ndarray
+    NpArrayInt = npt.NDArray
+    NpArrayDate = npt.NDArray
+    NpArrayBoolean = npt.NDArray
 
 
 def numpy_dates(dates: PdSeriesTimestamp) -> NpArrayDate:

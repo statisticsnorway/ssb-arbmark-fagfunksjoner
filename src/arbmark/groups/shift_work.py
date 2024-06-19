@@ -10,10 +10,10 @@ import pandas as pd
 
 if TYPE_CHECKING:
     PdSeriesStr = pd.Series[str]  # type: ignore[misc]
-    NpArrayStr = npt.ndarray[np.unicode_]  # type: ignore[misc]
+    NpArrayStr = npt.NDArray[np.unicode_]  # type: ignore[misc]
 else:
     PdSeriesStr = pd.Series
-    NpArrayStr = npt.ndarray
+    NpArrayStr = npt.NDArray
 
 
 def turnuskoder(arb_tid_ordning: PdSeriesStr) -> NpArrayStr:
