@@ -6,24 +6,23 @@ import holidays
 
 # Numpy for data wrangling
 import numpy as np
+import numpy.typing as npt
 
 # Pandas for table management
 import pandas as pd
 
 if TYPE_CHECKING:
-    from numpy.typing import NDArray
-
     PdSeriesTimestamp = pd.Series[pd.Timestamp]  # type: ignore[misc]
     PdSeriesInt = pd.Series[int]  # type: ignore[misc]
-    NpArrayInt = NDArray[np.int_]  # type: ignore[misc]
-    NpArrayDate = NDArray[np.datetime64]  # type: ignore[misc]
-    NpArrayBoolean = NDArray[np.bool_]  # type: ignore[misc]
+    NpArrayInt = npt.ndarray[np.int_]  # type: ignore[misc]
+    NpArrayDate = npt.ndarray[np.datetime64]  # type: ignore[misc]
+    NpArrayBoolean = npt.ndarray[np.dtype[bool]]  # type: ignore[misc]
 else:
     PdSeriesTimestamp = pd.Series
     PdSeriesInt = pd.Series
-    NpArrayInt = np.ndarray
-    NpArrayDate = np.ndarray
-    NpArrayBoolean = np.ndarray
+    NpArrayInt = npt.ndarray
+    NpArrayDate = npt.ndarray
+    NpArrayBoolean = npt.ndarray
 
 
 def numpy_dates(dates: PdSeriesTimestamp) -> NpArrayDate:
