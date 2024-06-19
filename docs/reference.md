@@ -129,3 +129,11 @@ arbmark.groups.sector module
    :members:
    :undoc-members:
    :show-inheritance:
+
+arbmark.groups.shift_work module
+----------------------------
+
+.. automodule:: arbmark.groups.shift_work
+   :members:
+   :undoc-members:
+   :show-inheritance:
