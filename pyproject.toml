@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ssb-arbmark-fagfunksjoner"
-version = "0.0.18"
+version = "0.0.19"
 description = "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner"
 authors = ["Jan Sebastian Rothe <jsr@ssb.no>"]
 license = "MIT"
@@ -18,10 +18,10 @@ Changelog = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner/relea
 python = "^3.10"
 click = ">=8.0.1"
 pandas = ">=1.5.3"
-numpy = ">=1.26.2"
-holidays = ">=0.37"
+numpy = "^2.0.0"
+holidays = "<1.0"
 pandas-stubs = ">=2.1.1.230928"
-dapla-toolbelt = ">=2.0.6"
+dapla-toolbelt = "^2.0.18"
 ssb-klass-python = ">=0.0.9"
 
 [tool.poetry.group.dev.dependencies]
