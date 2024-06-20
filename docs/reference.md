@@ -131,7 +131,7 @@ arbmark.groups.sector module
    :show-inheritance:
 
 arbmark.groups.shift_work module
-----------------------------
+--------------------------------
 
 .. automodule:: arbmark.groups.shift_work
    :members:
