@@ -118,13 +118,12 @@ def ref_week(
         )
     )
 
-    # Calculate the week numbers using pandas with Monday as the starting day
-    from_weeks = from_dates.dt.isocalendar().week
-    to_weeks = to_dates.dt.isocalendar().week
-    ref_weeks = ref_days.dt.isocalendar().week
+    # Determine the start and end of the reference week
+    start_of_week = ref_days - pd.to_timedelta(ref_days.dt.weekday, unit="d")
+    end_of_week = start_of_week + pd.Timedelta(days=6)
 
-    # Check if any of the weeks between from_dates and to_dates is the reference week
-    result = np.logical_and(from_weeks <= ref_weeks, ref_weeks <= to_weeks)
+    # Check if the date range overlaps with the reference week
+    result = np.logical_and(from_dates <= end_of_week, to_dates >= start_of_week)
 
     # Return the result as a series of boolean values
     return pd.Series(result, dtype="boolean")

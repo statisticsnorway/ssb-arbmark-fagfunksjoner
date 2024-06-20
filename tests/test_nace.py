@@ -11,7 +11,7 @@ def sample_df() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "nace_sn07": np.random.choice(
-                ["49.100", "56.101", "84.110", "93.130", "95.110"], size=100
+                ["49.100", "56.101", "84.110", "85.421", "93.130", "95.110"], size=100
             ),
         }
     )
