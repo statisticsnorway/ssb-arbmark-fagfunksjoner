@@ -38,15 +38,15 @@ def clean_nace_17_groups(val: str) -> str:
 
     """
     # Check if the hyphen is in the string
-    if "-" in val:
+    if "-" in str(val):
         # Split the string at the hyphen
-        parts = val.split("-")
+        parts = str(val).split("-")
         # Check if parts before and after hyphen are the same
         if parts[0] == parts[1]:
             # Return the part before the hyphen if true
             return parts[0]
     # Return original value if no modifications are made
-    return val
+    return str(val)
 
 
 def nace_to_17_groups(nace: PdSeriesStr, label: bool = False) -> PdSeriesStr:
@@ -83,7 +83,7 @@ def nace_to_17_groups(nace: PdSeriesStr, label: bool = False) -> PdSeriesStr:
         return nace_groups.map(mapping_label["name"]).fillna("Uoppgitt")
     else:
         # If labels are not requested, return the group codes directly
-        return nace_groups.apply(clean_nace_17_groups)
+        return nace_groups.fillna("00").apply(clean_nace_17_groups)
 
 
 def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> NpArrayStr:
