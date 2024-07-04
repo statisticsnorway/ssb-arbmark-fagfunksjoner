@@ -8,6 +8,8 @@ from arbmark.functions.quarter import first_last_date_quarter
 from arbmark.functions.reference import ref_day
 from arbmark.functions.reference import ref_tuesday
 from arbmark.functions.reference import ref_week
+from arbmark.functions.statbank_formats import sb_integer
+from arbmark.functions.statbank_formats import sb_percent
 from arbmark.functions.workdays import count_days
 from arbmark.functions.workdays import count_holidays
 from arbmark.functions.workdays import count_weekend_days
@@ -37,8 +39,10 @@ __all__ = [
     "indicate_merge",
     "first_last_date_quarter",
     "ref_day",
-    "ref_week",
     "ref_tuesday",
+    "ref_week",
+    "sb_integer",
+    "sb_percent",
     "count_days",
     "count_holidays",
     "count_weekend_days",
