@@ -72,18 +72,18 @@ def nace_to_17_groups(nace: PdSeriesStr, label: bool = False) -> PdSeriesStr:
     kv_level = kv.query('level == "2"')
     # Create a mapping dictionary from NACE codes to their parent codes
     mapping = kv_level.set_index("code").to_dict()
-    # Map the first two characters of each NACE code in the input series to their corresponding group codes
-    nace_groups = pd.Series(nace.str[0:2].map(mapping["parentCode"]))
-
+    # Substring the first two characters of each NACE code in the input series
+    nace_substr = nace.str[0:2]
+    # Map the substring series to their corresponding group codes
     if label:
         # If labels are requested, create a mapping for NACE code names at level 1
         kv_label = kv.query('level == "1"')
         mapping_label = kv_label.set_index("code").to_dict()
         # Map the group codes to their names, filling in 'Uoppgitt' for any missing mappings
-        return nace_groups.map(mapping_label["name"]).fillna("Uoppgitt")
+        return nace_substr.map(mapping["parentCode"]).map(mapping_label["name"]).fillna("Uoppgitt")
     else:
         # If labels are not requested, return the group codes directly
-        return nace_groups.fillna("00").apply(clean_nace_17_groups)
+        return nace_substr.map(mapping["parentCode"]).fillna("00").apply(clean_nace_17_groups)
 
 
 def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> NpArrayStr:
