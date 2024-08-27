@@ -73,7 +73,7 @@ def nace_to_17_groups(nace: PdSeriesStr, label: bool = False) -> PdSeriesStr:
     # Create a mapping dictionary from NACE codes to their parent codes
     mapping = kv_level.set_index("code").to_dict()
     # Map the first two characters of each NACE code in the input series to their corresponding group codes
-    nace_groups = nace.str[0:2].map(mapping["parentCode"])
+    nace_groups = pd.Series(nace.str[0:2].map(mapping["parentCode"]))
 
     if label:
         # If labels are requested, create a mapping for NACE code names at level 1
