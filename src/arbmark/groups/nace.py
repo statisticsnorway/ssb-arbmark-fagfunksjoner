@@ -80,10 +80,18 @@ def nace_to_17_groups(nace: PdSeriesStr, label: bool = False) -> PdSeriesStr:
         kv_label = kv.query('level == "1"')
         mapping_label = kv_label.set_index("code").to_dict()
         # Map the group codes to their names, filling in 'Uoppgitt' for any missing mappings
-        return nace_substr.map(mapping["parentCode"]).map(mapping_label["name"]).fillna("Uoppgitt")
+        return (
+            nace_substr.map(mapping["parentCode"])
+            .map(mapping_label["name"])
+            .fillna("Uoppgitt")
+        )
     else:
         # If labels are not requested, return the group codes directly
-        return nace_substr.map(mapping["parentCode"]).fillna("00").apply(clean_nace_17_groups)
+        return (
+            nace_substr.map(mapping["parentCode"])
+            .fillna("00")
+            .apply(clean_nace_17_groups)
+        )
 
 
 def nace_sn07_47grp(nace_sn07: PdSeriesStr, display: str = "label") -> NpArrayStr:
