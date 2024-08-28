@@ -18,7 +18,7 @@ Changelog = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner/relea
 python = ">=3.10,<4"
 click = ">=8.0.1"
 pandas = ">=1.5.3"
-numpy = ">=1.26.4"
+numpy = ">=2.0.0"
 holidays = "<1.0"
 pandas-stubs = ">=2.1.1.230928"
 dapla-toolbelt = ">=2.0.6"
