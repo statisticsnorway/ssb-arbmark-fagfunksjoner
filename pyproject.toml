@@ -23,7 +23,6 @@ holidays = "<1.0"
 pandas-stubs = ">=2.1.1.230928"
 dapla-toolbelt = ">=2.0.6"
 ssb-klass-python = ">=0.0.9"
-sphinx-autodoc-typehints = "^2.3.0"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
