@@ -1,19 +1,12 @@
 from typing import TYPE_CHECKING
 
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
 
 if TYPE_CHECKING:
-    PdSeriesInt = pd.Series[int]  # type: ignore[misc]
     PdSeriesStr = pd.Series[str]  # type: ignore[misc]
-    NpArrayInt = npt.NDArray[np.int_]  # type: ignore[misc]
-    NpArrayStr = npt.NDArray[np.str_]  # type: ignore[misc]
 else:
-    PdSeriesInt = pd.Series
     PdSeriesStr = pd.Series
-    NpArrayInt = npt.NDArray
-    NpArrayStr = npt.NDArray
 
 
 def categorize_ranges(
