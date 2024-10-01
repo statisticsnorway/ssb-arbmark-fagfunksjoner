@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 import numpy as np
 import numpy.typing as npt
@@ -18,7 +18,7 @@ else:
     NpArrayStr = npt.NDArray
 
 
-def get_valid_county_codes(year: int | str) -> List[str]:
+def get_valid_county_codes(year: int | str) -> list[str]:
     """Retrieves valid Norwegian county codes for a given year, excluding the special code "99".
 
     Parameters:
@@ -38,7 +38,7 @@ def get_valid_county_codes(year: int | str) -> List[str]:
     return valid_county_codes
 
 
-def get_regional_special_codes(year: int | str) -> List[str]:
+def get_regional_special_codes(year: int | str) -> list[str]:
     """Retrieves regional special codes (e.g., Svalbard, Jan Mayen) for a specified year.
 
     Parameters:
