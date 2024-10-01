@@ -1,6 +1,7 @@
 """SSB Arbeidsmarked og lønn Fag-fellesfunksjoner."""
 
 from arbmark.functions.aggregation import proc_sums
+from arbmark.functions.categorize_ranges import categorize_ranges
 from arbmark.functions.files import read_latest
 from arbmark.functions.interval import pinterval
 from arbmark.functions.merge import indicate_merge
@@ -22,7 +23,6 @@ from arbmark.functions.workdays import get_norwegian_holidays
 from arbmark.functions.workdays import get_years
 from arbmark.functions.workdays import is_weekend
 from arbmark.functions.workdays import numpy_dates
-from arbmark.functions.categorize_ranges import categorize_ranges
 from arbmark.groups.age import alder_5grp
 from arbmark.groups.age import alder_grp
 from arbmark.groups.company_size import virk_str_8grp
@@ -30,14 +30,13 @@ from arbmark.groups.country_origin import landbakgrunn_grp
 from arbmark.groups.nace import clean_nace_17_groups
 from arbmark.groups.nace import nace_sn07_47grp
 from arbmark.groups.nace import nace_to_17_groups
+from arbmark.groups.occupation import nyk08yrkeregsys1
+from arbmark.groups.region import classify_county_not_mainland
+from arbmark.groups.region import classify_mainland_not_mainland
+from arbmark.groups.region import get_regional_special_codes
+from arbmark.groups.region import get_valid_county_codes
 from arbmark.groups.sector import sektor2_grp
 from arbmark.groups.shift_work import turnuskoder
-from arbmark.groups.occupation import nyk08yrkeregsys1
-from arbmark.groups.region import get_valid_county_codes
-from arbmark.groups.region import get_regional_special_codes
-from arbmark.groups.region import classify_mainland_not_mainland
-from arbmark.groups.region import classify_county_not_mainland
-
 
 __all__ = [
     "proc_sums",
