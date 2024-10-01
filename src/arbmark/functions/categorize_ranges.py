@@ -47,7 +47,7 @@ def categorize_ranges(
     }
 
     # Define bins for categorization, appending infinity to cover all ranges
-    bins = list(sorted_dict.keys())
+    bins: list[Union[int, float]] = list(sorted_dict.keys())
     bins.append(np.inf)
 
     # Extract the labels for the bins
