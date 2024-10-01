@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 import numpy as np
 import pandas as pd
@@ -33,9 +33,9 @@ def categorize_ranges(
     try:
         # Access the format dictionary for the specified format_name
         format_dict = format_dict[format_name]
-    except KeyError:
+    except KeyError as err:
         # Raise an error if the specified format_name is not found
-        raise ValueError(f"No format with name {format_name} within given dictionary")
+        raise ValueError(f"No format with name {format_name} within given dictionary") from err
 
     # Ensure all keys in the format dictionary are digits
     if not all(key.isdigit() for key in format_dict):
