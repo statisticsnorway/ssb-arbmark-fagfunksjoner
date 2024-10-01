@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
@@ -15,27 +15,30 @@ def categorize_ranges(
     """Categorize a pandas Series based on predefined ranges specified in a dictionary.
 
     Parameters:
-    obj: The pandas Series to be categorized.
-    format_name (str): The key name in the format_dict that contains the range definitions.
-    format_dict (dict): A dictionary containing the range definitions.
-                        The keys should be format names, and the values should be dictionaries where:
-                        - keys are string representations of integer cut-off points,
-                        - values are the corresponding categories.
+        obj: The pandas Series to be categorized.
+        format_name: The key name in the format_dict that contains the range definitions.
+        format_dict: A dictionary containing the range definitions.
+            - The keys should be format names, and the values should be dictionaries where:
+                - Keys are string representations of integer cut-off points.
+                - Values are the corresponding categories.
 
     Returns:
-        A pandas Series with the same index as obj, where each value is categorized
-        according to the ranges defined in format_dict[format_name]. NaNs are replaced with None.
+        A pandas Series with the same index as `obj`, where each value is categorized
+                   according to the ranges defined in `format_dict[format_name]`. NaNs are replaced with None.
 
     Raises:
-    ValueError: If format_name is not in format_dict.
-                If there are non-digit keys in the format_dict[format_name].
+        ValueError: If `format_name` is not in `format_dict` or if there are non-digit keys
+                    in `format_dict[format_name]`.
+
     """
     try:
         # Access the format dictionary for the specified format_name
         format_dict = format_dict[format_name]
     except KeyError as err:
         # Raise an error if the specified format_name is not found
-        raise ValueError(f"No format with name {format_name} within given dictionary") from err
+        raise ValueError(
+            f"No format with name {format_name} within given dictionary"
+        ) from err
 
     # Ensure all keys in the format dictionary are digits
     if not all(key.isdigit() for key in format_dict):
@@ -47,7 +50,7 @@ def categorize_ranges(
     }
 
     # Define bins for categorization, appending infinity to cover all ranges
-    bins: list[Union[int, float]] = list(sorted_dict.keys())
+    bins: list[int | float] = list(sorted_dict.keys())
     bins.append(np.inf)
 
     # Extract the labels for the bins
