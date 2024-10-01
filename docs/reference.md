@@ -23,6 +23,7 @@ Subpackages
 
    arbmark.functions
    arbmark.groups
+   modules
 
 
 arbmark.functions package
@@ -36,6 +37,7 @@ arbmark.functions.aggregation module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.functions.files module
 ------------------------------
@@ -44,6 +46,7 @@ arbmark.functions.files module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.functions.interval module
 ---------------------------------
@@ -52,6 +55,7 @@ arbmark.functions.interval module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.functions.merge module
 ------------------------------
@@ -60,6 +64,7 @@ arbmark.functions.merge module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.functions.quarter module
 --------------------------------
@@ -68,6 +73,7 @@ arbmark.functions.quarter module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.functions.reference module
 ----------------------------------
@@ -76,6 +82,7 @@ arbmark.functions.reference module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.functions.workdays module
 ---------------------------------
@@ -84,6 +91,7 @@ arbmark.functions.workdays module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 
 arbmark.groups package
@@ -97,6 +105,7 @@ arbmark.groups.age module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.groups.company\_size module
 -----------------------------------
@@ -105,6 +114,7 @@ arbmark.groups.company\_size module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.groups.country\_origin module
 -------------------------------------
@@ -113,6 +123,7 @@ arbmark.groups.country\_origin module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.groups.nace module
 --------------------------
@@ -121,6 +132,7 @@ arbmark.groups.nace module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.groups.sector module
 ----------------------------
@@ -129,6 +141,7 @@ arbmark.groups.sector module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 arbmark.groups.shift_work module
 --------------------------------
@@ -137,3 +150,4 @@ arbmark.groups.shift_work module
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
