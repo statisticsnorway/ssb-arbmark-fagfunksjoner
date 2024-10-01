@@ -30,7 +30,7 @@ def get_valid_county_codes(year: int | str) -> list[str]:
     year = int(year)
     year = datetime(year, 1, 1).strftime("%Y-%m-%d")
 
-    fylke_klass = KlassClassification(104)
+    fylke_klass = KlassClassification("104")
 
     valid_county_codes = list(fylke_klass.get_codes(from_date=year).data["code"])
     valid_county_codes.remove("99")
@@ -50,7 +50,7 @@ def get_regional_special_codes(year: int | str) -> list[str]:
     year = int(year)
     year = datetime(year, 1, 1).strftime("%Y-%m-%d")
 
-    reg_klass = KlassClassification(4)
+    reg_klass = KlassClassification("4")
     return list(reg_klass.get_codes(from_date=year).data["code"])
 
 
@@ -83,7 +83,7 @@ def classify_mainland_not_mainland(
 
 
 def classify_county_not_mainland(
-    municipality_no: PdSeriesStr, year: int | str, detailed=True
+    municipality_no: PdSeriesStr, year: int | str, detailed: bool=True
 ) -> NpArrayStr:
     """Classifies municipality numbers based on valid mainland or non-mainland county codes.
     Optionally provides specific non-mainland codes if detailed = True.
