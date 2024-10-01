@@ -83,7 +83,7 @@ def classify_mainland_not_mainland(
 
 
 def classify_county_not_mainland(
-    municipality_no: PdSeriesStr, year: int | str, detailed: bool=True
+    municipality_no: PdSeriesStr, year: int | str, detailed: bool = True
 ) -> NpArrayStr:
     """Classifies municipality numbers based on valid mainland or non-mainland county codes.
     Optionally provides specific non-mainland codes if detailed = True.
