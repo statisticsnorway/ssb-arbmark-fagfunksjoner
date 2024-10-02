@@ -2546,8 +2546,8 @@ files = [
 [package.dependencies]
 lxml = {version = ">=4.9.2", optional = true, markers = "extra == \"xml\""}
 numpy = [
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
     {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
     {version = ">=1.22.4", markers = "python_version < \"3.11\""},
 ]
 odfpy = {version = ">=1.4.1", optional = true, markers = "extra == \"excel\""}
@@ -4723,4 +4723,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4"
-content-hash = "d98da06ae88363574c9d4ccaa96b0015bfb43874caab7e5fe24c2df0902bc48f"
+content-hash = "03301f280d2fbaae51b9452d57a06d3e6aa99fd81db2b86177025b526098bb95"
