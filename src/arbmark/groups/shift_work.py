@@ -27,17 +27,15 @@ def turnuskoder(arb_tid_ordning: PdSeriesStr) -> NpArrayStr:
     Any value that doesn't match these conditions will be assigned an empty string.
 
     Parameters:
-    arb_tid_ordning: A pandas Series object containing strings that represent
-                                 different work schedule categories.
+        arb_tid_ordning: A pandas Series object containing strings that represent different work schedule categories.
 
     Returns:
-    An array of strings, where each string is a code corresponding to the work schedule
-                category in `arb_tid_ordning`.
+        An array of strings, where each string is a code corresponding to the work schedule category in `arb_tid_ordning`.
 
     Example:
-    >>> arb_tid_ordning = pd.Series(['dogn355', 'helkont336', 'ikke_skift', '-2', 'offshore336', ''])
-    >>> turnuskoder(arb_tid_ordning)
-    array(['20', '20', '25', '99', '20', '99'], dtype='<U2')
+        >>> arb_tid_ordning = pd.Series(['dogn355', 'helkont336', 'ikke_skift', '-2', 'offshore336', ''])
+        >>> turnuskoder(arb_tid_ordning)
+        array(['20', '20', '25', '99', '20', '99'], dtype='<U2')
     """
     # Define the conditions
     conditions = [

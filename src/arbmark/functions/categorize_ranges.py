@@ -46,7 +46,8 @@ def categorize_ranges(
 
     # Sort the dictionary by its integer keys
     sorted_dict = {
-        int(k): v for k, v in sorted(format_dict.items(), key=lambda item: int(item[0]))
+        float(k): v
+        for k, v in sorted(format_dict.items(), key=lambda item: float(item[0]))
     }
 
     # Define bins for categorization, appending infinity to cover all ranges
@@ -58,7 +59,7 @@ def categorize_ranges(
 
     # Categorize the Series based on the bins and labels
     categories = pd.cut(
-        obj.astype(int), bins=bins, labels=labels, right=False, ordered=False
+        obj.astype(float), bins=bins, labels=labels, right=False, ordered=False
     )
 
     # Convert the resulting categories to object dtype and replace NaNs with None
