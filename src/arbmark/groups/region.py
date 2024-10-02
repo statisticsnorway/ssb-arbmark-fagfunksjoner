@@ -22,10 +22,10 @@ def get_valid_county_codes(year: int | str) -> list[str]:
     """Retrieves valid Norwegian county codes for a given year, excluding the special code "99".
 
     Parameters:
-    year (Union[int, str]): The year for which valid county codes are needed. It can be provided as an integer or a string.
+    year: The year for which valid county codes are needed. It can be provided as an integer or a string.
 
     Returns:
-    List[str]: A list of valid county codes as strings, excluding "99".
+    A list of valid county codes as strings, excluding "99".
     """
     year = int(year)
     year = datetime(year, 1, 1).strftime("%Y-%m-%d")
@@ -42,10 +42,10 @@ def get_regional_special_codes(year: int | str) -> list[str]:
     """Retrieves regional special codes (e.g., Svalbard, Jan Mayen) for a specified year.
 
     Parameters:
-    year (Union[int, str]): The year for which regional special codes are needed. It can be provided as an integer or a string.
+    year: The year for which regional special codes are needed. It can be provided as an integer or a string.
 
     Returns:
-    List[str]: A list of regional special codes as strings.
+    A list of regional special codes as strings.
     """
     year = int(year)
     year = datetime(year, 1, 1).strftime("%Y-%m-%d")
@@ -61,7 +61,7 @@ def classify_mainland_not_mainland(
 
     Parameters:
     municipality_no: A pandas Series containing municipality numbers.
-    year (Union[int, str]): The year for which the classification is needed. It can be provided as an integer or a string.
+    year: The year for which the classification is needed. It can be provided as an integer or a string.
 
     Returns:
     An array containing the classification for each municipality number.
@@ -89,8 +89,8 @@ def classify_county_not_mainland(
 
     Parameters:
     municipality_no: A pandas Series containing municipality numbers.
-    year (Union[int, str]): The year for which the classification is needed. It can be provided as an integer or a string.
-    detailed (bool): If True, returns specific non-mainland codes. If False, non-mainland is classified as "99g".
+    year: The year for which the classification is needed. It can be provided as an integer or a string.
+    detailed: If True, returns specific non-mainland codes. If False, non-mainland is classified as "99g".
 
     Returns:
     An array with classified county numbers or fallback codes.
