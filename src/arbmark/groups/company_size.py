@@ -29,7 +29,7 @@ def virk_str_8grp(ansatte: PdSeriesInt, display: str = "label") -> NpArrayStr:
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A numpy Array where the original employee counts are replaced by group labels or keys.
+         A numpy Array where the original employee counts are replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
