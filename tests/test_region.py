@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+
 from arbmark import classify_county_not_mainland
 from arbmark import classify_mainland_not_mainland
 from arbmark import get_regional_special_codes
@@ -26,20 +29,6 @@ def test_get_regional_special_codes() -> None:
     assert (
         test2_result_first == test2_expected
     ), f"Expected {test2_expected}, but got {test2_result_first}"
-
-
-def test_classify_mainland_not_mainland() -> None:
-    municipality_numbers = pd.Series(["0101", "0301", "2100", "9999", "2211"])
-
-    year = 2023
-
-    expected_output = np.array(["Uoppgitt", "FNorge", "IFNorge", "Uoppgitt", "IFNorge"])
-
-    output = classify_mainland_not_mainland(municipality_numbers, year)
-
-    assert np.array_equal(
-        output, expected_output
-    ), f"Expected {expected_output}, but got {output}"
 
 
 def test_classify_mainland_not_mainland() -> None:

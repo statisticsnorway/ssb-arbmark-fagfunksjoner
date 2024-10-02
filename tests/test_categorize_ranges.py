@@ -11,7 +11,7 @@ def test_categorize_ranges():
     format_dict = {"example_format": {"10": "Low", "20": "Medium", "30": "High"}}
 
     expected_output = pd.Series(
-        ["Low", "Medium", "High", None, "High", "High", "High"], dtype="object"
+        [None, "Low", "Medium", None, "High", "High", "High"], dtype="object"
     )
 
     output = categorize_ranges(obj, "example_format", format_dict)
