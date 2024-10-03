@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ssb-arbmark-fagfunksjoner"
-version = "0.0.23"
+version = "0.0.24"
 description = "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner"
 authors = ["Jan Sebastian Rothe <jsr@ssb.no>"]
 license = "MIT"
