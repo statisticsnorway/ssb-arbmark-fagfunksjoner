@@ -30,7 +30,7 @@ def clean_nace_17_groups(val: str) -> str:
     before and after the hyphen are identical. If they are, it returns only the part before the hyphen.
     Otherwise, it returns the original input value.
 
-    Args:
+    Parameters:
         val: A string containing the NACE code to be cleaned.
 
     Returns:

@@ -20,11 +20,11 @@ def nyk08yrkeregsys1(occupation_code: PdSeriesStr) -> NpArrayStr:
     """Classifies occupation codes based on the first few characters.
 
     Parameters:
-    occupation_code: A pandas Series containing occupation codes. Occupation code must contain at least two digits.
+        occupation_code: A pandas Series containing occupation codes. Occupation code must contain at least two digits.
 
     Returns:
-    An array with classified occupation codes. Codes starting with "01", "02", or "03" are grouped under "3_01-03".
-      Other valid codes are categorized based on their first digit, with invalid codes defaulting to "0b".
+        An array with classified occupation codes. Codes starting with "01", "02", or "03" are grouped under "3_01-03".
+        Other valid codes are categorized based on their first digit, with invalid codes defaulting to "0b".
     """
     # Define the valid occupation codes from "1" to "9"
     valid_occupation_codes = [str(i) for i in range(1, 10)]
