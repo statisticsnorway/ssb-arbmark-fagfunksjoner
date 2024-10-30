@@ -2,7 +2,6 @@
 
 from arbmark.functions.aggregation import proc_sums
 from arbmark.functions.categorize_ranges import categorize_ranges
-from arbmark.functions.files import read_latest
 from arbmark.functions.interval import pinterval
 from arbmark.functions.merge import indicate_merge
 from arbmark.functions.quarter import first_last_date_quarter
