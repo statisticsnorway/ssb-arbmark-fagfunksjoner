@@ -9,21 +9,17 @@ import numpy.typing as npt
 import pandas as pd
 
 if TYPE_CHECKING:
-    PdSeriesInt = pd.Series[int]  # type: ignore[misc]
     PdSeriesStr = pd.Series[str]  # type: ignore[misc]
-    NpArrayInt = npt.NDArray[np.int_]  # type: ignore[misc]
     NpArrayStr = npt.NDArray[np.str_]  # type: ignore[misc]
 else:
-    PdSeriesInt = pd.Series
     PdSeriesStr = pd.Series
-    NpArrayInt = npt.NDArray
     NpArrayStr = npt.NDArray
 
 
 def sektor2_grp(
-    sektor: PdSeriesStr, undersektor: PdSeriesStr, display: str = "label"
+    sektor: PdSeriesStr, display: str = "label"
 ) -> NpArrayStr:
-    """Categorize a pandas Series of sectors and subsectors into predefined groups.
+    """Categorize a pandas Series of sectors into predefined groups.
 
     Parameters:
         sektor: A pandas Series containing the sector codes.
@@ -32,13 +28,12 @@ def sektor2_grp(
                        for any other string, returns a combination of keys and labels.
 
     Returns:
-        A numpy Array where the original sector and subsectors are replaced by group labels or keys.
+        A numpy Array where the original sector is replaced by group labels or keys.
     """
     # Define the conditions for each group
     conditions = [
         (sektor == "6100").to_numpy(),
-        np.logical_and(sektor == "6500", undersektor != "007"),
-        np.logical_and(sektor == "6500", undersektor == "007"),
+        (sektor == "6500").to_numpy(),
         (sektor == "1510").to_numpy(),
         (sektor == "1520").to_numpy(),
     ]
@@ -46,7 +41,6 @@ def sektor2_grp(
     groups = {
         "110": "Statlig forvaltning",
         "550": "Kommunal forvaltning",
-        "510": "Fylkeskommunal forvaltning",
         "660": "Kommunale foretak med ubegrenset ansvar",
         "680": "Kommunalt eide aksjeselskaper m.v.",
     }
