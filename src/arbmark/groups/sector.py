@@ -21,7 +21,6 @@ def sektor2_grp(sektor: PdSeriesStr, display: str = "label") -> NpArrayStr:
 
     Parameters:
         sektor: A pandas Series containing the sector codes.
-        undersektor: A pandas Series containing the subsector codes.
         display: If 'label', returns group labels; if 'number', returns keys;
                        for any other string, returns a combination of keys and labels.
 
