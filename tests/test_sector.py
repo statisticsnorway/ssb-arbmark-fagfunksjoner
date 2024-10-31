@@ -22,7 +22,5 @@ def test_sektor2_grp(sample_df):
 
 def test_sektor2_grp_number(sample_df):
     df = sample_df
-    df["sektor2_grp"] = sektor2_grp(
-        df["sektor"], display="number"
-    ).astype(str)
+    df["sektor2_grp"] = sektor2_grp(df["sektor"], display="number").astype(str)
     assert not df["sektor2_grp"].isnull().any(), "Sector 2 group contains null values"

@@ -16,9 +16,7 @@ else:
     NpArrayStr = npt.NDArray
 
 
-def sektor2_grp(
-    sektor: PdSeriesStr, display: str = "label"
-) -> NpArrayStr:
+def sektor2_grp(sektor: PdSeriesStr, display: str = "label") -> NpArrayStr:
     """Categorize a pandas Series of sectors into predefined groups.
 
     Parameters:

@@ -1,6 +1,5 @@
 """This function is outdated use 'latest_version_path' from ssb-fagfunksjoner instead."""
 
-
 # Glob for Unix style pathname pattern expansion.
 import glob
 
@@ -15,7 +14,7 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
     """Finds the latest version of a specified file in a given directory and returns its name.
 
     This function is outdated use 'latest_version_path' from ssb-fagfunksjoner instead.
-    
+
     This function searches for files in the specified path that match the given name and file
     type, sorts them by modification time, and returns the path of the latest version. If no
     files are found, it returns None.
@@ -28,7 +27,9 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
     Returns:
         Optional[str]: The path of the latest version of the file if found, None otherwise.
     """
-    print("This function is outdated use 'latest_version_path' from ssb-fagfunksjoner instead.")
+    print(
+        "This function is outdated use 'latest_version_path' from ssb-fagfunksjoner instead."
+    )
     # Inform the user about the file versions being checked
     print(f"Checking versions of file: {name}")
 
