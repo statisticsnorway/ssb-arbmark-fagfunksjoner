@@ -5,9 +5,9 @@ from arbmark import nyk08yrkeregsys1
 
 
 def test_nyk08yrkeregsys1() -> None:
-    occupation_codes = pd.Series(["24", "5421", "9999", "0000", "0111101"])
+    occupation_codes = pd.Series(["24", "5421", "9999", "0000", "0111101", "32312"])
 
-    expected_output = np.array(["2", "5", "9", "0b", "3_01-03"])
+    expected_output = np.array(["2", "5", "9", "0b", "3_01-03", "3_01-03"])
 
     output = nyk08yrkeregsys1(occupation_codes)
 
