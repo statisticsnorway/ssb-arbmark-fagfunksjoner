@@ -31,7 +31,7 @@ def nyk08yrkeregsys1(occupation_code: PdSeriesStr) -> NpArrayStr:
 
     # First check if the first two digits are "01", "02", or "03" or first digit is "3" and group them under "3_01-03"
     condition_1 = (occupation_code.str[:2].isin(["01", "02", "03"])) | (
-        occupation_code.str[:1] == "3"
+        occupation_code.str.startswith("3")
     )
 
     # Next, check if the first digit is between "1" and "9", and classify it as that digit
