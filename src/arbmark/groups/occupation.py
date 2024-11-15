@@ -29,8 +29,8 @@ def nyk08yrkeregsys1(occupation_code: PdSeriesStr) -> NpArrayStr:
     # Define the valid occupation codes from "1" to "9"
     valid_occupation_codes = [str(i) for i in range(1, 10)]
 
-    # First check if the first two digits are "01", "02", or "03", and group them under "3_01-03"
-    condition_1 = occupation_code.str[:2].isin(["01", "02", "03"])
+    # First check if the first two digits are "01", "02", or "03" or first digit is "3" and group them under "3_01-03"
+    condition_1 = (occupation_code.str[:2].isin(["01", "02", "03"])) | (occupation_code.str[:1] == "3")
 
     # Next, check if the first digit is between "1" and "9", and classify it as that digit
     condition_2 = occupation_code.str[:1].isin(valid_occupation_codes)
