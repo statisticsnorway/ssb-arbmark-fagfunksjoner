@@ -17,7 +17,7 @@ def proc_sums(
     agg_func: dict[str, Any | list[Any]] | None = None,
 ) -> pd.DataFrame:
     """Compute aggregations for combinations of columns and return a new DataFrame with these aggregations.
-    
+
     This function is outdated use 'all_combos_agg' from ssb-fagfunksjoner instead.
 
     Args:
