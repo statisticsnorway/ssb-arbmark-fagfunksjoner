@@ -1,3 +1,5 @@
+"""This function is outdated use 'all_combos_agg' from ssb-fagfunksjoner instead."""
+
 # Itertools for functions creating iterators for efficient looping
 from itertools import combinations
 
@@ -15,6 +17,8 @@ def proc_sums(
     agg_func: dict[str, Any | list[Any]] | None = None,
 ) -> pd.DataFrame:
     """Compute aggregations for combinations of columns and return a new DataFrame with these aggregations.
+
+    This function is outdated use 'all_combos_agg' from ssb-fagfunksjoner instead.
 
     Args:
         df: The input DataFrame.
@@ -42,6 +46,9 @@ def proc_sums(
         - If 'values' is None and 'agg_func' is provided, 'values' is automatically
           set to the keys of 'agg_func'.
     """
+    print(
+        "This function is outdated use 'all_combos_agg' from ssb-fagfunksjoner instead."
+    )
     # Set 'values' based on 'agg_func' if 'values' is not provided
     if values is None:
         if agg_func is not None:
