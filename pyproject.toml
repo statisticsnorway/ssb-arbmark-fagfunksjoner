@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ssb-arbmark-fagfunksjoner"
-version = "0.0.27"
+version = "0.0.28"
 description = "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner"
 authors = ["Jan Sebastian Rothe <jsr@ssb.no>"]
 license = "MIT"
@@ -99,8 +99,6 @@ select = [
     "RUF",  # the ruff developer's own rules
 ]
 ignore = [
-    "ANN101", # Supress missing-type-self.
-    "ANN102", # Supress missing-type-cls.
     "ANN202", # Don't requiere return type annotation for private functions.
     "ANN401", # Allow type annotation with type Any.
     "D100",   # Supress undocumented-public-module. Only doc of public api required.
