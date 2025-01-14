@@ -23,7 +23,6 @@ holidays = "<1.0"
 pandas-stubs = ">=2.1.1.230928"
 dapla-toolbelt = ">=3.2.0"
 ssb-klass-python = ">=0.0.9"
-cruft = "^2.16.0"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
@@ -43,6 +42,7 @@ sphinx-click = ">=3.0.2"
 typeguard = ">=2.13.3"
 xdoctest = { extras = ["colors"], version = ">=0.15.10" }
 myst-parser = { version = ">=0.16.1" }
+cruft = ">=2.16.0"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
