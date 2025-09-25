@@ -1,35 +1,35 @@
 from klass import KlassClassification
 import numpy as np
+import pandas as pd
 
-def landgr_format(value):
-    if value == 'G0':
-        return 'abd'
-    elif value == 'G1':
-        return 'VES'
-    elif value == 'G2':
-        return 'IVE'
-    elif isinstance(value, (int, float)):  # Hvis verdien er et tall
-        return '999'
-    else:
-        return value  # Retur av verdien som den er hvis ingen betingelser oppfylles
+vkoder = KlassClassification(545).get_codes(select_level='4').data
 
 
+# +
 landkat = KlassClassification(546)
-landkoder = landkat.get_codes(presentation_name_pattern='{code} {name}')
-landkoder.data
+landkoder = landkat.get_codes().data
+levels = np.sort(landkoder['level'].astype(int).unique())
 
-landkat = KlassClassification(546)
-landkoder = landkat.get_codes(presentation_name_pattern='{code} {name}')
-levels = np.sort(landkoder.data['level'].astype(int).unique())
-levels
+vkoder = KlassClassification(545).get_codes().data
+levels = np.sort(landkoder['level'].astype(int).unique())
 
+# -
 
-def koble_landbakgrunn(df: pd.DataFrame, land_col: str = None) -> pd.DataFrame:
+lev3_dict = landkoder.loc[landkoder['level'] == '3'][['code', 'parentCode']].set_index('code').to_dict()['parentCode']
+
+landkoder = KlassClassification(546).get_codes(select_level='3').data
+# lev3_dict = landkoder.loc[landkoder.data['level'] == '3'][['code', 'parentCode']].set_index('code').to_dict()
+# lev3_dict
+
+def koble_landbakgrunn_546(df: pd.DataFrame, land_col: str = None) -> pd.DataFrame:
     if not land_col:
-        raise ValueError("You need to specify column containing country codes.")
-    landkat = KlassClassification(546)
-    landkoder = landkat.get_codes(presentation_name_pattern='{code} {name}')
-    levels = np.sort(landkoder.data['level'].unique())
+        raise ValueError("You need to specify column containing country codes in parameter 'land_col'.")
+    landkoder = KlassClassification(546).get_codes(presentation_name_pattern='{code} {name}')
+
+    lev3_dict = landkoder.loc[landkoder.data['level'] == '3'][['code', 'parentCode']].set_index('code').rename(columns={'parentCode' : 'land_3_to_2'}).to_dict()
+    df['verdensdel']
+    df['landegruppe']
+
 
 
 def koble_landbakgrunn_old(df):
