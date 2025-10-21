@@ -175,7 +175,7 @@ def koble_landbakgrunn_546(
         )
     map_dict = (
         KlassClassification(546)
-        .get_codes(select_level="3")
+        .get_codes(select_level=3)
         .data[["code", "parentCode"]]
         .set_index("code")
         .to_dict()["parentCode"]
@@ -243,7 +243,7 @@ def koble_landbakgrunn_545(
         )
     map_dict = (
         KlassClassification(545)
-        .get_codes(select_level="4")
+        .get_codes(select_level=4)
         .data[["code", "parentCode"]]
         .set_index("code")
         .to_dict()["parentCode"]
