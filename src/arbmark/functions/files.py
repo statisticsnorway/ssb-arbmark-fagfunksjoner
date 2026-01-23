@@ -6,8 +6,6 @@ import glob
 # OS for interacting with the operating system
 import os
 
-# Dapla for cloud file client
-from dapla import FileClient
 
 
 def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
@@ -39,19 +37,8 @@ def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
     # Join directory and file name
     file_path = os.path.join(path, file_name_pattern)
 
-    # If path is a google cloud bucket
-    if path[:4] in ["ssb-", "gs:/"]:
-
-        # Get filesystem
-        fs = FileClient.get_gcs_file_system()
-
-        # Use glob to find all files matching the pattern
-        file_list = fs.glob(file_path)
-
-    else:
-
-        # Use glob to find all files matching the pattern
-        file_list = glob.glob(file_path)
+    # Use glob to find all files matching the pattern
+    file_list = glob.glob(file_path)
 
     # Sorting key based on file version
     file_versions = sorted(
