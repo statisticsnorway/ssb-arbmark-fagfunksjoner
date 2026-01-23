@@ -7,7 +7,6 @@ import glob
 import os
 
 
-
 def read_latest(path: str, name: str, dottype: str = ".parquet") -> str | None:
     """Finds the latest version of a specified file in a given directory and returns its name.
 
