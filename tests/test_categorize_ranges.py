@@ -41,7 +41,7 @@ def test_invalid_keys_in_format_dict():
     }
 
     with pytest.raises(
-        ValueError, match="Non-digits in dictionary keys. Fix your JSON-file"
+        ValueError, match=r"Non-digits in dictionary keys\. Fix your JSON-file"
     ):
         categorize_ranges(obj, "example_format", format_dict)
 
