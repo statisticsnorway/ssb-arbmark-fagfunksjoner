@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+from typing import Any
+from typing import cast
 
 import numpy as np
 import pandas as pd
@@ -63,4 +65,4 @@ def categorize_ranges(
     )
 
     # Convert the resulting categories to object dtype and replace NaNs with None
-    return categories.astype("object").where(categories.notna(), None)
+    return categories.astype("object").where(categories.notna(), cast(Any, None))
