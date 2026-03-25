@@ -1,12 +1,13 @@
 import inspect
+
 import pandas as pd
 
 
 def list_dataframes(namespace: dict | None = None) -> pd.DataFrame:
-    """
-    Returnerer en oversikt over alle pandas-DataFrames i et namespace.
+    """Returnerer en oversikt over alle pandas-DataFrames i et namespace.
+
     Hvis namespace ikke er oppgitt, brukes caller sitt globale namespace.
-    Bruker trenger kun å skrive list_dataframes() 
+    Bruker trenger kun å skrive ``list_dataframes()``.
     """
     if namespace is None:
         frame = inspect.currentframe()
