@@ -3,6 +3,7 @@
 from arbmark.functions.aggregation import proc_sums
 from arbmark.functions.categorize_ranges import categorize_ranges
 from arbmark.functions.interval import pinterval
+from arbmark.functions.memory import list_dataframes
 from arbmark.functions.merge import indicate_merge
 from arbmark.functions.quarter import first_last_date_quarter
 from arbmark.functions.reference import ref_day
@@ -61,6 +62,7 @@ __all__ = [
     "indicate_merge",
     "is_weekend",
     "landbakgrunn_grp",
+    "list_dataframes",
     "nace_sn07_47grp",
     "nace_to_17_groups",
     "numpy_dates",
