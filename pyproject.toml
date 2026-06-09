@@ -26,23 +26,27 @@ ipykernel = "^7.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
-black = { extras = ["jupyter"], version = ">=23.1.0" }
 coverage = { extras = ["toml"], version = ">=6.2" }
-darglint = ">=1.8.1"
-furo = ">=2021.11.12"
 mypy = ">=0.930"
+pytest = ">=6.2.5"
+typeguard = ">=2.13.3"
+xdoctest = { extras = ["colors"], version = ">=0.15.10" }
+cruft = ">=2.16.0"
+
+[tool.poetry.group.lint.dependencies]
+black = { extras = ["jupyter"], version = ">=23.1.0" }
+darglint = ">=1.8.1"
 pre-commit = ">=2.16.0"
 pre-commit-hooks = ">=4.1.0"
 ruff = ">=0.0.284"
-pytest = ">=6.2.5"
+
+[tool.poetry.group.doc.dependencies]
+furo = ">=2021.11.12"
 sphinx = ">=6.2.1"
 sphinx-autobuild = ">=2021.3.14"
 sphinx-autodoc-typehints = ">=1.24.0"
 sphinx-click = ">=3.0.2"
-typeguard = ">=2.13.3"
-xdoctest = { extras = ["colors"], version = ">=0.15.10" }
-myst-parser = { version = ">=0.16.1" }
-cruft = ">=2.16.0"
+myst-parser = ">=0.16.1"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
