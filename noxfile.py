@@ -24,6 +24,7 @@ except ImportError:
 package = "arbmark"
 MAIN_PYTHON = "3.13"
 python_versions = ["3.11", "3.12", "3.13", "3.14"]
+python_versions_for_test = python_versions
 nox.needs_version = ">= 2025.2.9"
 nox.options.sessions = (
     "pre-commit",
