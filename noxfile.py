@@ -22,8 +22,8 @@ except ImportError:
     raise SystemExit(dedent(message)) from None
 
 package = "arbmark"
-python_versions = ["3.10", "3.11", "3.12", "3.13"]
-nox.needs_version = ">= 2021.6.6"
+python_versions = ["3.11", "3.12", "3.13", "3.14"]
+nox.needs_version = ">= 2025.2.9"
 nox.options.sessions = (
     "pre-commit",
     "mypy",
