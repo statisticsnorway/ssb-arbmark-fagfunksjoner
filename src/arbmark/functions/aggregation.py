@@ -34,10 +34,9 @@ def proc_sums(
         an additional 'level' column indicating the level of grouping.
 
     Raises:
-        ValueError: If any of the specified columns in 'groups' or 'values' are not
-            present in the DataFrame.
-        ValueError: If any columns in 'values' are not numeric and no aggregation
-            function is provided.
+        ValueError: If any of the specified columns in `groups` or `values` are not
+            present in the DataFrame, or if columns in `values` are non-numeric
+            and no aggregation function is provided.
 
     Note:
         - The returned DataFrame also contains an additional column named 'level'

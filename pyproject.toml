@@ -26,23 +26,28 @@ ipykernel = "^7.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
-black = { extras = ["jupyter"], version = ">=23.1.0" }
 coverage = { extras = ["toml"], version = ">=6.2" }
-darglint = ">=1.8.1"
-furo = ">=2021.11.12"
 mypy = ">=0.930"
+pytest = ">=6.2.5"
+typeguard = ">=2.13.3"
+xdoctest = { extras = ["colors"], version = ">=0.15.10" }
+cruft = ">=2.16.0"
+
+[tool.poetry.group.lint.dependencies]
+pydoclint = "^0.8.5"
+black = { extras = ["jupyter"], version = ">=23.1.0" }
+darglint = ">=1.8.1"
 pre-commit = ">=2.16.0"
 pre-commit-hooks = ">=4.1.0"
 ruff = ">=0.0.284"
-pytest = ">=6.2.5"
+
+[tool.poetry.group.doc.dependencies]
+furo = ">=2021.11.12"
 sphinx = ">=6.2.1"
 sphinx-autobuild = ">=2021.3.14"
 sphinx-autodoc-typehints = ">=1.24.0"
 sphinx-click = ">=3.0.2"
-typeguard = ">=2.13.3"
-xdoctest = { extras = ["colors"], version = ">=0.15.10" }
-myst-parser = { version = ">=0.16.1" }
-cruft = ">=2.16.0"
+myst-parser = ">=0.16.1"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
@@ -69,6 +74,15 @@ warn_unreachable = true
 pretty = true
 show_column_numbers = true
 show_error_context = true
+
+[tool.pydoclint]
+style = "google"
+exclude = '\.git|\.nox'
+arg-type-hints-in-docstring = false
+check-return-types = false
+check-yield-types = false
+allow-init-docstring = true
+quiet = true
 
 [tool.ruff]
 force-exclude = true  # Apply excludes to pre-commit
@@ -99,12 +113,16 @@ select = [
     "RUF",  # the ruff developer's own rules
 ]
 ignore = [
-    "ANN202", # Don't requiere return type annotation for private functions.
+    "ANN202", # Don't require return type annotation for private functions.
     "ANN401", # Allow type annotation with type Any.
     "D100",   # Supress undocumented-public-module. Only doc of public api required.
+    "FBT001", # Allow boolean positional arguments in a function.
+    "FBT002", # Allow boolean default positional arguments in a function.
     "E402",   # Supress module-import-not-at-top-of-file, needed in jupyter notebooks.
     "E501",   # Supress line-too-long warnings: trust black's judgement on this one.
+    "PLR2004", # Allow to compare with unnamed numerical constants.
 ]
+external = ["DOC"]  # Avoiding removing any codes starting with `DOC` from any `# noqa` directives.
 
 [tool.ruff.lint.isort]
 force-single-line = true
@@ -114,6 +132,9 @@ max-complexity = 15
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"  # You can also use "numpy".
+
+[tool.ruff.lint.pylint]
+max-args = 8
 
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = ["classmethod", "validator", "root_validator", "pydantic.validator"]
@@ -136,5 +157,5 @@ classmethod-decorators = ["classmethod", "validator", "root_validator", "pydanti
 ]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

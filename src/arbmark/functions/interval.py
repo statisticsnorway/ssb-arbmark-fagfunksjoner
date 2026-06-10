@@ -18,16 +18,18 @@ def pinterval(start_p: str, end_p: str, sep: str = "", freq: str = "m") -> list[
         A list of strings representing the monthly or quarterly periods from start_p to end_p, inclusive.
 
     Raises:
-        ValueError: If the frequency is not 'monthly' or 'quarterly'.
-        ValueError: If the start and end period do not include the specified separator.
+        ValueError: If the frequency is not monthly/quarterly, or if start/end
+            periods do not include the specified separator.
 
     Example:
-    >>> pinterval('2022k1', '2023k2', sep='k', freq='quarterly')
-    ['2022k1', '2022k2', '2022k3', '2022k4', '2023k1', '2023k2']
+        >>> pinterval('2022k1', '2023k2', sep='k', freq='quarterly')
+        ['2022k1', '2022k2', '2022k3', '2022k4', '2023k1', '2023k2']
     """
     freq = freq[:1].lower()
+
     if freq not in ["m", "q"]:
         raise ValueError("Frequency needs to be either monthly or quarterly.")
+
     if sep not in start_p or sep not in end_p:
         raise ValueError(
             "Start and end period must be in the same format as the interval."
