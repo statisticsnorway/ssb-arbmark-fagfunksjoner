@@ -1164,7 +1164,7 @@ version = "0.0.14"
 description = "Parse Python docstrings in reST, Google and Numpydoc format"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev"]
+groups = ["lint"]
 files = [
     {file = "docstring_parser_fork-0.0.14-py3-none-any.whl", hash = "sha256:4c544f234ef2cc2749a3df32b70c437d77888b1099143a1ad5454452c574b9af"},
     {file = "docstring_parser_fork-0.0.14.tar.gz", hash = "sha256:a2743a63d8d36c09650594f7b4ab5b2758fee8629dcf794d1b221b23179baa5c"},
@@ -3999,7 +3999,7 @@ version = "0.8.5"
 description = "A Python docstring linter that checks arguments, returns, yields, and raises sections"
 optional = false
 python-versions = ">=3.10"
-groups = ["dev"]
+groups = ["lint"]
 files = [
     {file = "pydoclint-0.8.5-py3-none-any.whl", hash = "sha256:ed45de2d49af1c43579327eabdf5034d4a63df2e2521d200252d040f37f25802"},
     {file = "pydoclint-0.8.5.tar.gz", hash = "sha256:988b8d4303d6d68740866879ea4bb4b787ec75acf9cecb5ae1c53ff4506542b0"},
@@ -5959,4 +5959,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "ed72c747e7c71247aaf8bf14686c7670919b72f385622599d38291b2dffda0f3"
+content-hash = "3a2956506f74a8a1f118a1623378da0b25405bfef27563c7002bee39590ec8c3"

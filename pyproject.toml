@@ -25,7 +25,6 @@ ssb-klass-python = ">=0.0.9"
 ipykernel = "^7.1.0"
 
 [tool.poetry.group.dev.dependencies]
-pydoclint = "^0.8.5"
 pygments = ">=2.10.0"
 coverage = { extras = ["toml"], version = ">=6.2" }
 mypy = ">=0.930"
@@ -35,6 +34,7 @@ xdoctest = { extras = ["colors"], version = ">=0.15.10" }
 cruft = ">=2.16.0"
 
 [tool.poetry.group.lint.dependencies]
+pydoclint = "^0.8.5"
 black = { extras = ["jupyter"], version = ">=23.1.0" }
 darglint = ">=1.8.1"
 pre-commit = ">=2.16.0"
