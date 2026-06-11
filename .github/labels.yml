@@ -64,6 +64,3 @@
 - name: "skip-changelog"
   description: Changes that should be omitted from the release notes
   color: ededed
-- name: security
-  description: Security fixes and improvements
-  color: ee0701

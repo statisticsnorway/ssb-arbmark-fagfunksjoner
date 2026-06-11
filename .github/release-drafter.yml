@@ -1,8 +1,6 @@
 categories:
   - title: ":boom: Breaking Changes"
     label: "breaking"
-  - title: ":lock: Security"
-    label: "security"
   - title: ":rocket: Features"
     label: "enhancement"
   - title: ":fire: Removals and Deprecations"
