@@ -64,4 +64,3 @@
 - name: "skip-changelog"
   description: Changes that should be omitted from the release notes
   color: ededed
-
