@@ -147,7 +147,7 @@ def ref_week(
     )
 
     # Determine the start and end of the reference week
-    start_of_week = ref_days - pd.to_timedelta(ref_days.dt.weekday, unit="d")
+    start_of_week = ref_days - pd.to_timedelta(ref_days.dt.weekday, unit="D")
     end_of_week = start_of_week + pd.Timedelta(days=6)
 
     # Check if the date range overlaps with the reference week
@@ -199,7 +199,7 @@ def ref_tuesday(
     weekday_16th = reference_16th.dt.dayofweek
 
     # Calculate the Tuesday in the same week as the 16th
-    tuesday_ref = reference_16th + pd.to_timedelta(1 - weekday_16th, unit="d")
+    tuesday_ref = reference_16th + pd.to_timedelta(1 - weekday_16th, unit="D")
 
     # Check if the Tuesday reference day is within the range of the from_date and to_date
     result = np.logical_and(from_dates <= tuesday_ref, tuesday_ref <= to_dates)
