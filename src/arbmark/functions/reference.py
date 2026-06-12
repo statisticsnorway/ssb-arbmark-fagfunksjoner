@@ -1,9 +1,10 @@
 # Type hints
+from datetime import date
+from datetime import timedelta
 from typing import TYPE_CHECKING
 
 # Numpy for data wrangling
 import numpy as np
-from datetime import date, timedelta
 
 # Pandas for table management
 import pandas as pd
@@ -33,6 +34,9 @@ def get_reference_week_start_end(year: int | str, month: int | str) -> tuple[str
     Returns:
         Tuple containing the Monday and Sunday dates as ISO-formatted
         strings (YYYY-MM-DD).
+
+    Raises:
+        ValueError: If year or month cannot be converted to a valid date.
     """
     try:
         d16 = date(int(year), int(month), 16)

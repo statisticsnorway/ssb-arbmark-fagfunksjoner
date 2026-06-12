@@ -6,10 +6,10 @@ from arbmark.functions.interval import pinterval
 from arbmark.functions.memory import list_dataframes
 from arbmark.functions.merge import indicate_merge
 from arbmark.functions.quarter import first_last_date_quarter
+from arbmark.functions.reference import get_reference_week_start_end
 from arbmark.functions.reference import ref_day
 from arbmark.functions.reference import ref_tuesday
 from arbmark.functions.reference import ref_week
-from arbmark.functions.reference import get_reference_week_start_end
 from arbmark.functions.statbank_formats import sb_integer
 from arbmark.functions.statbank_formats import sb_percent
 from arbmark.functions.workdays import count_days
@@ -57,6 +57,7 @@ __all__ = [
     "first_last_date_quarter",
     "get_calendar",
     "get_norwegian_holidays",
+    "get_reference_week_start_end",
     "get_regional_special_codes",
     "get_valid_county_codes",
     "get_years",
@@ -73,7 +74,6 @@ __all__ = [
     "ref_day",
     "ref_tuesday",
     "ref_week",
-    "get_reference_week_start_end",
     "sb_integer",
     "sb_percent",
     "sektor2_grp",

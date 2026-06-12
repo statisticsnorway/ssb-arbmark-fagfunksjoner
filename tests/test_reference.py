@@ -1,10 +1,10 @@
 import pandas as pd
 import pytest
 
+from arbmark import get_reference_week_start_end
 from arbmark import ref_day
 from arbmark import ref_tuesday
 from arbmark import ref_week
-from arbmark import get_reference_week_start_end
 
 
 def test_reference_week_when_16th_is_midweek():
