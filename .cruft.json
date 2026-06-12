@@ -1,7 +1,7 @@
 {
   "template": "https://github.com/statisticsnorway/ssb-pypitemplate.git",
-  "commit": "dc2ab59a33df1ff4b22245fe29b109ef7701da4f",
-  "checkout": null,
+  "commit": "57b7b713c78245687a1d5421aba8bf01bead2245",
+  "checkout": "2026.5.27",
   "context": {
     "cookiecutter": {
       "project_name": "ssb-arbmark-fagfunksjoner",
@@ -9,15 +9,15 @@
       "friendly_name": "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner",
       "copyright_owner": "Statistics Norway",
       "copyright_year": "2023",
-      "author": "Jan Sebastian Rothe",
-      "email": "jsr@ssb.no",
+      "author": "Eirik Fredborg",
+      "email": "eirik.fredborg@ssb.no",
       "github_organization": "statisticsnorway",
-      "version": "0.0.0",
+      "version": "0.0.28",
       "license": "MIT",
-      "development_status": "Development Status :: 1 - Planning",
+      "development_status": "Development Status :: 4 - Beta",
       "code_quality_level": "Medium",
       "dependency_manager_tool": "poetry",
-      "department_number": "",
+      "department_number": "312",
       "_copy_without_render": [
         "*.rst_t"
       ],
@@ -26,7 +26,7 @@
         "trim_blocks": true
       },
       "_template": "https://github.com/statisticsnorway/ssb-pypitemplate.git",
-      "_commit": "dc2ab59a33df1ff4b22245fe29b109ef7701da4f"
+      "_commit": "57b7b713c78245687a1d5421aba8bf01bead2245"
     }
   },
   "directory": null
