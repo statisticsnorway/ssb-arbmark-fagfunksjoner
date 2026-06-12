@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 # Numpy for data wrangling
 import numpy as np
+from datetime import date, timedelta
 
 # Pandas for table management
 import pandas as pd
@@ -17,6 +18,33 @@ else:
     PdSeriesInt = pd.Series
     PdSeriesStr = pd.Series
     PdSeriesBool = pd.Series
+
+
+def get_reference_week_start_end(year: int | str, month: int | str) -> tuple[str, str]:
+    """Return the start and end dates of the labour statistics reference week.
+
+    The reference week is defined as the Monday-Sunday week containing
+    the 16th day of the specified month.
+
+    Args:
+        year: Year.
+        month: Month.
+
+    Returns:
+        Tuple containing the Monday and Sunday dates as ISO-formatted
+        strings (YYYY-MM-DD).
+    """
+    try:
+        d16 = date(int(year), int(month), 16)
+    except (TypeError, ValueError) as e:
+        raise ValueError(
+            f"Invalid year/month combination: year={year}, month={month}"
+        ) from e
+
+    monday: date = d16 - timedelta(days=d16.weekday())
+    sunday: date = monday + timedelta(days=6)
+
+    return monday.isoformat(), sunday.isoformat()
 
 
 def ref_day(from_dates: PdSeriesStr, to_dates: PdSeriesStr) -> PdSeriesBool:

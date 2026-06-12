@@ -1,8 +1,55 @@
 import pandas as pd
+import pytest
 
 from arbmark import ref_day
 from arbmark import ref_tuesday
 from arbmark import ref_week
+from arbmark import get_reference_week_start_end
+
+
+def test_reference_week_when_16th_is_midweek():
+    result = get_reference_week_start_end(2026, 6)
+
+    assert result == ("2026-06-15", "2026-06-21")
+
+
+def test_reference_week_when_16th_is_monday():
+    result = get_reference_week_start_end(2026, 2)
+
+    assert result == ("2026-02-16", "2026-02-22")
+
+
+def test_reference_week_when_16th_is_sunday():
+    result = get_reference_week_start_end(2025, 2)
+
+    assert result == ("2025-02-10", "2025-02-16")
+
+
+def test_accepts_string_inputs():
+    result = get_reference_week_start_end("2026", "06")
+
+    assert result == ("2026-06-15", "2026-06-21")
+
+
+def test_returns_iso_formatted_strings():
+    result = get_reference_week_start_end(2026, 6)
+
+    assert isinstance(result[0], str)
+    assert isinstance(result[1], str)
+    assert result[0] == "2026-06-15"
+    assert result[1] == "2026-06-21"
+
+
+@pytest.mark.parametrize("month", [0, 13, "abc", ""])
+def test_invalid_month_raises_value_error(month):
+    with pytest.raises(ValueError):
+        get_reference_week_start_end(2026, month)
+
+
+@pytest.mark.parametrize("year", ["abc", ""])
+def test_invalid_year_raises_value_error(year):
+    with pytest.raises(ValueError):
+        get_reference_week_start_end(year, 6)
 
 
 def test_ref_day_within_range() -> None:
