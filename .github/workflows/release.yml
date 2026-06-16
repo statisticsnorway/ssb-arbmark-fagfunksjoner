@@ -16,7 +16,7 @@ jobs:
       pull-requests: read
     steps:
       - name: Check out the repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
         with:
           persist-credentials: true  # Required for pushing tags to the repository
           fetch-depth: 2
@@ -135,7 +135,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Publish the release notes
-        uses: release-drafter/release-drafter@c2e2804cc59f45f57076a99af580d0fedb697927  #v7.3.0
+        uses: release-drafter/release-drafter@693d20e7c1ce1a81d3a41962f85914253b518449  #v7.3.1
         with:
           publish: ${{ steps.check-version.outputs.tag != '' }}
           tag: ${{ steps.check-version.outputs.tag }}
