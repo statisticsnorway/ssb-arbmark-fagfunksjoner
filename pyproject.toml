@@ -1,59 +1,73 @@
-[tool.poetry]
+[project]
 name = "ssb-arbmark-fagfunksjoner"
 version = "0.0.28"
 description = "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner"
-authors = ["Jan Sebastian Rothe <jsr@ssb.no>"]
+authors = [{ name = "Eirik Fredborg", email = "eirik.fredborg@ssb.no" }]
+maintainers = [{ name = "Statistics Norway, Labour market and wage statistics Department (312)" }]
 license = "MIT"
 readme = "README.md"
+requires-python = ">=3.12"
+dynamic = ["classifiers"]
+dependencies = [
+    "click>=8.0.1",
+    "pandas>=1.5.3",
+    "numpy>=2.0.0",
+    "holidays<1.0",
+    "pandas-stubs>=2.1.1.230928",
+    "ssb-klass-python>=0.0.9",
+    "ipykernel>=7.1.0",
+]
+
+[project.urls]
 homepage = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner"
 repository = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner"
 documentation = "https://statisticsnorway.github.io/ssb-arbmark-fagfunksjoner"
-packages = [{ include = "arbmark", from = "src" }]
-classifiers = ["Development Status :: 4 - Beta"]
-
-[tool.poetry.urls]
 Changelog = "https://github.com/statisticsnorway/ssb-arbmark-fagfunksjoner/releases"
 
-[tool.poetry.dependencies]
-python = ">=3.10,<4"
-click = ">=8.0.1"
-pandas = ">=1.5.3"
-numpy = ">=2.0.0"
-holidays = "<1.0"
-pandas-stubs = ">=2.1.1.230928"
-ssb-klass-python = ">=0.0.9"
-ipykernel = "^7.1.0"
+[project.scripts]
+ssb-arbmark-fagfunksjoner = "arbmark.__main__:main"
 
-[tool.poetry.group.dev.dependencies]
-pygments = ">=2.10.0"
-coverage = { extras = ["toml"], version = ">=6.2" }
-mypy = ">=0.930"
-pytest = ">=6.2.5"
-typeguard = ">=2.13.3"
-xdoctest = { extras = ["colors"], version = ">=0.15.10" }
-cruft = ">=2.16.0"
+[dependency-groups]
+lint = [
+    "black[jupyter]>=25.11.0",
+    "pre-commit>=4.4.0",
+    "pre-commit-hooks>=6.0.0",
+    "pydoclint>=0.8.3",
+    "ruff>=0.14.5",
+]
+doc = [
+    "furo>=2025.9.25",
+    "myst-parser>=4.0.1",
+    "sphinx>=8.2.3",
+    "sphinx-autobuild>=2025.8.25",
+    "sphinx-autodoc-typehints>=3.5.2",
+    "sphinx-click>=6.1.0",
+]
 
-[tool.poetry.group.lint.dependencies]
-pydoclint = "^0.8.5"
-black = { extras = ["jupyter"], version = ">=23.1.0" }
-darglint = ">=1.8.1"
-pre-commit = ">=2.16.0"
-pre-commit-hooks = ">=4.1.0"
-ruff = ">=0.0.284"
+# Type hint stubs should be placed in the dev dependency group
+dev = [
+    {include-group = "lint"},
+    {include-group = "doc"},
+    "coverage[toml]>=7.11.3",
+    "deptry>=0.24.0; python_version < '4.0'",
+    "mypy>=1.18.2",
+    "pygments>=2.19.0",
+    "pytest>=9.0.0",
+    "typeguard>=2.13.3",
+    "xdoctest[colors]>=1.3.0",
+    "cruft>=2.16.0",
+]
 
-[tool.poetry.group.doc.dependencies]
-furo = ">=2021.11.12"
-sphinx = ">=6.2.1"
-sphinx-autobuild = ">=2021.3.14"
-sphinx-autodoc-typehints = ">=1.24.0"
-sphinx-click = ">=3.0.2"
-myst-parser = ">=0.16.1"
+[tool.poetry]
+classifiers = ["Development Status :: 4 - Beta"]
+requires-poetry = ">=2.3"
+packages = [{ include = "arbmark", from = "src" }]
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.9"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
-
-[tool.poetry.scripts]
-ssb-arbmark-fagfunksjoner = "arbmark.__main__:main"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -67,6 +81,9 @@ relative_files = true
 [tool.coverage.report]
 show_missing = true
 fail_under = 50
+
+[tool.deptry.per_rule_ignores]
+DEP001 = ["nox", "nox_poetry"]  # packages available by default
 
 [tool.mypy]
 strict = false
@@ -88,7 +105,7 @@ quiet = true
 force-exclude = true  # Apply excludes to pre-commit
 show-fixes = true
 src = ["src", "tests"]
-target-version = "py310"  # Minimum Python version supported
+target-version = "py313"  # Minimum Python version supported
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
 extend-exclude = [
     "__pycache__",

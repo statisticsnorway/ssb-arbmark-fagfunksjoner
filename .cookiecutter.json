@@ -1,4 +1,5 @@
 {
+  "_commit": "57b7b713c78245687a1d5421aba8bf01bead2245",
   "_copy_without_render": [
     "*.rst_t"
   ],
@@ -7,18 +8,18 @@
     "trim_blocks": true
   },
   "_template": "https://github.com/statisticsnorway/ssb-pypitemplate.git",
-  "author": "Jan Sebastian Rothe",
+  "author": "Eirik Fredborg",
   "code_quality_level": "Medium",
   "copyright_owner": "Statistics Norway",
   "copyright_year": "2023",
-  "department_number": "",
+  "department_number": "312",
   "dependency_manager_tool": "poetry",
-  "development_status": "Development Status :: 1 - Planning",
-  "email": "jsr@ssb.no",
-  "friendly_name": "SSB Arbeidsmarked og l\u00f8nn Fag-fellesfunksjoner",
+  "development_status": "Development Status :: 4 - Beta",
+  "email": "eirik.fredborg@ssb.no",
+  "friendly_name": "SSB Arbmark Fagfunksjoner",
   "github_organization": "statisticsnorway",
   "license": "MIT",
   "package_name": "ssb_arbmark_fagfunksjoner",
   "project_name": "ssb-arbmark-fagfunksjoner",
-  "version": "0.0.0"
+  "version": "0.0.28"
 }
