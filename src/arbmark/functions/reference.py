@@ -1,4 +1,6 @@
 # Type hints
+from datetime import date
+from datetime import timedelta
 from typing import TYPE_CHECKING
 
 # Numpy for data wrangling
@@ -17,6 +19,36 @@ else:
     PdSeriesInt = pd.Series
     PdSeriesStr = pd.Series
     PdSeriesBool = pd.Series
+
+
+def get_reference_week_start_end(year: int | str, month: int | str) -> tuple[str, str]:
+    """Return the start and end dates of the labour statistics reference week.
+
+    The reference week is defined as the Monday-Sunday week containing
+    the 16th day of the specified month.
+
+    Args:
+        year: Year.
+        month: Month.
+
+    Returns:
+        Tuple containing the Monday and Sunday dates as ISO-formatted
+        strings (YYYY-MM-DD).
+
+    Raises:
+        ValueError: If year or month cannot be converted to a valid date.
+    """
+    try:
+        d16 = date(int(year), int(month), 16)
+    except (TypeError, ValueError) as e:
+        raise ValueError(
+            f"Invalid year/month combination: year={year}, month={month}"
+        ) from e
+
+    monday: date = d16 - timedelta(days=d16.weekday())
+    sunday: date = monday + timedelta(days=6)
+
+    return monday.isoformat(), sunday.isoformat()
 
 
 def ref_day(from_dates: PdSeriesStr, to_dates: PdSeriesStr) -> PdSeriesBool:
@@ -119,7 +151,7 @@ def ref_week(
     )
 
     # Determine the start and end of the reference week
-    start_of_week = ref_days - pd.to_timedelta(ref_days.dt.weekday, unit="d")
+    start_of_week = ref_days - pd.to_timedelta(ref_days.dt.weekday, unit="D")
     end_of_week = start_of_week + pd.Timedelta(days=6)
 
     # Check if the date range overlaps with the reference week
@@ -171,7 +203,7 @@ def ref_tuesday(
     weekday_16th = reference_16th.dt.dayofweek
 
     # Calculate the Tuesday in the same week as the 16th
-    tuesday_ref = reference_16th + pd.to_timedelta(1 - weekday_16th, unit="d")
+    tuesday_ref = reference_16th + pd.to_timedelta(1 - weekday_16th, unit="D")
 
     # Check if the Tuesday reference day is within the range of the from_date and to_date
     result = np.logical_and(from_dates <= tuesday_ref, tuesday_ref <= to_dates)
