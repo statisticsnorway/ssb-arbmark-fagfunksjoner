@@ -1,6 +1,6 @@
 [project]
 name = "ssb-arbmark-fagfunksjoner"
-version = "0.0.28"
+version = "0.0.29"
 description = "SSB Arbeidsmarked og lønn Fag-fellesfunksjoner"
 authors = [{ name = "Eirik Fredborg", email = "eirik.fredborg@ssb.no" }]
 maintainers = [{ name = "Statistics Norway, Labour market and wage statistics Department (312)" }]
