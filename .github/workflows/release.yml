@@ -16,13 +16,13 @@ jobs:
       pull-requests: read
     steps:
       - name: Check out the repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: true  # Required for pushing tags to the repository
           fetch-depth: 2
 
       - name: Set up Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.13"
 
@@ -126,16 +126,16 @@ jobs:
 
       - name: Publish package on PyPI
         if: steps.check-version.outputs.tag
-        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  #v1.14.0
+        uses: pypa/gh-action-pypi-publish@ba38be9e461d3875417946c167d0b5f3d385a247  #v1.14.1
 
       - name: Publish package on TestPyPI
         if: (!steps.check-version.outputs.tag)
-        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  #v1.14.0
+        uses: pypa/gh-action-pypi-publish@ba38be9e461d3875417946c167d0b5f3d385a247  #v1.14.1
         with:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Publish the release notes
-        uses: release-drafter/release-drafter@693d20e7c1ce1a81d3a41962f85914253b518449  #v7.3.1
+        uses: release-drafter/release-drafter@eada3c96a64734dd381cfbda23511034e328ddb0  #v7.6.0
         with:
           publish: ${{ steps.check-version.outputs.tag != '' }}
           tag: ${{ steps.check-version.outputs.tag }}
